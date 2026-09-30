@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Allen Kang, Product Design Lead</title>
+<meta name="description" content="Product designer, eight years in. A lightweight mirror of allenkang.com for networks that block the main site.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=Caveat:wght@700&display=swap">
+<style>
+  :root{
+    --paper:#f7f4ec; --ink:#1a1a1a; --muted:#636360; --border:#e2dcce; --seal:#cd2e3a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink)}
+  body{font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.6}
+  .wrap{max-width:800px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+
+  header{padding:32px 0 16px;display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px}
+  .logo{font-family:Caveat,cursive;font-size:28px;text-decoration:none}
+  nav{display:flex;gap:20px;font-size:14px}
+  nav a{text-decoration:none;color:var(--muted)}
+  nav a:hover{color:var(--ink)}
+
+  .notice{margin-top:20px;padding:14px 18px;border:1px solid var(--border);border-radius:8px;
+    font-size:13.5px;color:var(--muted);line-height:1.55}
+  .notice a{color:var(--ink);font-weight:500}
+
+  h1.hero{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:34px;
+    line-height:1.25;margin:36px 0 8px;letter-spacing:-0.01em}
+  .role{color:var(--muted);font-size:15px;margin:0 0 28px}
+
+  .contact-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:44px;font-size:14.5px}
+  .contact-row a{text-decoration:underline;text-underline-offset:3px}
+  .btn{display:inline-block;background:var(--ink);color:var(--paper)!important;
+    padding:10px 20px;border-radius:99px;text-decoration:none!important;font-size:14px;font-weight:500}
+
+  h2.section{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;margin:0 0 20px}
+
+  .card{display:flex;gap:20px;padding:22px 0;border-top:1px solid var(--border)}
+  .card:last-child{border-bottom:1px solid var(--border)}
+  .card img{width:180px;height:120px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0}
+  .card .meta{font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .card h3{font-family:"Playfair Display",Georgia,serif;font-size:19px;font-weight:600;margin:0 0 6px;line-height:1.3}
+  .card p{font-size:14px;color:var(--muted);line-height:1.55;margin:0}
+  .stat{margin-top:8px;font-size:13.5px;font-weight:600;color:var(--seal)}
+  @media(max-width:560px){.card{flex-direction:column}.card img{width:100%;height:auto;aspect-ratio:3/2}}
+
+  footer{margin:56px 0 48px;padding-top:28px;border-top:1px solid var(--border);
+    font-size:13.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--ink);text-decoration:none;font-weight:500}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="logo" href="#">Allen Kang</a>
+    <nav>
+      <a href="https://www.linkedin.com/in/mooque/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:allensmkang@gmail.com">Email</a>
+      <a href="assets/Allen-Kang-Resume.pdf">Résumé (PDF)</a>
+    </nav>
+  </header>
+
+  <p class="notice">
+    This is a lightweight, static mirror of the full portfolio, built for
+    networks where the main site's link filtering blocks it. The full site,
+    with every case study, is at <a href="https://allenkang.com">allenkang.com</a>.
+  </p>
+
+  <h1 class="hero">Product Design Lead, optimist, systems-builder, and experience-maker.</h1>
+  <p class="role">Eight years designing mission-driven products for the people most software forgets.</p>
+
+  <div class="contact-row">
+    <a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a>
+    <a href="https://www.linkedin.com/in/mooque/" target="_blank" rel="noopener">linkedin.com/in/mooque</a>
+    <a class="btn" href="assets/Allen-Kang-Resume.pdf">Download résumé</a>
+  </div>
+
+  <h2 class="section">Selected work</h2>
+
+  <div class="card">
+    <img src="assets/fee-opt-in.jpg" alt="Fee Opt-In case study cover, confidential and blurred">
+    <div>
+      <div class="meta">Experimentation · 2026</div>
+      <h3>Fee Opt-In: Winning the Moment Donors Change Their Mind</h3>
+      <p>A behavioral A/B test on Raisely's donation flow. Paused a winning variant that leaned on donor confusion, and rebuilt the moment around a clear choice instead.</p>
+      <div class="stat">75% &rarr; 92% fee opt-in, conversion held</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="assets/transaction-workflows.jpg" alt="Transaction Workflows case study cover">
+    <div>
+      <div class="meta">Feature Redesign · 2025</div>
+      <h3>Transaction Workflows: The Feature That Was Causing Churn</h3>
+      <p>Nonprofit accountants were spending weeks on tax reconciliation because the product treated every transaction the same way. Redesigned it into a growth lever.</p>
+      <div class="stat">70% drop in support tickets</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="assets/orchid.jpg" alt="Orchid design system case study cover">
+    <div>
+      <div class="meta">Design System · 2025&ndash;2026</div>
+      <h3>Orchid: A Design System Born From a Merger</h3>
+      <p>Three products, 340+ scattered components, and three teams who didn't choose to work together. Built the shared design language that made convergence possible.</p>
+      <div class="stat">340+ &rarr; 86 primitives, 96% reuse</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="assets/aplos-keela.jpg" alt="Aplos and Keela integration case study cover">
+    <div>
+      <div class="meta">Integration · 2025&ndash;2026</div>
+      <h3>Aplos &times; Keela: Connecting CRM and Accounting</h3>
+      <p>The first cross-product integration after an acquisition, reframed from a data-sync brief into a trust problem, then turned into the exec template.</p>
+      <div class="stat">85% less reconciliation time</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>&copy; 2026 Allen Kang</span>
+    <span>Full case studies at <a href="https://allenkang.com">allenkang.com</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
