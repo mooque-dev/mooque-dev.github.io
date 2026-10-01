@@ -32,10 +32,12 @@
     line-height:1.25;margin:36px 0 8px;letter-spacing:-0.01em}
   .role{color:var(--muted);font-size:15px;margin:0 0 28px}
 
-  .contact-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:44px;font-size:14.5px}
-  .contact-row a{text-decoration:underline;text-underline-offset:3px}
-  .btn{display:inline-block;background:var(--ink);color:var(--paper)!important;
-    padding:10px 20px;border-radius:99px;text-decoration:none!important;font-size:14px;font-weight:500}
+  .contact-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:44px}
+  .btn{display:inline-flex;align-items:center;height:40px;padding:0 20px;border-radius:99px;
+    text-decoration:none!important;font-size:14px;font-weight:500;line-height:1;box-sizing:border-box}
+  .btn-outline{border:1px solid var(--border);color:var(--ink)!important}
+  .btn-outline:hover{border-color:var(--ink)}
+  .btn-solid{background:var(--ink);color:var(--paper)!important;border:1px solid var(--ink)}
 
   h2.section{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);
     font-weight:600;margin:0 0 20px}
@@ -76,9 +78,9 @@
   <p class="role">Eight years designing mission-driven products for the people most software forgets.</p>
 
   <div class="contact-row">
-    <a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a>
-    <a href="https://www.linkedin.com/in/mooque/" target="_blank" rel="noopener">linkedin.com/in/mooque</a>
-    <a class="btn" href="assets/Allen-Kang-Resume.pdf">Download résumé</a>
+    <a class="btn btn-outline" href="mailto:allensmkang@gmail.com">Email</a>
+    <a class="btn btn-outline" href="https://www.linkedin.com/in/mooque/" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="btn btn-solid" href="assets/Allen-Kang-Resume.pdf">Download résumé</a>
   </div>
 
   <h2 class="section">Selected work</h2>
@@ -120,6 +122,27 @@
       <h3>Aplos &times; Keela: Connecting CRM and Accounting</h3>
       <p>The first cross-product integration after an acquisition, reframed from a data-sync brief into a trust problem, then turned into the exec template.</p>
       <div class="stat">85% less reconciliation time</div>
+    </div>
+  </div>
+
+  <h2 class="section" style="margin-top:12px">Also built, end to end</h2>
+
+  <div class="card">
+    <img src="assets/arnd.jpg" alt="ARND case study cover, two phone screens on a bellflower blue ground">
+    <div>
+      <div class="meta">Mobile App · 2026, in beta</div>
+      <h3>ARND: Live Music Around You</h3>
+      <p>A map-first app for a city's small shows: buskers, pop-ups, and small-venue sets. Started as a concept, now a working app running on live curated Toronto listings.</p>
+      <div class="stat"><a href="https://arnd.app" style="color:inherit" target="_blank" rel="noopener">arnd.app &rarr;</a></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="assets/forkestrate.jpg" alt="Forkestrate AI Recipe Book case study cover">
+    <div>
+      <div class="meta">Side Project · 2025</div>
+      <h3>Forkestrate: AI Recipe Book</h3>
+      <p>Partnered with a PM and two engineers to build an AI cooking app from zero to MVP in under three months. Also taught me how to design for AI before it hit my day job.</p>
     </div>
   </div>
 
