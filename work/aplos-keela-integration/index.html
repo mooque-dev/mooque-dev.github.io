@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aplos × Keela: Connecting CRM and Accounting for Nonprofits</title>
+<meta name="description" content="The first cross-product integration after an acquisition: syncing nonprofit CRM data with accounting and tax workflows across two codebases and two teams.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=Caveat:wght@700&display=swap">
+<link rel="stylesheet" href="../../assets/case.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="../../">Allen Kang</a>
+    <nav>
+      <a href="../../mastercard/">&larr; Back to overview</a>
+      <a href="../../assets/Allen-Kang-Resume.pdf">R&eacute;sum&eacute; (PDF)</a>
+    </nav>
+  </header>
+  <p class="cat">Integration</p>
+  <h1>Aplos × Keela: Connecting CRM and Accounting for Nonprofits</h1>
+  <p class="sub">The first cross-product integration after an acquisition: syncing nonprofit CRM data with accounting and tax workflows across two codebases and two teams.</p>
+  
+  <dl class="meta-grid">
+    <div><dt>Role</dt><dd>Product Design Lead</dd></div>
+    <div><dt>Timeline</dt><dd>2025–2026</dd></div>
+    <div><dt>Team</dt><dd>2 designers, 4 engineers, 1 PM</dd></div>
+    <div><dt>Tools</dt><dd>Figma, FigJam, Jira, Amplitude</dd></div>
+  </dl>
+  <div class="cover" style="background:#d4dde6"><img src="../../case-studies/aplos-keela-integration/cover.jpg" alt="Aplos × Keela: Connecting CRM and Accounting for Nonprofits"></div>
+  
+  <div class="prose">
+<h2>The Real Problem</h2>
+<p>This was the first thing the two newly merged companies would ship together, and leadership was watching it as a signal of whether the acquisition would actually work. The project was supposed to be a data sync. The brief said: make Keela's CRM talk to Aplos's accounting system. Simple enough on paper.</p>
+<p>But after talking to 12 nonprofit finance managers, I realized the problem wasn't data transfer. It was <strong>trust</strong>. Every manual workaround we saw (spreadsheets, CSV exports, duplicated entry) existed because these teams didn't trust automated processes they couldn't see. They'd been burned before by systems that moved data silently and incorrectly.</p>
+<p>That insight reframed the entire project. Instead of building a backend sync, we needed to design an experience where users could see exactly what was happening to their data at every step.</p>
+<h2>What Made This Hard</h2>
+<p>This was the first time the two companies had shipped anything together. Beyond the product challenge, I was navigating:</p>
+<ul>
+<li>Two engineering teams with different sprint cadences, naming conventions, and deployment practices</li>
+<li>No shared component library or design language</li>
+<li>Organizational dynamics where each team was protective of their existing patterns</li>
+</ul>
+<p>I spent the first two weeks not designing at all: just sitting in on both teams' standups, mapping how each side thought about the same data differently, and building the relationships that would make the actual work possible.</p>
+<h2>Key Design Decisions</h2>
+<h3>Visible Data Mapping</h3>
+<p>The easy path was to hide the complexity behind smart defaults, the way most integrations do. I pushed back, because these users had been burned before by automation that moved their data silently, and hiding complexity again would have cost us the trust we were there to build. I designed a mapping interface that shows users exactly how each Keela field connects to each Aplos account: editable, transparent, no black boxes. The metaphor was a visual bridge between two worlds.</p>
+<h3>Progressive Configuration</h3>
+<p>The setup flow started simple: default mappings that covered 80% of use cases. Power users could go deeper with one click. The goal was to make the first experience feel effortless while respecting the complexity that experienced users needed.</p>
+<h3>A Dashboard You Can Trust</h3>
+<p>A persistent sync status view showed the last sync time, records processed, and any exceptions needing attention. This was the feature that eliminated the "did my data actually sync?" anxiety that had plagued the manual process.</p>
+<h2>The Organizational Work</h2>
+<p>The design work was maybe 40% of this project. The rest was organizational:</p>
+<ul>
+<li>I ran the first joint design reviews between the two engineering teams. The format I established became the default for all subsequent cross-product work.</li>
+<li>I created the first shared component library for integration UI, which later became the seed for Orchid's cross-product adoption.</li>
+<li>I presented the integration framework to the executive team, and it became the template for every subsequent cross-product initiative.</li>
+</ul>
+<h2>What Happened</h2>
+<ul>
+<li><strong>85% reduction</strong> in manual data reconciliation time</li>
+<li><strong>92% setup completion rate</strong> for the self-serve configuration flow</li>
+<li>Became the blueprint for all subsequent cross-product integrations</li>
+<li>The shared components I built seeded the unified design system</li>
+<li>Established the collaboration model the merged org still uses today</li>
+</ul>
+<p>The lesson that outlived the project: when trust, not data transfer, is the actual constraint, transparency beats automation, even when automation would ship faster. Two teams who didn't choose each other found a way to build something together. Everything above, the reviews, the shared library, the executive template, was just how that actually happened.</p>
+<h2>What Came Next: ARK</h2>
+<p>The integration work laid the groundwork for something bigger. ARK is the connected nonprofit suite: Keela, Raisely, and Aplos unified under a single system. The integration I led became one of the first building blocks.</p>
+<figure class="wide">
+  <img src="../../case-studies/aplos-keela-integration/image.png" alt="Marketing banner for the official ARK Partnership announcement" />
+  <figcaption>ARK Partnership announcement: the public launch of the connected nonprofit suite</figcaption>
+</figure>
+<figure>
+  <img src="../../case-studies/aplos-keela-integration/image-1.png" alt="Keela x Aplos integration in product" />
+  <figcaption>Keela × Aplos integration: the first cross-product feature to ship</figcaption>
+</figure>
+<figure>
+  <img src="../../case-studies/aplos-keela-integration/image-2.png" alt="Working with PMs and Design Lead at Aplos to ensure ARK Design System consistency" />
+  <figcaption>Cross-company design reviews: aligning the ARK Design System with each product's context</figcaption>
+</figure>
+<figure>
+  <img src="../../case-studies/aplos-keela-integration/image-3.jpg" alt="PLG banners for Raisely x Keela partnership" />
+  <figcaption>Raisely × Keela partnership banners: product-led growth assets for the connected suite</figcaption>
+</figure>
+
+  </div>
+  <footer>
+    <span>&copy; 2026 Allen Kang</span>
+    <span><a href="../../mastercard/">Back to overview</a> &middot; <a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a></span>
+  </footer>
+</div>
+</body>
+</html>

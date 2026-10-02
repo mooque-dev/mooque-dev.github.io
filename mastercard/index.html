@@ -10,46 +10,46 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=Caveat:wght@700&display=swap">
 <style>
   :root{
-    --paper:#f7f4ec; --ink:#1a1a1a; --muted:#636360; --border:#e2dcce; --seal:#cd2e3a;
+    --paper:#f7f4ec; --ink:#1a1a1a; --muted:#4d4d4a; --border:#e2dcce; --seal:#cd2e3a;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--paper);color:var(--ink)}
-  body{font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.6}
+  body{font-family:Inter,system-ui,sans-serif;font-size:17px;line-height:1.65;font-variant-numeric:lining-nums}
   .wrap{max-width:800px;margin:0 auto;padding:0 24px}
   a{color:inherit}
 
   header{padding:32px 0 16px;display:flex;align-items:center;justify-content:space-between;
     border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px}
   .logo{font-family:Caveat,cursive;font-size:28px;text-decoration:none}
-  nav{display:flex;gap:20px;font-size:14px}
+  nav{display:flex;gap:20px;font-size:15px}
   nav a{text-decoration:none;color:var(--muted)}
   nav a:hover{color:var(--ink)}
 
   .notice{margin-top:20px;padding:14px 18px;border:1px solid var(--border);border-radius:8px;
-    font-size:13.5px;color:var(--muted);line-height:1.55}
+    font-size:15px;color:var(--muted);line-height:1.55}
   .notice a{color:var(--ink);font-weight:500}
 
   h1.hero{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:34px;
     line-height:1.25;margin:36px 0 8px;letter-spacing:-0.01em}
-  .role{color:var(--muted);font-size:15px;margin:0 0 28px}
+  .role{color:var(--muted);font-size:17px;margin:0 0 28px}
 
   .contact-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:44px}
   .btn{display:inline-flex;align-items:center;height:40px;padding:0 20px;border-radius:99px;
-    text-decoration:none!important;font-size:14px;font-weight:500;line-height:1;box-sizing:border-box}
+    text-decoration:none!important;font-size:15px;font-weight:500;line-height:1;box-sizing:border-box}
   .btn-outline{border:1px solid var(--border);color:var(--ink)!important}
   .btn-outline:hover{border-color:var(--ink)}
   .btn-solid{background:var(--ink);color:var(--paper)!important;border:1px solid var(--ink)}
 
-  h2.section{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);
+  h2.section{font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);
     font-weight:600;margin:0 0 20px}
 
   .card{display:flex;gap:20px;padding:22px 0;border-top:1px solid var(--border)}
   .card:last-child{border-bottom:1px solid var(--border)}
   .card img{width:180px;height:120px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0}
-  .card .meta{font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-  .card h3{font-family:"Playfair Display",Georgia,serif;font-size:19px;font-weight:600;margin:0 0 6px;line-height:1.3}
-  .card p{font-size:14px;color:var(--muted);line-height:1.55;margin:0}
-  .stat{margin-top:8px;font-size:13.5px;font-weight:600;color:var(--seal)}
+  .card .meta{font-size:12.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .card h3{font-family:"Playfair Display",Georgia,serif;font-size:21px;font-weight:600;margin:0 0 6px;line-height:1.3}
+  .card p{font-size:16px;color:var(--muted);line-height:1.6;margin:0}
+  .stat{margin-top:10px;font-size:15px;font-weight:600;color:var(--seal)}
   @media(max-width:560px){.card{flex-direction:column}.card img{width:100%;height:auto;aspect-ratio:3/2}}
 
   footer{margin:56px 0 48px;padding-top:28px;border-top:1px solid var(--border);
@@ -59,12 +59,12 @@
   .rule{height:3px;border-radius:99px;background:linear-gradient(90deg,#EB001B,#FF5F00,#F79E1B);margin:40px 0}
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:32px 24px;margin:0 0 56px}
   .stat-n{font-family:"Playfair Display",Georgia,serif;font-size:42px;font-weight:600;line-height:1;color:#c24a00}
-  .stat-l{font-size:14.5px;line-height:1.35;margin-top:10px}
-  .stat-s{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-l{font-size:16px;line-height:1.35;margin-top:10px}
+  .stat-s{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
   .pr{border-top:1px solid var(--border);padding:22px 0}
-  .pr .k{font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
+  .pr .k{font-size:12.5px;letter-spacing:.1em;color:var(--muted)}
   .pr h3{font-family:"Playfair Display",Georgia,serif;font-size:21px;font-weight:600;margin:6px 0 8px;line-height:1.3}
-  .pr p{font-size:14.5px;color:var(--muted);margin:0}
+  .pr p{font-size:16.5px;color:var(--muted);margin:0}
   .small{font-size:12px;color:var(--muted);margin-top:28px}
   @media(max-width:560px){.stats{grid-template-columns:1fr 1fr}.stat-n{font-size:34px}}
 </style>
@@ -113,8 +113,9 @@
     <img src="../assets/transaction-workflows.jpg" alt="Transaction Workflows case study cover">
     <div>
       <div class="meta">Feature Redesign · 2025</div>
-      <h3>Transaction Workflows: The Feature That Was Causing Churn</h3>
+      <h3><a href="../work/transaction-workflows/" style="text-decoration:none">Transaction Workflows: The Feature That Was Causing Churn</a></h3>
       <p>Nonprofit accountants were spending weeks on tax reconciliation because the product treated every transaction the same way. Redesigned it into a growth lever.</p>
+      <p style="margin-top:8px"><a href="../work/transaction-workflows/" style="font-weight:600">Read the full case study &rarr;</a></p>
       <div class="stat">70% drop in support tickets</div>
     </div>
   </div>
@@ -122,8 +123,9 @@
     <img src="../assets/aplos-keela.jpg" alt="Aplos and Keela integration case study cover">
     <div>
       <div class="meta">Integration · 2025&ndash;2026</div>
-      <h3>Aplos &times; Keela: Connecting CRM and Accounting</h3>
+      <h3><a href="../work/aplos-keela-integration/" style="text-decoration:none">Aplos &times; Keela: Connecting CRM and Accounting</a></h3>
       <p>The first cross-product integration after an acquisition, reframed from a data-sync brief into a trust problem, then turned into the exec template.</p>
+      <p style="margin-top:8px"><a href="../work/aplos-keela-integration/" style="font-weight:600">Read the full case study &rarr;</a></p>
       <div class="stat">85% less reconciliation time</div>
     </div>
   </div>
@@ -131,8 +133,9 @@
     <img src="../assets/fee-opt-in.jpg" alt="Fee Opt-In case study cover, confidential and blurred">
     <div>
       <div class="meta">Experimentation · 2026</div>
-      <h3>Fee Opt-In: Winning the Moment Donors Change Their Mind</h3>
+      <h3><a href="../work/fee-opt-in-experimentation/" style="text-decoration:none">Fee Opt-In: Winning the Moment Donors Change Their Mind</a></h3>
       <p>A behavioral A/B test on Raisely&rsquo;s donation flow. Paused a winning variant that leaned on donor confusion, and rebuilt the moment around a clear choice instead.</p>
+      <p style="margin-top:8px"><a href="../work/fee-opt-in-experimentation/" style="font-weight:600">Read the full case study &rarr;</a></p>
       <div class="stat">75% &rarr; 92% fee opt-in, conversion held</div>
     </div>
   </div>
@@ -140,8 +143,9 @@
     <img src="../assets/orchid.jpg" alt="Orchid design system case study cover">
     <div>
       <div class="meta">Design System · 2025&ndash;2026</div>
-      <h3>Orchid: A Design System Born From a Merger</h3>
+      <h3><a href="../work/orchid-design-system/" style="text-decoration:none">Orchid: A Design System Born From a Merger</a></h3>
       <p>Three products, 340+ scattered components, and three teams who didn&rsquo;t choose to work together. Built the shared design language that made convergence possible.</p>
+      <p style="margin-top:8px"><a href="../work/orchid-design-system/" style="font-weight:600">Read the full case study &rarr;</a></p>
       <div class="stat">340+ &rarr; 86 primitives, 96% reuse</div>
     </div>
   </div>
@@ -149,8 +153,9 @@
     <img src="../assets/automation.jpg" alt="Automation for nonprofits case study cover">
     <div>
       <div class="meta">New Feature · 2022</div>
-      <h3>Automation for Nonprofits: When the Real Obstacle Is Fear</h3>
+      <h3><a href="../work/automation-nonprofits/" style="text-decoration:none">Automation for Nonprofits: When the Real Obstacle Is Fear</a></h3>
       <p>A no-code automation system built from scratch, where the hardest design problem turned out to be fear, not complexity.</p>
+      <p style="margin-top:8px"><a href="../work/automation-nonprofits/" style="font-weight:600">Read the full case study &rarr;</a></p>
       <div class="stat">30% adoption across 355 organizations</div>
     </div>
   </div>
@@ -160,8 +165,9 @@
     <img src="../assets/arnd.jpg" alt="ARND cover">
     <div>
       <div class="meta">Mobile App · 2026, in beta</div>
-      <h3>ARND: Live Music Around You</h3>
+      <h3><a href="../work/arnd/" style="text-decoration:none">ARND: Live Music Around You</a></h3>
       <p>A live map of real shows, served from a database I designed and secured. The hard part was deciding what the map should leave out.</p>
+      <p style="margin-top:8px"><a href="../work/arnd/" style="font-weight:600">Read the full case study &rarr;</a></p>
       <div class="stat"><a href="https://arnd.app" style="color:inherit" target="_blank" rel="noopener">arnd.app &rarr;</a></div>
     </div>
   </div>
@@ -169,8 +175,9 @@
     <img src="../assets/schematic.jpg" alt="Schematic cover">
     <div>
       <div class="meta">Design Research · 2016, rebuilt 2026</div>
-      <h3>Schematic: Visualizing Maladaptive Schemas</h3>
+      <h3><a href="../work/schematic/" style="text-decoration:none">Schematic: Visualizing Maladaptive Schemas</a></h3>
       <p>Eighteen psychological schemas turned into a poster system and a private, browser-only profile. Information design where the data is someone&rsquo;s inner life.</p>
+      <p style="margin-top:8px"><a href="../work/schematic/" style="font-weight:600">Read the full case study &rarr;</a></p>
       <div class="stat"><a href="https://mooque-dev.github.io/schematic/" style="color:inherit">Open the archive &rarr;</a></div>
     </div>
   </div>
@@ -178,15 +185,16 @@
     <img src="../assets/color-analysis.jpg" alt="Personal Color Analysis cover">
     <div>
       <div class="meta">Computer Vision · 2026</div>
-      <h3>Personal Color Analysis: Your Palette, From Your Camera</h3>
+      <h3><a href="../work/color-analysis/" style="text-decoration:none">Personal Color Analysis: Your Palette, From Your Camera</a></h3>
       <p>Live camera data graded against your skin tone, run entirely on-device so nothing leaves the browser.</p>
+      <p style="margin-top:8px"><a href="../work/color-analysis/" style="font-weight:600">Read the full case study &rarr;</a></p>
       <div class="stat"><a href="https://color-analysis-three.vercel.app/" style="color:inherit" target="_blank" rel="noopener">Try it &rarr;</a></div>
     </div>
   </div>
 
   <div class="rule"></div>
   <p style="font-size:16px;margin:0 0 6px"><strong style="font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:600">I&rsquo;d like to talk about the numbers behind your numbers.</strong></p>
-  <p style="margin:0;color:var(--muted);font-size:14.5px">Full case studies live at <a href="https://allenkang.com">allenkang.com</a>. Contact: <a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a></p>
+  <p style="margin:0;color:var(--muted);font-size:14.5px">Everything above opens as a full case study on this site. The complete portfolio is also at <a href="https://allenkang.com">allenkang.com</a>. Contact: <a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a></p>
   <p class="small">An independent portfolio page. Not affiliated with or endorsed by Mastercard.</p>
 
   <footer>

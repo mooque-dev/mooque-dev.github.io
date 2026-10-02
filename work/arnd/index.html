@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARND: Live Music Around You</title>
+<meta name="description" content="A map-first app for the city's small shows: buskers, pop-ups, and small-venue sets. Started as a concept, now a working app running on live curated Toronto listings, in beta at arnd.app.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=Caveat:wght@700&display=swap">
+<link rel="stylesheet" href="../../assets/case.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="../../">Allen Kang</a>
+    <nav>
+      <a href="../../mastercard/">&larr; Back to overview</a>
+      <a href="../../assets/Allen-Kang-Resume.pdf">R&eacute;sum&eacute; (PDF)</a>
+    </nav>
+  </header>
+  <p class="cat">Mobile App</p>
+  <h1>ARND: Live Music Around You</h1>
+  <p class="sub">A map-first app for the city's small shows: buskers, pop-ups, and small-venue sets. Started as a concept, now a working app running on live curated Toronto listings, in beta at arnd.app.</p>
+  <p><a class="btn btn-solid" href="https://arnd.app" target="_blank" rel="noopener">Visit the live app &#8599;</a></p>
+  <dl class="meta-grid">
+    <div><dt>Role</dt><dd>Design &amp; build, end to end</dd></div>
+    <div><dt>Timeline</dt><dd>2026, in beta</dd></div>
+    <div><dt>Team</dt><dd>Solo, with Claude Code</dd></div>
+    <div><dt>Tools</dt><dd>React Native, Expo, Supabase, React Query, TypeScript</dd></div>
+  </dl>
+  <div class="cover" style="background:#504BF1"><img src="../../case-studies/arnd/cover.jpg" alt="ARND: Live Music Around You"></div>
+  
+  <div class="prose">
+<h2>The problem that wouldn't leave me alone</h2>
+<p>Live, local music is everywhere and almost impossible to find. Buskers, pop-ups,
+secret sets, small-venue gigs: they happen all around you and vanish without a
+trace. ARND ("around") answers one question the big platforms don't care about:
+what's playing near me, tonight?</p>
+<figure class="phone">
+  <img src="../../case-studies/arnd/map.jpg" alt="ARND map view of Toronto showing 19 real shows, with live listings at The Rex Jazz and Blues Bar" />
+  <figcaption>The map, on live data: real Toronto shows, curated by hand</figcaption>
+</figure>
+<h2>It refused to stay a concept</h2>
+<p>This started as a design exercise in reputation systems and two-sided
+marketplaces. Then it kept going. Today the feed, map, and search run on live
+curated Toronto listings served from Supabase, with row-level security on every
+table and hardened write paths. There is a front door at arnd.app, a governed
+design system with five themes measured to AA contrast, first-party crash
+reporting, and a written weekly routine for keeping the listings real. It is in
+beta, and it says so.</p>
+<figure class="phone">
+  <img src="../../case-studies/arnd/feed.jpg" alt="ARND home feed reading Live music arnd you, with 19 live sets around you in Toronto" />
+  <figcaption>The feed: open it the way you'd open a maps app for food</figcaption>
+</figure>
+<h2>The decision that shapes everything: curation over scraping</h2>
+<p>The obvious move was to scrape aggregators and launch with thousands of
+listings. I chose the opposite: a small number of real shows, picked by hand,
+every week. Community listings wear a badge saying what they are, and performers
+claim their page through a reviewed Instagram handshake that ends in an Official
+mark. In a product whose whole promise is "this is really happening," credibility
+is the feature. Everything else is furniture.</p>
+<p>The same principle runs through the details. No fake success states anywhere:
+demo content is labeled, counts are measured or say "syncs soon," and features
+that live only on your device tell you so. Tips go person-to-person through the
+artist's own CashApp, Venmo, or PayPal. ARND takes nothing and has no rail that
+could pretend otherwise.</p>
+<figure class="phones">
+  <img src="../../case-studies/arnd/show.jpg" alt="ARND show page for Classic Rex Jazz Jam with generative cover art and an honest community-listing card" />
+  <img src="../../case-studies/arnd/achievements.jpg" alt="ARND achievements screen reading Your proof starts here, badges earned by checking in to live shows" />
+  <img src="../../case-studies/arnd/performer.jpg" alt="ARND performer pitch reading The neighbourhood is listening, with free show pages and direct tips" />
+  <figcaption>The loop in three screens: a show page that says exactly what it is, proof that starts at check-in, and the performer's side of the promise</figcaption>
+</figure>
+<h2>Beyond venues: nights people host themselves</h2>
+<p>The newest surface skips the venue entirely. Anyone can throw a listening night
+from their profile: a shareable invite with RSVPs and plus-ones counted against
+the cap, the exact address unlocked only for people who said they're in, and a
+share poster that carries only the neighbourhood. Privacy decisions made where
+they belong, in the design.</p>
+<figure class="phone">
+  <img src="../../case-studies/arnd/host-invite.jpg" alt="ARND hosted listening night invite: Thrust, Front to Back, with RSVP spots, the record being played, and the plan" />
+  <figcaption>A hosted night: one record, front to back, no phones</figcaption>
+</figure>
+<h2>One brand, from app to street</h2>
+<p>The brand doesn't stop at the app icon. arnd.app opens on a front door in the
+same voice: dark ground, the wordmark, and cards that route fans, musicians, and
+venue owners each to their own path. It leads with a thank-you to the Toronto
+listening rooms that inspired the whole thing, because credit is part of the
+brand too.</p>
+<figure>
+  <img src="../../case-studies/arnd/site-front.jpg" alt="The arnd.app front door: a live map of the city's small shows, with cards for fans, performers, and venues" />
+  <figcaption>The front door at arnd.app: one brand voice routing three audiences</figcaption>
+</figure>
+<p>Real listings get real art. Each community show carries cover art in the app's
+sticker-block language, made per event: a park series finale, a Herbie Hancock
+listening night, a trip-hop session. Small shows deserve to look like they
+matter, because they do.</p>
+<figure class="wide">
+  <img src="../../case-studies/arnd/covers-strip.jpg" alt="Three ARND event covers in the sticker-block style: LowKey in the Park Final Chapter, 88 Keys Herbie Hancock Thrust, and Trip Hop Morcheeba Big Calm" />
+  <figcaption>Event cover art, made per listing in one visual language</figcaption>
+</figure>
+<h2>Run in the open</h2>
+<p>The part I care about most is the one you can check. ARND keeps a public
+changelog: over a hundred updates in plain language, each with what shipped and
+why, because a change without a why doesn't ship. Next to it live a governed
+design system page, where the code is the source of truth and disagreements get
+fixed the same day, and an atlas of every screen in the app. The content itself
+runs on a written weekly routine. None of this is required for an app this
+size. All of it is what makes one person's project pick-up-able by the next
+person.</p>
+<figure>
+  <img src="../../case-studies/arnd/site-changelog.jpg" alt="The ARND public changelog: What changed, and why, with over a hundred updates filterable by feature, design, fix, community, infra, security, and docs" />
+  <figcaption>The public changelog: every push, in plain language, with the reasoning</figcaption>
+</figure>
+<figure>
+  <img src="../../case-studies/arnd/site-design.jpg" alt="The ARND design system page: How ARND looks, and when, with brand and semantic color tokens across five themes" />
+  <figcaption>The governed design system: five themes, one set of rules, code as the source of truth</figcaption>
+</figure>
+<h2>What it is now</h2>
+<p>The deepest thing I've built end to end: brand, product, backend, security
+posture, payments stance, content operations, and the documentation that would
+let someone else pick it up. The iOS build is carried through App Store
+readiness the unglamorous way: Sign in with Apple, in-app account deletion, a
+privacy manifest, and accessibility work across VoiceOver and Dynamic Type.
+It's live in Toronto, in beta, growing one real show at a time.</p>
+
+  </div>
+  <footer>
+    <span>&copy; 2026 Allen Kang</span>
+    <span><a href="../../mastercard/">Back to overview</a> &middot; <a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a></span>
+  </footer>
+</div>
+</body>
+</html>

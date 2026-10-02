@@ -1,0 +1,27 @@
+<svg viewBox="0 0 1200 750" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Automation for Nonprofits</title>
+
+<rect width="1200" height="750" fill="#FAFAFA"/>
+
+<circle cx="112" cy="200" r="14" fill="none" stroke="#1D9E75" stroke-width="1.5"/>
+<line x1="126" y1="200" x2="258" y2="200" stroke="#cccccc" stroke-width="1"/>
+<circle cx="272" cy="200" r="14" fill="none" stroke="#cccccc" stroke-width="1.5"/>
+<line x1="286" y1="200" x2="418" y2="200" stroke="#cccccc" stroke-width="1"/>
+<circle cx="432" cy="200" r="14" fill="none" stroke="#cccccc" stroke-width="1.5"/>
+<line x1="446" y1="200" x2="578" y2="200" stroke="#cccccc" stroke-width="1"/>
+<circle cx="592" cy="200" r="14" fill="none" stroke="#cccccc" stroke-width="1.5"/>
+<line x1="606" y1="200" x2="738" y2="200" stroke="#cccccc" stroke-width="1"/>
+<circle cx="752" cy="200" r="14" fill="#1D9E75"/>
+
+<text x="112" y="240" font-family="system-ui,-apple-system,sans-serif" font-size="11" fill="#888888" text-anchor="middle">Trigger</text>
+<text x="272" y="240" font-family="system-ui,-apple-system,sans-serif" font-size="11" fill="#cccccc" text-anchor="middle">Check</text>
+<text x="432" y="240" font-family="system-ui,-apple-system,sans-serif" font-size="11" fill="#cccccc" text-anchor="middle">Wait</text>
+<text x="592" y="240" font-family="system-ui,-apple-system,sans-serif" font-size="11" fill="#cccccc" text-anchor="middle">Act</text>
+<text x="752" y="240" font-family="system-ui,-apple-system,sans-serif" font-size="11" fill="#1D9E75" text-anchor="middle">Done</text>
+
+<text x="80" y="340" font-family="system-ui,-apple-system,sans-serif" font-size="11" letter-spacing="3" fill="#888888">AUTOMATION</text>
+<text x="80" y="390" font-family="system-ui,-apple-system,sans-serif" font-size="42" fill="#1a1a1a" font-weight="400">What happens when</text>
+<text x="80" y="440" font-family="system-ui,-apple-system,sans-serif" font-size="42" fill="#1D9E75" font-weight="400">a donor goes quiet.</text>
+
+<text x="80" y="516" font-family="system-ui,-apple-system,sans-serif" font-size="14" fill="#999999">Keela · 8+ platforms evaluated</text>
+</svg>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transaction Workflows: The Feature That Was Causing Churn</title>
+<meta name="description" content="Nonprofit accountants were spending weeks on tax reconciliation because the product treated every transaction the same way. A redesign that turned our #1 churn driver into a growth lever.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=Caveat:wght@700&display=swap">
+<link rel="stylesheet" href="../../assets/case.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="../../">Allen Kang</a>
+    <nav>
+      <a href="../../mastercard/">&larr; Back to overview</a>
+      <a href="../../assets/Allen-Kang-Resume.pdf">R&eacute;sum&eacute; (PDF)</a>
+    </nav>
+  </header>
+  <p class="cat">Feature Redesign</p>
+  <h1>Transaction Workflows: The Feature That Was Causing Churn</h1>
+  <p class="sub">Nonprofit accountants were spending weeks on tax reconciliation because the product treated every transaction the same way. A redesign that turned our #1 churn driver into a growth lever.</p>
+  
+  <dl class="meta-grid">
+    <div><dt>Role</dt><dd>Product Design Lead</dd></div>
+    <div><dt>Timeline</dt><dd>2025</dd></div>
+    <div><dt>Team</dt><dd>Associate Director of Product, Senior PM, 12 Engineers</dd></div>
+    <div><dt>Tools</dt><dd>Figma, Amplitude, Maze</dd></div>
+  </dl>
+  <div class="cover" style="background:#dde4d4"><img src="../../case-studies/transaction-workflows/cover.jpg" alt="Transaction Workflows: The Feature That Was Causing Churn"></div>
+  
+  <div class="prose">
+<h2>Why This Mattered</h2>
+<p>As Keela pushed upmarket after its acquisition, this feature stood between the roadmap and the larger nonprofits the growth plan depended on. Keela's transaction model handled simple one-time donations well. It broke down for larger nonprofits who needed to record one payment split across multiple purposes: ticket plus donation plus campaign attribution in a single transaction. The workaround forced staff to log multiple records, creating inaccurate receipts, messy accounting, and more support tickets.</p>
+<p>Signal we used to prioritize this:</p>
+<ul>
+<li><strong>56%</strong> of newly onboarded orgs (40 of 72) upvoted transaction flexibility in roadmap voting</li>
+<li><strong>~500 support tickets per quarter</strong> tied to splitting, incorrect receipts, and reporting mismatches</li>
+</ul>
+<figure>
+  <img src="../../case-studies/transaction-workflows/image-4.png" alt="Dashboard showing roadmap voting signal, 56% of new orgs upvoting transaction flexibility" />
+  <figcaption>Roadmap voting data that made the prioritization case</figcaption>
+</figure>
+<p>This wasn't a nice-to-have redesign. As the team pushed upmarket after acquisition, transaction rigidity had become a growth blocker.</p>
+<h2>What I Learned From Watching People Work</h2>
+<p>I spent time with 8 nonprofit accountants during their actual tax preparation process, not usability tests with tasks I'd written, but genuine contextual inquiry. I sat next to them while they reconciled.</p>
+<figure>
+  <img src="../../case-studies/transaction-workflows/image-1.png" alt="User problem statement: as a nonprofit admin I need to split a single payment into multiple items" />
+  <figcaption>The user problem statement that framed the project</figcaption>
+</figure>
+<p>Three things stood out:</p>
+<ul>
+<li>Every single accountant maintained a parallel spreadsheet. The product couldn't handle their categorization needs, so they worked around it.</li>
+<li>The batch editing interface required too many clicks. One person described it as "death by checkbox."</li>
+<li>Error states were invisible. Users couldn't tell if a transaction was miscategorized until the final report. By that point they'd have to start over.</li>
+</ul>
+<h2>Approach</h2>
+<p>The easy path was a narrow fix: ship a one-off split-transaction screen scoped to the loudest complaint, then move to the next fire. I pushed back, because a narrow fix would leave the same fragile data model waiting to break again at the next growth motion. I decided to design for extensibility instead, so future capabilities could layer on without rework, not just clear the ticket backlog. Before designing anything, I got alignment with the PM and engineering lead on what we couldn't do: no full backend refactor, no breaking a legacy data model tied to reporting. We agreed to ship in phases.</p>
+<figure>
+  <img src="../../case-studies/transaction-workflows/image-5.jpg" alt="Phased delivery plan, stakeholder alignment on constraints" />
+  <figcaption>Phased approach: deliver value without a full backend refactor</figcaption>
+</figure>
+<h2>The Design</h2>
+<h3>Smart Defaults, Human Override</h3>
+<p>By analyzing historical transaction data, I designed a system that pre-categorized incoming transactions based on patterns: donor history, amount ranges, fund designations. Users could accept the suggestion with one click or override it. The categorization task went from manual labor to verification.</p>
+<p>This pattern became a platform-wide design principle I later codified in Orchid's interaction guidelines.</p>
+<h3>Batch Operations That Match How People Think</h3>
+<p>Instead of a flat table with checkboxes, I redesigned batch editing around natural contexts: by date range, by donor, by fund, by category. Users scope to the transactions they care about first, then act on them as a group. The interface matches the mental model instead of fighting it.</p>
+<h3>Continuous Validation</h3>
+<p>The old design accumulated errors silently and surfaced them all at report time. The new design validates continuously, showing the health of each reporting period as an ambient signal. Issues surface as they happen, not as a year-end surprise.</p>
+<figure class="wide">
+  <img src="../../case-studies/transaction-workflows/image-11.png" alt="Final transaction workflow design" />
+  <figcaption>The final design: split workflow with continuous validation</figcaption>
+</figure>
+<h2>Iteration Was the Work</h2>
+<p>Moving from a modal flow to a full-screen split workflow was the single biggest change to the creation experience, and it did not land in one pass. Each round went in front of the accountants and the engineering team before it went any further.</p>
+<figure>
+  <img src="../../case-studies/transaction-workflows/image-6.jpg" alt="Design review over video call: walking the product and engineering team through the split-transaction flow, with the redesign mockups around it" />
+  <figcaption>Design review: walking the team through the split-transaction flow, round by round</figcaption>
+</figure>
+<p>The transaction details view required three full rounds, each scored by the people who would use it:</p>
+<ul>
+<li><strong>V1</strong> (minimal change, fast and low risk): 6/10</li>
+<li><strong>V2</strong> (borrowed ecosystem patterns, introduced DS components): 7.5/10</li>
+<li><strong>V3</strong> (associations secondary, items primary): 9.5/10</li>
+</ul>
+<figure>
+  <img src="../../case-studies/transaction-workflows/image-7.png" alt="V1 transaction detail layout, minimal change" />
+  <figcaption>V1: minimal change, 6/10</figcaption>
+</figure>
+<figure>
+  <img src="../../case-studies/transaction-workflows/image-9.png" alt="V3 transaction detail layout, associations secondary, items primary" />
+  <figcaption>V3: associations secondary, items primary, 9.5/10</figcaption>
+</figure>
+<p>V3 won because it matched how accountants actually think: what they're recording first, who it belongs to second. The organizational hierarchy wasn't wrong in V1 and V2. It was just answered in the wrong order.</p>
+<p>Feature flags enabled safe rollout. Usage data helped us simplify the UI by removing low-value sections and prioritizing split clarity.</p>
+<h2>What Happened</h2>
+<figure>
+  <img src="../../case-studies/transaction-workflows/image-12.png" alt="Impact dashboard showing 70% drop in tickets, 60% reduction in manual adjustments, $1.8M ARR supported" />
+  <figcaption>Impact: first month post-launch</figcaption>
+</figure>
+<p>Within the first month:</p>
+<ul>
+<li><strong>70% drop</strong> in categorization-related support tickets</li>
+<li><strong>60% reduction</strong> in manual adjustments</li>
+<li><strong>25% increase</strong> in integrated transaction processing</li>
+</ul>
+<p>Business impact:</p>
+<ul>
+<li>Supported <strong>$1.8M ARR</strong> in connected accounts</li>
+<li>Unlocked <strong>$2M</strong> in additional revenue potential</li>
+</ul>
+<p>The system map I drew in week one (arrows and question marks on a whiteboard) was the most important artifact of the project. More important than any Figma file.</p>
+
+  </div>
+  <footer>
+    <span>&copy; 2026 Allen Kang</span>
+    <span><a href="../../mastercard/">Back to overview</a> &middot; <a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a></span>
+  </footer>
+</div>
+</body>
+</html>

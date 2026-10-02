@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Automation for Nonprofits: When the Real Obstacle Is Fear</title>
+<meta name="description" content="Nonprofit teams are chronically under-resourced. We built a no-code automation system from scratch, and the hardest design problem turned out to be fear, not complexity.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=Caveat:wght@700&display=swap">
+<link rel="stylesheet" href="../../assets/case.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="../../">Allen Kang</a>
+    <nav>
+      <a href="../../mastercard/">&larr; Back to overview</a>
+      <a href="../../assets/Allen-Kang-Resume.pdf">R&eacute;sum&eacute; (PDF)</a>
+    </nav>
+  </header>
+  <p class="cat">New Feature</p>
+  <h1>Automation for Nonprofits: When the Real Obstacle Is Fear</h1>
+  <p class="sub">Nonprofit teams are chronically under-resourced. We built a no-code automation system from scratch, and the hardest design problem turned out to be fear, not complexity.</p>
+  
+  <dl class="meta-grid">
+    <div><dt>Role</dt><dd>Product Design Lead</dd></div>
+    <div><dt>Timeline</dt><dd>2022</dd></div>
+    <div><dt>Team</dt><dd>CTO, Product Manager, SDR</dd></div>
+    <div><dt>Tools</dt><dd>Figma, Linear, MailChimp, Hubspot</dd></div>
+  </dl>
+  <div class="cover" style="background:#d4e0e6"><img src="../../case-studies/automation-nonprofits/cover.jpg" alt="Automation for Nonprofits: When the Real Obstacle Is Fear"></div>
+  
+  <div class="prose">
+<h2>Context</h2>
+<p>Automation was the #1 requested feature on the roadmap and a growing gap competitors were starting to win deals on. Nonprofit staff wear too many hats, and repetitive tasks (thank-you emails, donor record updates, follow-up triggers) eat hours that should go toward the actual work. I partnered with the Product Manager and CTO to frame this as more than a feature: a platform capability that would open up future surface area for integrations, AI-assisted workflows, and custom donor journeys.</p>
+<figure class="wide">
+  <img src="../../case-studies/automation-nonprofits/1.jpg" alt="Automation and Workflow feature overview" />
+</figure>
+<h2>The Research Surprise</h2>
+<p>I talked to 15 nonprofit operations managers and expected to hear about complexity concerns. Instead, the #1 fear was much simpler:</p>
+<blockquote>
+<p>"What if I accidentally email all 5,000 of our donors?"</p>
+</blockquote>
+<p>That insight reshaped the entire design. The problem wasn't complexity. It was confidence. People needed to trust the system before they'd use it.</p>
+<p>I also studied the competitive landscape by testing Hubspot and Mailchimp directly using Keela's internal accounts, finding strengths and weaknesses, not just feature lists. I analyzed Phrasee, Klaviyo, Simplero, and ActiveCampaign. The research surfaced user stories we hadn't initially captured and exposed real gaps in competitor approaches around re-enrollment logic and contact-level control.</p>
+<figure class="phone">
+  <img src="../../case-studies/automation-nonprofits/untitled-2.png" alt="User stories and feature scope for Keela Automation" />
+  <figcaption>Required user stories developed with the PM. Some moved to the V2 backlog to hit the MVP timeline</figcaption>
+</figure>
+<h2>The Design</h2>
+<p>The easy version of this feature ships the workflow builder alone and calls it done, since that's the part everyone asked for on the roadmap. I decided the builder wasn't the hard problem. The hard problem was getting someone who had never trusted software with donor data to press activate. Every decision below answers to that, not to feature completeness.</p>
+<h3>Visual Workflow Builder</h3>
+<p>A node-based canvas that makes automation logic tangible. Users see their automation as a visual flow (trigger, conditions, actions) instead of filling out abstract forms. The builder deliberately constrains complexity: start from a template, extend it. No blank canvas anxiety.</p>
+<h3>Preview Mode (The Key Feature)</h3>
+<p>Before activating any automation, users can preview exactly which contacts it would affect. This was the feature that gave people the courage to actually turn things on. They could verify without risk. This design decision directly traces back to the 5,000-donor fear uncovered in research.</p>
+<figure class="wide">
+  <img src="../../case-studies/automation-nonprofits/untitled.png" alt="Final automation workflow builder, node-based canvas with triggers, conditions, and actions" />
+  <figcaption>The final product: visual workflow builder with branch logic and preview mode</figcaption>
+</figure>
+<h3>Templated Journeys</h3>
+<p>Rather than a blank canvas, users start from pre-built journey types: New Donor Journey, Recurring Donor Journey, Disengaged Donor Journey. Each template suggests trigger timing and email structure: not the copy, but the scaffolding. Getting the scaffolding right is what most organizations struggle with.</p>
+<h3>Progressive Complexity</h3>
+<p>New users see a curated template library. As they build confidence, the interface reveals more: custom triggers, conditional logic, multiple branches. The system grows with the user.</p>
+<h2>Testing</h2>
+<p>I ran three rounds of prototype testing, each focused on a different part of the experience. The PM and Lead Designer joined sessions to record notes. Each round fed back into Linear as prioritized action items.</p>
+<figure>
+  <img src="../../case-studies/automation-nonprofits/untitled-3.png" alt="Prototype 1: Creating and activating a workflow" />
+  <figcaption>Round 1: Creating and activating a workflow</figcaption>
+</figure>
+<figure>
+  <img src="../../case-studies/automation-nonprofits/untitled-5.png" alt="Prototype 2: Monitoring an active workflow and tracking contacts" />
+  <figcaption>Round 2: Monitoring an activated workflow</figcaption>
+</figure>
+<figure>
+  <img src="../../case-studies/automation-nonprofits/untitled-7.png" alt="Prototype 3: Pausing and reactivating individual contacts in a workflow" />
+  <figcaption>Round 3: Pausing and reactivating contacts</figcaption>
+</figure>
+<h2>What Happened</h2>
+<p>Automation launched as a premium paid add-on:</p>
+<ul>
+<li>Reached <strong>30% adoption across 355 organizations</strong></li>
+<li>Contributed to a <strong>13% ARR increase</strong> for the product</li>
+</ul>
+<figure>
+  <img src="../../case-studies/automation-nonprofits/untitled-10.png" alt="Keela customer case study featuring automation, Love Quilt Project" />
+  <figcaption>A customer case study featuring automation at the Love Quilt Project</figcaption>
+</figure>
+<p>The preview mode insight (building for confidence, not just capability) is something I keep returning to. It applies to design systems, data integrations, and any feature where users fear irreversible consequences.</p>
+
+  </div>
+  <footer>
+    <span>&copy; 2026 Allen Kang</span>
+    <span><a href="../../mastercard/">Back to overview</a> &middot; <a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a></span>
+  </footer>
+</div>
+</body>
+</html>

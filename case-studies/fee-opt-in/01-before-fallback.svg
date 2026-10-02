@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="system-ui,-apple-system,BlinkMacSystemFont,sans-serif">
+  <defs>
+    <filter id="s1"><feDropShadow dx="0" dy="8" stdDeviation="24" flood-color="#1C1917" flood-opacity="0.09"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="#F2EFE9"/>
+
+  <!-- Label -->
+  <text x="80" y="68" font-size="10" letter-spacing="3" fill="#A8A29E" font-weight="500">BEFORE · LEGACY FALLBACK</text>
+
+  <!-- === Donation card === -->
+  <rect x="440" y="92" width="420" height="630" rx="16" fill="#FFFFFF" filter="url(#s1)"/>
+
+  <!-- Card header -->
+  <rect x="440" y="92" width="420" height="76" rx="16" fill="#2B4D38"/>
+  <rect x="440" y="140" width="420" height="28" fill="#2B4D38"/>
+  <text x="650" y="122" font-size="10" letter-spacing="2" fill="rgba(255,255,255,0.5)" text-anchor="middle">HOPE FOUNDATION</text>
+  <text x="650" y="148" font-size="13" fill="rgba(255,255,255,0.85)" text-anchor="middle">Complete your donation</text>
+
+  <!-- Amount -->
+  <text x="468" y="208" font-size="10" letter-spacing="2.5" fill="#A8A29E" font-weight="500">DONATION</text>
+  <text x="468" y="252" font-size="42" font-weight="700" fill="#1C1917" letter-spacing="-1.5">$100.00</text>
+  <line x1="468" y1="272" x2="842" y2="272" stroke="#EDE9E3" stroke-width="1"/>
+
+  <!-- Fee row -->
+  <text x="468" y="302" font-size="10" letter-spacing="2.5" fill="#A8A29E" font-weight="500">PLATFORM FEE</text>
+  <!-- Toggle ON -->
+  <rect x="468" y="318" width="38" height="22" rx="11" fill="#2B4D38"/>
+  <circle cx="496" cy="329" r="9" fill="white"/>
+  <text x="516" y="333" font-size="13" fill="#1C1917">Cover our fees (2%)</text>
+  <text x="842" y="333" font-size="13" fill="#1C1917" text-anchor="end" font-weight="500">$2.00</text>
+  <!-- Edit link -->
+  <text x="468" y="362" font-size="12" fill="#2B4D38">Edit amount</text>
+  <line x1="468" y1="364" x2="542" y2="364" stroke="#2B4D38" stroke-width="1"/>
+
+  <!-- ░░ Bad fallback: text input defaulting to $0 ░░ -->
+  <rect x="468" y="378" width="330" height="56" rx="8" fill="#FAF8F5" stroke="#DED9D2" stroke-width="1.5"/>
+  <text x="490" y="412" font-size="15" fill="#C0BAB2">$</text>
+  <text x="504" y="412" font-size="15" fill="#1C1917" font-weight="500">0</text>
+  <!-- Cursor -->
+  <rect x="518" y="396" width="1.5" height="22" fill="#1C1917" opacity="0.7"/>
+  <!-- Range hint -->
+  <text x="468" y="450" font-size="11" fill="#C0BAB2">Min $0.00 · Max $2.00</text>
+
+  <!-- Divider -->
+  <line x1="468" y1="470" x2="842" y2="470" stroke="#EDE9E3" stroke-width="1"/>
+
+  <!-- Total -->
+  <text x="468" y="502" font-size="14" fill="#78716C">Your total</text>
+  <text x="842" y="502" font-size="24" font-weight="700" fill="#1C1917" text-anchor="end">$100.00</text>
+  <text x="842" y="520" font-size="11" fill="#C0BAB2" text-anchor="end">Excluding platform fee</text>
+
+  <!-- CTA -->
+  <rect x="468" y="544" width="334" height="52" rx="10" fill="#2B4D38"/>
+  <text x="635" y="575" font-size="14" font-weight="600" fill="white" text-anchor="middle">Donate $100.00</text>
+
+  <!-- Raisely-style progress steps -->
+  <circle cx="596" cy="626" r="5" fill="#DED9D2"/>
+  <circle cx="614" cy="626" r="5" fill="#DED9D2"/>
+  <circle cx="632" cy="626" r="5" fill="#2B4D38"/>
+  <circle cx="650" cy="626" r="5" fill="#DED9D2"/>
+  <circle cx="668" cy="626" r="5" fill="#DED9D2"/>
+
+  <!-- Secure badge -->
+  <text x="650" y="656" font-size="11" fill="#A8A29E" text-anchor="middle">🔒 Secured by Raisely</text>
+
+  <!-- === Problem annotations (right panel) === -->
+  <text x="936" y="136" font-size="10" letter-spacing="3" fill="#A8A29E" font-weight="500">WHAT'S WRONG HERE</text>
+
+  <!-- Problem 1 -->
+  <rect x="936" y="158" width="3" height="60" rx="1.5" fill="#C94040"/>
+  <text x="950" y="178" font-size="14" font-weight="600" fill="#1C1917">Blank-slate defaults to $0</text>
+  <text x="950" y="198" font-size="12" fill="#78716C">The text input has no anchor value. The path of least</text>
+  <text x="950" y="214" font-size="12" fill="#78716C">resistance — typing nothing — is a $0 opt-out.</text>
+
+  <!-- Problem 2 -->
+  <rect x="936" y="238" width="3" height="60" rx="1.5" fill="#C94040"/>
+  <text x="950" y="258" font-size="14" font-weight="600" fill="#1C1917">Fragmented visual layout</text>
+  <text x="950" y="278" font-size="12" fill="#78716C">The edit box appears below the fee row with no</text>
+  <text x="950" y="294" font-size="12" fill="#78716C">spatial relationship to what it's editing.</text>
+
+  <!-- Problem 3 -->
+  <rect x="936" y="318" width="3" height="60" rx="1.5" fill="#C94040"/>
+  <text x="950" y="338" font-size="14" font-weight="600" fill="#1C1917">Mismatched with the updated entry point</text>
+  <text x="950" y="358" font-size="12" fill="#78716C">The new edit box dropped donors into a legacy UI that</text>
+  <text x="950" y="374" font-size="12" fill="#78716C">was never redesigned to match. Inconsistent behavior.</text>
+
+  <!-- Divider -->
+  <line x1="936" y1="402" x2="1510" y2="402" stroke="#EDE9E3" stroke-width="1"/>
+
+  <!-- Outcome stat card -->
+  <rect x="936" y="422" width="540" height="104" rx="12" fill="#FBF0F0" stroke="#EECACA" stroke-width="1"/>
+  <text x="960" y="450" font-size="10" letter-spacing="3" fill="#C94040" font-weight="500">OBSERVED BEHAVIOR</text>
+  <text x="960" y="492" font-size="44" font-weight="800" fill="#C94040" letter-spacing="-2">12–20%</text>
+  <text x="1122" y="480" font-size="13" fill="#78716C">of donors who tapped Edit</text>
+  <text x="1122" y="500" font-size="13" fill="#78716C">dragged to $0 or opted out.</text>
+  <text x="960" y="516" font-size="12" fill="#C9A0A0">Fee opt-in baseline: 75%  ·  Benchmark: 90%  ·  Opportunity: clear.</text>
+
+  <!-- Dashed connector to the input box -->
+  <path d="M 800 407 C 850 407 900 360 932 340" fill="none" stroke="#DED9D2" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+  <text x="80" y="870" font-size="10" letter-spacing="2" fill="#C0BAB2">raisely · fee opt-in experimentation · before state</text>
+</svg>

@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="system-ui,-apple-system,BlinkMacSystemFont,sans-serif">
+  <defs>
+    <filter id="s5"><feDropShadow dx="0" dy="4" stdDeviation="14" flood-color="#1C1917" flood-opacity="0.07"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="#F2EFE9"/>
+
+  <text x="80" y="68" font-size="10" letter-spacing="3" fill="#A8A29E" font-weight="500">RESULTS · SLIDER VARIANT · FIRST MONTH POST-LAUNCH</text>
+
+  <!-- ── Top: three big stat cards ── -->
+
+  <!-- Stat 1: Fee opt-in lift -->
+  <rect x="60" y="92" width="480" height="200" rx="16" fill="#FFFFFF" filter="url(#s5)"/>
+  <text x="88" y="130" font-size="10" letter-spacing="2.5" fill="#A8A29E" font-weight="500">FEE OPT-IN RATE</text>
+  <text x="88" y="192" font-size="72" font-weight="800" fill="#2B4D38" letter-spacing="-3">92%</text>
+  <text x="88" y="224" font-size="14" fill="#78716C">Up from <tspan font-weight="700" fill="#1C1917">75%</tspan> baseline · cleared <tspan font-weight="700" fill="#1C1917">90%</tspan> benchmark</text>
+  <!-- Arrow indicator -->
+  <path d="M 442 172 L 468 148 L 468 196 Z" fill="#2B4D38" opacity="0.15"/>
+  <path d="M 450 172 L 468 155" stroke="#2B4D38" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 468 155 L 468 196" stroke="#2B4D38" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Stat 2: Conversion held -->
+  <rect x="560" y="92" width="480" height="200" rx="16" fill="#FFFFFF" filter="url(#s5)"/>
+  <text x="588" y="130" font-size="10" letter-spacing="2.5" fill="#A8A29E" font-weight="500">DONATION CONVERSION</text>
+  <text x="588" y="192" font-size="72" font-weight="800" fill="#1C1917" letter-spacing="-3">Held</text>
+  <text x="588" y="224" font-size="14" fill="#78716C">No drop in donors completing the flow</text>
+  <!-- Checkmark -->
+  <circle cx="490" cy="160" r="24" fill="#E8F0EB"/>
+  <path d="M 479 160 L 488 170 L 503 150" stroke="#2B4D38" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Stat 3: Avg gift held -->
+  <rect x="1060" y="92" width="480" height="200" rx="16" fill="#FFFFFF" filter="url(#s5)"/>
+  <text x="1088" y="130" font-size="10" letter-spacing="2.5" fill="#A8A29E" font-weight="500">AVERAGE GIFT SIZE</text>
+  <text x="1088" y="192" font-size="72" font-weight="800" fill="#1C1917" letter-spacing="-3">Held</text>
+  <text x="1088" y="224" font-size="14" fill="#78716C">The lift came from better decisions, not pressure</text>
+  <!-- Checkmark -->
+  <circle cx="990" cy="160" r="24" fill="#E8F0EB"/>
+  <path d="M 979 160 L 988 170 L 1003 150" stroke="#2B4D38" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- ── Bottom: bar chart ── -->
+  <rect x="60" y="316" width="1480" height="524" rx="16" fill="#FFFFFF" filter="url(#s5)"/>
+
+  <text x="88" y="360" font-size="10" letter-spacing="2.5" fill="#A8A29E" font-weight="500">FEE OPT-IN BY VARIANT</text>
+
+  <!-- Y-axis labels -->
+  <text x="152" y="406" font-size="11" fill="#A8A29E" text-anchor="end">100%</text>
+  <text x="152" y="477" font-size="11" fill="#A8A29E" text-anchor="end">80%</text>
+  <text x="152" y="548" font-size="11" fill="#A8A29E" text-anchor="end">60%</text>
+  <text x="152" y="619" font-size="11" fill="#A8A29E" text-anchor="end">40%</text>
+  <text x="152" y="690" font-size="11" fill="#A8A29E" text-anchor="end">20%</text>
+  <text x="152" y="761" font-size="11" fill="#A8A29E" text-anchor="end">0%</text>
+
+  <!-- Grid lines -->
+  <line x1="160" y1="400" x2="1512" y2="400" stroke="#F0ECE6" stroke-width="1"/>
+  <line x1="160" y1="471" x2="1512" y2="471" stroke="#F0ECE6" stroke-width="1"/>
+  <line x1="160" y1="542" x2="1512" y2="542" stroke="#F0ECE6" stroke-width="1"/>
+  <line x1="160" y1="613" x2="1512" y2="613" stroke="#F0ECE6" stroke-width="1"/>
+  <line x1="160" y1="684" x2="1512" y2="684" stroke="#F0ECE6" stroke-width="1"/>
+  <line x1="160" y1="755" x2="1512" y2="755" stroke="#EDE9E3" stroke-width="1.5"/>
+
+  <!-- 90% benchmark line -->
+  <line x1="160" y1="421" x2="1512" y2="421" stroke="#C9A040" stroke-width="1.5" stroke-dasharray="8 5"/>
+  <text x="1520" y="425" font-size="11" fill="#C9A040" font-weight="500">90% benchmark</text>
+
+  <!-- Bar 1: Baseline (75%) -->
+  <!-- 75% = 0.75 * 355 = 266px tall, top = 755 - 266 = 489 -->
+  <rect x="240" y="489" width="180" height="266" rx="6" fill="#DED9D2"/>
+  <text x="330" y="480" font-size="18" font-weight="700" fill="#78716C" text-anchor="middle">75%</text>
+  <text x="330" y="780" font-size="13" fill="#1C1917" text-anchor="middle" font-weight="500">Baseline</text>
+  <text x="330" y="798" font-size="11" fill="#A8A29E" text-anchor="middle">Legacy fallback</text>
+
+  <!-- Bar 2: First redesign (82%) -->
+  <!-- 82% = 0.82 * 355 = 291px tall, top = 755 - 291 = 464 -->
+  <rect x="560" y="464" width="180" height="291" rx="6" fill="#C0D0C4"/>
+  <text x="650" y="455" font-size="18" font-weight="700" fill="#78716C" text-anchor="middle">82%</text>
+  <text x="650" y="780" font-size="13" fill="#1C1917" text-anchor="middle" font-weight="500">Redesigned box</text>
+  <text x="650" y="798" font-size="11" fill="#A8A29E" text-anchor="middle">New entry point only</text>
+
+  <!-- Bar 3: Toggle buttons (88%) -->
+  <!-- 88% = 0.88 * 355 = 312px tall, top = 755 - 312 = 443 -->
+  <rect x="880" y="443" width="180" height="312" rx="6" fill="#8DAFB0"/>
+  <text x="970" y="434" font-size="18" font-weight="700" fill="#78716C" text-anchor="middle">88%</text>
+  <text x="970" y="780" font-size="13" fill="#1C1917" text-anchor="middle" font-weight="500">Toggle buttons</text>
+  <text x="970" y="798" font-size="11" fill="#A8A29E" text-anchor="middle">Variant B</text>
+
+  <!-- Bar 4: Slider (92%) — WINNER -->
+  <!-- 92% = 0.92 * 355 = 327px tall, top = 755 - 327 = 428 -->
+  <rect x="1200" y="428" width="180" height="327" rx="6" fill="#2B4D38"/>
+  <text x="1290" y="418" font-size="22" font-weight="800" fill="#2B4D38" text-anchor="middle">92%</text>
+  <!-- Winner badge above bar -->
+  <rect x="1212" y="376" width="156" height="28" rx="14" fill="#E8F0EB" stroke="#2B4D38" stroke-width="1"/>
+  <text x="1290" y="395" font-size="11" font-weight="700" fill="#2B4D38" text-anchor="middle">★  WINNER</text>
+  <text x="1290" y="780" font-size="13" fill="#1C1917" text-anchor="middle" font-weight="700">Slider</text>
+  <text x="1290" y="798" font-size="11" fill="#A8A29E" text-anchor="middle">Variant A · Winner</text>
+
+  <text x="80" y="870" font-size="10" letter-spacing="2" fill="#C0BAB2">raisely · fee opt-in experimentation · results</text>
+</svg>

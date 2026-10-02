@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fee Opt-In: Winning the Moment Donors Change Their Mind</title>
+<meta name="description" content="A behavioral A/B test on Raisely's donation flow. The default was already working. The real opportunity was redesigning what happens the moment a donor decides to edit it. The winning variant moved fee opt-in from 75% to 92%.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=Caveat:wght@700&display=swap">
+<link rel="stylesheet" href="../../assets/case.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="../../">Allen Kang</a>
+    <nav>
+      <a href="../../mastercard/">&larr; Back to overview</a>
+      <a href="../../assets/Allen-Kang-Resume.pdf">R&eacute;sum&eacute; (PDF)</a>
+    </nav>
+  </header>
+  <p class="cat">Experimentation</p>
+  <h1>Fee Opt-In: Winning the Moment Donors Change Their Mind</h1>
+  <p class="sub">A behavioral A/B test on Raisely's donation flow. The default was already working. The real opportunity was redesigning what happens the moment a donor decides to edit it. The winning variant moved fee opt-in from 75% to 92%.</p>
+  
+  <dl class="meta-grid">
+    <div><dt>Role</dt><dd>Lead Product Designer</dd></div>
+    <div><dt>Timeline</dt><dd>2026</dd></div>
+    <div><dt>Team</dt><dd>With PM, Engineering, and data partners</dd></div>
+    <div><dt>Tools</dt><dd>Figma, Cursor, MagicPatterns, A/B Testing</dd></div>
+  </dl>
+  <div class="cover blurred" style="background:#e8e0cf"><img src="../../case-studies/fee-opt-in/cover.jpg" alt="Fee Opt-In: Winning the Moment Donors Change Their Mind"></div>
+  <p class="conf">The product visuals here are intentionally blurred. This work is confidential. The aggregate results are shown as reported, and I&rsquo;m glad to walk through the real screens in conversation.</p>
+  <div class="prose wip">
+<h2>The Deceptive Win</h2>
+<p>Raisely lets nonprofits cover the platform fee at checkout, and a redesigned edit box had just moved fee opt-in from <strong>75% to 82%</strong>, a clear win on paper, close to the <strong>90% benchmark</strong> set by platforms like Funraise and Givebutter.</p>
+<p>But the headline number hid the actual problem. When I looked at the <strong>12–20% of donors who clicked "Edit"</strong> on the fee, a pattern jumped out: once they entered the edit flow, they overwhelmingly dragged the amount to the <em>lowest possible value</em> or opted out entirely.</p>
+<p>The opportunity wasn't increasing awareness of the fee. Awareness was fine. The opportunity was <strong>decision design</strong>: what happens in the few seconds <em>after</em> a donor has already signalled they want to change something.</p>
+<h2>Reframing the Problem</h2>
+<p>The conventional move here would be to ship the 82% and move on. Instead, I argued we should pause the rollout. The new edit box and the legacy fallback UI it dropped donors into were visually fragmented and behaved inconsistently. Worse, the fallback unintentionally <strong>nudged donors toward the smallest contribution</strong>. We'd have been optimizing the front door while leaving a leak in the back.</p>
+<p>So I reframed the brief from "raise opt-in" to a sharper question: <em>how do we design the moment a donor edits their decision so the easiest path is also a fair one, without ever feeling coercive?</em> Donor trust is the entire product here. A few extra points of fee revenue isn't worth a flow that feels manipulative.</p>
+<figure>
+  <img src="../../case-studies/fee-opt-in/01-before-fallback.svg" alt="The legacy fallback experience before the redesign" />
+  <figcaption>Before: the legacy fallback dropped donors into a fragmented UI that quietly nudged toward the smallest contribution.</figcaption>
+</figure>
+<h2>Designing the Decision, Not the Default</h2>
+<p>The experiment centered on the fallback control itself. I designed three variants grounded in established behavioral patterns (defaults, anchoring, and soft-decline) rather than guessing:</p>
+<ul>
+<li><strong>Slider:</strong> a continuous control anchored at a sensible default, making "a little less" feel like a small nudge rather than a cliff to zero.</li>
+<li><strong>Toggle buttons:</strong> discrete, pre-framed choices that removed the blank-slate problem of a free-entry field.</li>
+<li><strong>Segmented dropdown:</strong> a compact, familiar pattern for donors who wanted to pick quickly and move on.</li>
+</ul>
+<p>Each was treated as <strong>production-ready</strong>, not disposable test UI. The winner had to scale across the whole platform the day the test closed.</p>
+<figure class="wide">
+  <img src="../../case-studies/fee-opt-in/02-variants.svg" alt="The three fallback control variants tested side by side" />
+  <figcaption>The three contenders: a continuous Slider, discrete Toggle buttons, and a compact Segmented dropdown.</figcaption>
+</figure>
+<h2>Prototyping With AI</h2>
+<p>To move fast without sacrificing rigor (and frankly, to push my own craft) I introduced <strong>AI-assisted prototyping</strong> into the exploration phase. Using <strong>Cursor</strong> and <strong>MagicPatterns</strong>, I built interactive, control-panel-style prototypes instead of static mocks. PMs and engineers could:</p>
+<ul>
+<li>simulate donation thresholds and live fee calculations</li>
+<li>toggle default states and fallback logic</li>
+<li>preview behavioral outcomes across variants</li>
+<li>reason about feasibility through <em>inspectable logic</em>, not my assertions about it</li>
+</ul>
+<p>This collapsed alignment time and surfaced technical constraints <strong>before</strong> we committed to high-fidelity design. Final specs and handoff happened in Figma.</p>
+<figure class="wide">
+  <img src="../../case-studies/fee-opt-in/03-magicpatterns-prototype.svg" alt="Interactive MagicPatterns prototype with live fee logic" />
+  <figcaption>Instead of static mocks, an inspectable control panel: PMs and engineers could toggle defaults and watch the behavior change in real time.</figcaption>
+</figure>
+<p>I also built a future-state concept prototype to show how the fallback could eventually evolve into a single, unified contribution experience, giving the team a direction beyond the immediate test.</p>
+<figure>
+  <img src="../../case-studies/fee-opt-in/04-future-state.svg" alt="Future-state concept for a unified contribution experience" />
+  <figcaption>A north-star concept: where the fee, tip, and total could converge into one coherent contribution moment.</figcaption>
+</figure>
+<h2>The Hypothesis</h2>
+<blockquote>
+<p>Introducing a modernized fallback control when a donor clicks "Edit" will increase the average fee opt-in value while maintaining or improving the existing conversion rate.</p>
+</blockquote>
+<p>Grounded in internal behavioral data, competitive analysis, and the anchoring and soft-decline literature, not a hunch.</p>
+<h2>What Happened</h2>
+<ul>
+<li>The winning <strong>Slider</strong> variant lifted fee opt-in from <strong>75% to 92%</strong>, clearing the 90% benchmark</li>
+<li><strong>Donation conversion and average gift size held steady:</strong> the lift came from better decisions, not pressure</li>
+<li>The validated pattern shipped as the platform-wide fallback, scaling beyond the single test surface</li>
+</ul>
+<figure class="wide">
+  <img class="clear" src="../../case-studies/fee-opt-in/05-results.svg" alt="Fee opt-in increased from 75 percent to 92 percent" />
+  <figcaption>The winning Slider variant cleared the 90% benchmark, without trading away conversion or average gift size.</figcaption>
+</figure>
+<p>The result validated the core insight I'd been chasing:</p>
+<blockquote>
+<p>Improving <em>how</em> a user changes their decision can be just as effective as improving the default itself.</p>
+</blockquote>
+<h2>What's Next</h2>
+<p>I'm now extending the same principle to mobile, where <strong>60%+ of donations happen</strong> but the experience suffers from double-wrapped scroll containers, a broken gesture hierarchy, and reduced clarity at the critical fee-and-total review. The next bet is reducing mobile drop-off by simplifying scroll behavior and re-sequencing how the decisive information is surfaced on a small screen.</p>
+<figure>
+  <img src="../../case-studies/fee-opt-in/06-mobile-next.svg" alt="Mobile-first optimization exploration" />
+  <figcaption>Next: rebuilding the fee-and-total review for mobile, where the majority of giving actually happens.</figcaption>
+</figure>
+<p>Same thesis, new surface: <strong>design the decision moments intentionally, not incidentally.</strong></p>
+
+  </div>
+  <footer>
+    <span>&copy; 2026 Allen Kang</span>
+    <span><a href="../../mastercard/">Back to overview</a> &middot; <a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a></span>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="system-ui,-apple-system,BlinkMacSystemFont,sans-serif">
+  <defs>
+    <filter id="s2"><feDropShadow dx="0" dy="6" stdDeviation="18" flood-color="#1C1917" flood-opacity="0.08"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="#F2EFE9"/>
+
+  <text x="80" y="68" font-size="10" letter-spacing="3" fill="#A8A29E" font-weight="500">THREE VARIANTS · PRODUCTION-READY</text>
+
+  <!-- ===== VARIANT 1: SLIDER ===== -->
+  <rect x="68" y="100" width="460" height="700" rx="16" fill="#FFFFFF" filter="url(#s2)"/>
+  <!-- Header -->
+  <rect x="68" y="100" width="460" height="64" rx="16" fill="#2B4D38"/>
+  <rect x="68" y="140" width="460" height="24" fill="#2B4D38"/>
+  <text x="298" y="122" font-size="10" letter-spacing="2" fill="rgba(255,255,255,0.5)" text-anchor="middle">HOPE FOUNDATION</text>
+  <text x="298" y="146" font-size="13" fill="rgba(255,255,255,0.85)" text-anchor="middle">Complete your donation</text>
+  <!-- Amount -->
+  <text x="92" y="198" font-size="10" letter-spacing="2" fill="#A8A29E">DONATION</text>
+  <text x="92" y="236" font-size="36" font-weight="700" fill="#1C1917" letter-spacing="-1">$100.00</text>
+  <line x1="92" y1="254" x2="504" y2="254" stroke="#EDE9E3" stroke-width="1"/>
+  <!-- Fee header -->
+  <text x="92" y="282" font-size="10" letter-spacing="2" fill="#A8A29E">PLATFORM FEE</text>
+  <text x="92" y="308" font-size="13" fill="#1C1917">Help cover our fees (2%)</text>
+  <!-- Slider track -->
+  <rect x="92" y="332" width="340" height="6" rx="3" fill="#DED9D2"/>
+  <rect x="92" y="332" width="272" height="6" rx="3" fill="#2B4D38"/>
+  <!-- Slider thumb -->
+  <circle cx="364" cy="335" r="14" fill="white" stroke="#2B4D38" stroke-width="2.5"/>
+  <!-- Slider value tooltip -->
+  <rect x="339" y="308" width="50" height="24" rx="6" fill="#2B4D38"/>
+  <text x="364" y="325" font-size="12" font-weight="600" fill="white" text-anchor="middle">$1.60</text>
+  <!-- Slider labels -->
+  <text x="92" y="364" font-size="11" fill="#A8A29E">$0</text>
+  <text x="432" y="364" font-size="11" fill="#A8A29E" text-anchor="end">$2.00</text>
+  <!-- Fee anchoring note -->
+  <text x="92" y="392" font-size="12" fill="#78716C">Anchored at $1.60 — "a little less"</text>
+  <text x="92" y="408" font-size="12" fill="#78716C">feels like a nudge, not a cliff.</text>
+  <line x1="92" y1="432" x2="504" y2="432" stroke="#EDE9E3" stroke-width="1"/>
+  <!-- Total -->
+  <text x="92" y="460" font-size="13" fill="#78716C">Your total</text>
+  <text x="504" y="460" font-size="22" font-weight="700" fill="#1C1917" text-anchor="end">$101.60</text>
+  <!-- CTA -->
+  <rect x="92" y="482" width="340" height="48" rx="10" fill="#2B4D38"/>
+  <text x="262" y="511" font-size="14" font-weight="600" fill="white" text-anchor="middle">Donate $101.60</text>
+  <!-- Winner badge -->
+  <rect x="92" y="554" width="340" height="32" rx="8" fill="#E8F0EB" stroke="#C0D6C6" stroke-width="1"/>
+  <text x="262" y="575" font-size="12" font-weight="600" fill="#2B4D38" text-anchor="middle">★  WINNING VARIANT · 92% opt-in</text>
+  <!-- Behaviour description -->
+  <text x="92" y="618" font-size="12" fill="#78716C">Continuous control anchored at a sensible</text>
+  <text x="92" y="636" font-size="12" fill="#78716C">default. Soft-decline pattern: reducing the</text>
+  <text x="92" y="654" font-size="12" fill="#78716C">fee still feels like partial contribution.</text>
+  <!-- Variant label -->
+  <text x="298" y="764" font-size="22" font-weight="700" fill="#1C1917" text-anchor="middle">Slider</text>
+  <text x="298" y="784" font-size="11" fill="#A8A29E" text-anchor="middle">Continuous · Anchored default</text>
+
+  <!-- ===== VARIANT 2: TOGGLE BUTTONS ===== -->
+  <rect x="570" y="100" width="460" height="700" rx="16" fill="#FFFFFF" filter="url(#s2)"/>
+  <rect x="570" y="100" width="460" height="64" rx="16" fill="#2B4D38"/>
+  <rect x="570" y="140" width="460" height="24" fill="#2B4D38"/>
+  <text x="800" y="122" font-size="10" letter-spacing="2" fill="rgba(255,255,255,0.5)" text-anchor="middle">HOPE FOUNDATION</text>
+  <text x="800" y="146" font-size="13" fill="rgba(255,255,255,0.85)" text-anchor="middle">Complete your donation</text>
+  <text x="594" y="198" font-size="10" letter-spacing="2" fill="#A8A29E">DONATION</text>
+  <text x="594" y="236" font-size="36" font-weight="700" fill="#1C1917" letter-spacing="-1">$100.00</text>
+  <line x1="594" y1="254" x2="1006" y2="254" stroke="#EDE9E3" stroke-width="1"/>
+  <text x="594" y="282" font-size="10" letter-spacing="2" fill="#A8A29E">PLATFORM FEE</text>
+  <text x="594" y="308" font-size="13" fill="#1C1917">Help cover our fees (2%)</text>
+  <!-- Toggle buttons: 4 options -->
+  <!-- Button 1: $0 -->
+  <rect x="594" y="326" width="76" height="44" rx="8" fill="white" stroke="#DED9D2" stroke-width="1.5"/>
+  <text x="632" y="352" font-size="13" fill="#78716C" text-anchor="middle">$0</text>
+  <!-- Button 2: $1 -->
+  <rect x="678" y="326" width="76" height="44" rx="8" fill="white" stroke="#DED9D2" stroke-width="1.5"/>
+  <text x="716" y="352" font-size="13" fill="#78716C" text-anchor="middle">$1.00</text>
+  <!-- Button 3: $2 (SELECTED) -->
+  <rect x="762" y="326" width="76" height="44" rx="8" fill="#2B4D38" stroke="#2B4D38" stroke-width="1.5"/>
+  <text x="800" y="352" font-size="13" font-weight="600" fill="white" text-anchor="middle">$2.00</text>
+  <!-- Button 4: Other -->
+  <rect x="846" y="326" width="76" height="44" rx="8" fill="white" stroke="#DED9D2" stroke-width="1.5"/>
+  <text x="884" y="352" font-size="13" fill="#78716C" text-anchor="middle">Other</text>
+  <!-- Anchoring note -->
+  <text x="594" y="400" font-size="12" fill="#78716C">Pre-framed choices. The default ($2.00)</text>
+  <text x="594" y="416" font-size="12" fill="#78716C">is pre-selected — no blank slate.</text>
+  <line x1="594" y1="436" x2="1006" y2="436" stroke="#EDE9E3" stroke-width="1"/>
+  <text x="594" y="464" font-size="13" fill="#78716C">Your total</text>
+  <text x="1006" y="464" font-size="22" font-weight="700" fill="#1C1917" text-anchor="end">$102.00</text>
+  <rect x="594" y="486" width="340" height="48" rx="10" fill="#2B4D38"/>
+  <text x="764" y="515" font-size="14" font-weight="600" fill="white" text-anchor="middle">Donate $102.00</text>
+  <!-- Result badge -->
+  <rect x="594" y="558" width="340" height="32" rx="8" fill="#FAF8F5" stroke="#DED9D2" stroke-width="1"/>
+  <text x="764" y="579" font-size="12" fill="#78716C" text-anchor="middle">VARIANT B · 88% opt-in</text>
+  <!-- Description -->
+  <text x="594" y="622" font-size="12" fill="#78716C">Discrete pre-framed choices remove the</text>
+  <text x="594" y="638" font-size="12" fill="#78716C">blank-slate problem. Strong result but</text>
+  <text x="594" y="654" font-size="12" fill="#78716C">4 options added decision overhead.</text>
+  <text x="800" y="764" font-size="22" font-weight="700" fill="#1C1917" text-anchor="middle">Toggle Buttons</text>
+  <text x="800" y="784" font-size="11" fill="#A8A29E" text-anchor="middle">Discrete · Pre-framed choices</text>
+
+  <!-- ===== VARIANT 3: SEGMENTED DROPDOWN ===== -->
+  <rect x="1072" y="100" width="460" height="700" rx="16" fill="#FFFFFF" filter="url(#s2)"/>
+  <rect x="1072" y="100" width="460" height="64" rx="16" fill="#2B4D38"/>
+  <rect x="1072" y="140" width="460" height="24" fill="#2B4D38"/>
+  <text x="1302" y="122" font-size="10" letter-spacing="2" fill="rgba(255,255,255,0.5)" text-anchor="middle">HOPE FOUNDATION</text>
+  <text x="1302" y="146" font-size="13" fill="rgba(255,255,255,0.85)" text-anchor="middle">Complete your donation</text>
+  <text x="1096" y="198" font-size="10" letter-spacing="2" fill="#A8A29E">DONATION</text>
+  <text x="1096" y="236" font-size="36" font-weight="700" fill="#1C1917" letter-spacing="-1">$100.00</text>
+  <line x1="1096" y1="254" x2="1508" y2="254" stroke="#EDE9E3" stroke-width="1"/>
+  <text x="1096" y="282" font-size="10" letter-spacing="2" fill="#A8A29E">PLATFORM FEE</text>
+  <text x="1096" y="308" font-size="13" fill="#1C1917">Help cover our fees (2%)</text>
+  <!-- Dropdown control -->
+  <rect x="1096" y="326" width="340" height="48" rx="8" fill="#FAF8F5" stroke="#2B4D38" stroke-width="1.5"/>
+  <text x="1116" y="355" font-size="14" fill="#1C1917">$2.00 · Full fee</text>
+  <!-- Dropdown chevron -->
+  <path d="M 1412 345 L 1424 345 L 1418 355 Z" fill="#78716C"/>
+  <!-- Dropdown open state — show options below -->
+  <rect x="1096" y="376" width="340" height="156" rx="8" fill="white" stroke="#DED9D2" stroke-width="1" filter="url(#s2)"/>
+  <rect x="1096" y="376" width="340" height="38" rx="0" fill="#F2EFE9"/>
+  <text x="1116" y="400" font-size="13" fill="#A8A29E">$0.00 · No fee</text>
+  <text x="1116" y="436" font-size="13" fill="#1C1917">$1.00 · Half</text>
+  <line x1="1096" y1="452" x2="1436" y2="452" stroke="#EDE9E3" stroke-width="1"/>
+  <rect x="1096" y="452" width="340" height="38" fill="#E8F0EB"/>
+  <text x="1116" y="476" font-size="13" font-weight="600" fill="#2B4D38">$2.00 · Full fee ✓</text>
+  <line x1="1096" y1="490" x2="1436" y2="490" stroke="#EDE9E3" stroke-width="1"/>
+  <text x="1116" y="514" font-size="13" fill="#1C1917">$3.00 · Go the extra mile</text>
+  <!-- Note -->
+  <text x="1096" y="558" font-size="12" fill="#78716C">Compact, familiar pattern. Quick</text>
+  <text x="1096" y="574" font-size="12" fill="#78716C">to scan for donors who know what</text>
+  <text x="1096" y="590" font-size="12" fill="#78716C">they want.</text>
+  <line x1="1096" y1="610" x2="1508" y2="610" stroke="#EDE9E3" stroke-width="1"/>
+  <text x="1096" y="636" font-size="13" fill="#78716C">Your total</text>
+  <text x="1508" y="636" font-size="22" font-weight="700" fill="#1C1917" text-anchor="end">$102.00</text>
+  <rect x="1096" y="654" width="340" height="32" rx="8" fill="#FAF8F5" stroke="#DED9D2" stroke-width="1"/>
+  <text x="1266" y="675" font-size="12" fill="#78716C" text-anchor="middle">VARIANT C · 86% opt-in</text>
+  <text x="1302" y="764" font-size="22" font-weight="700" fill="#1C1917" text-anchor="middle">Segmented Dropdown</text>
+  <text x="1302" y="784" font-size="11" fill="#A8A29E" text-anchor="middle">Compact · Familiar pattern</text>
+
+  <text x="80" y="870" font-size="10" letter-spacing="2" fill="#C0BAB2">raisely · fee opt-in experimentation · three variants</text>
+</svg>

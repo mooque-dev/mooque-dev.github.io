@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="system-ui,-apple-system,BlinkMacSystemFont,sans-serif">
+  <defs>
+    <filter id="s4"><feDropShadow dx="0" dy="8" stdDeviation="24" flood-color="#1C1917" flood-opacity="0.09"/></filter>
+    <filter id="s4b"><feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#1C1917" flood-opacity="0.06"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="#F2EFE9"/>
+
+  <text x="80" y="68" font-size="10" letter-spacing="3" fill="#A8A29E" font-weight="500">NORTH STAR CONCEPT · UNIFIED CONTRIBUTION EXPERIENCE</text>
+
+  <!-- === Main future-state donation card === -->
+  <rect x="440" y="88" width="720" height="724" rx="20" fill="#FFFFFF" filter="url(#s4)"/>
+
+  <!-- Card header — cleaner, more generous -->
+  <rect x="440" y="88" width="720" height="96" rx="20" fill="#2B4D38"/>
+  <rect x="440" y="152" width="720" height="32" fill="#2B4D38"/>
+  <!-- Campaign brand mark circle -->
+  <circle cx="800" cy="116" r="20" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <text x="800" y="121" font-size="13" fill="rgba(255,255,255,0.8)" text-anchor="middle" font-weight="700">H</text>
+  <text x="800" y="163" font-size="12" fill="rgba(255,255,255,0.7)" text-anchor="middle" letter-spacing="1">HOPE FOUNDATION</text>
+
+  <!-- Step indicator -->
+  <text x="800" y="208" font-size="11" fill="#A8A29E" text-anchor="middle" letter-spacing="1">STEP 3 OF 3 · REVIEW &amp; CONTRIBUTE</text>
+  <line x1="460" y1="220" x2="1140" y2="220" stroke="#EDE9E3" stroke-width="1"/>
+
+  <!-- Unified contribution block -->
+  <text x="480" y="258" font-size="10" letter-spacing="3" fill="#A8A29E" font-weight="500">YOUR CONTRIBUTION</text>
+
+  <!-- Donation row -->
+  <text x="480" y="296" font-size="15" fill="#1C1917">Donation to Hope Foundation</text>
+  <text x="1140" y="296" font-size="15" font-weight="600" fill="#1C1917" text-anchor="end">$100.00</text>
+
+  <!-- Platform support row — unified, inline slider -->
+  <rect x="480" y="314" width="620" height="72" rx="12" fill="#F5F3EF"/>
+  <text x="502" y="340" font-size="14" fill="#1C1917" font-weight="500">Platform support</text>
+  <text x="1084" y="340" font-size="14" fill="#2B4D38" font-weight="600" text-anchor="end">$2.00</text>
+  <!-- Inline slider -->
+  <rect x="502" y="358" width="480" height="4" rx="2" fill="#DED9D2"/>
+  <rect x="502" y="358" width="480" height="4" rx="2" fill="#2B4D38"/>
+  <circle cx="982" cy="360" r="12" fill="white" stroke="#2B4D38" stroke-width="2"/>
+  <!-- Mini labels -->
+  <text x="502" y="380" font-size="10" fill="#A8A29E">$0</text>
+  <text x="982" y="380" font-size="10" fill="#A8A29E" text-anchor="middle">$2.00</text>
+
+  <!-- Why we ask explainer -->
+  <rect x="480" y="400" width="620" height="52" rx="8" fill="#E8F0EB"/>
+  <!-- Info icon -->
+  <circle cx="502" cy="426" r="9" fill="none" stroke="#2B4D38" stroke-width="1.5"/>
+  <text x="502" y="430" font-size="11" fill="#2B4D38" text-anchor="middle" font-weight="700">i</text>
+  <text x="522" y="420" font-size="12" fill="#2B4D38" font-weight="500">Why we ask</text>
+  <text x="522" y="438" font-size="12" fill="#4A8C5E">Covering the 2% fee means 100% of your donation reaches Hope Foundation.</text>
+
+  <!-- Divider with "total" -->
+  <line x1="480" y1="476" x2="1140" y2="476" stroke="#EDE9E3" stroke-width="1"/>
+
+  <!-- Total row — prominent -->
+  <text x="480" y="518" font-size="14" fill="#78716C">Total charge today</text>
+  <text x="1140" y="522" font-size="44" font-weight="800" fill="#1C1917" text-anchor="end" letter-spacing="-2">$102.00</text>
+  <text x="1140" y="542" font-size="12" fill="#A8A29E" text-anchor="end">Processed securely · Instant receipt</text>
+
+  <!-- ── Card details (collapsed, clean) ── -->
+  <line x1="480" y1="562" x2="1140" y2="562" stroke="#EDE9E3" stroke-width="1"/>
+  <!-- Payment method row -->
+  <text x="480" y="594" font-size="13" fill="#78716C">Payment</text>
+  <!-- Card chip icon -->
+  <rect x="740" y="580" width="36" height="26" rx="5" fill="#DED9D2"/>
+  <rect x="744" y="588" width="10" height="8" rx="2" fill="#C0BAB2"/>
+  <text x="784" y="597" font-size="13" fill="#1C1917">Visa ···· 4242</text>
+  <text x="1140" y="597" font-size="12" fill="#2B4D38" text-anchor="end">Change</text>
+
+  <!-- CTA — primary button -->
+  <rect x="480" y="622" width="620" height="62" rx="12" fill="#2B4D38"/>
+  <text x="790" y="659" font-size="16" font-weight="700" fill="white" text-anchor="middle">Donate $102.00 →</text>
+
+  <!-- Trust signals -->
+  <text x="790" y="708" font-size="11" fill="#A8A29E" text-anchor="middle">🔒  Secure · Encrypted · Instant receipt by email</text>
+
+  <!-- Small print -->
+  <text x="790" y="738" font-size="10" fill="#C0BAB2" text-anchor="middle">By donating you agree to Raisely's terms. Receipts are issued by Hope Foundation.</text>
+
+  <!-- === Callout annotations === -->
+  <!-- Left annotation -->
+  <rect x="60" y="298" width="310" height="84" rx="10" fill="white" filter="url(#s4b)"/>
+  <rect x="60" y="298" width="3" height="84" rx="1.5" fill="#2B4D38"/>
+  <text x="76" y="320" font-size="11" font-weight="600" fill="#1C1917">Unified, not fragmented</text>
+  <text x="76" y="340" font-size="11" fill="#78716C">Fee and donation shown as one</text>
+  <text x="76" y="356" font-size="11" fill="#78716C">contribution moment. No separate</text>
+  <text x="76" y="372" font-size="11" fill="#78716C">modal or disconnected edit box.</text>
+  <!-- Connector -->
+  <path d="M 372 340 C 420 340 440 340 437 340" fill="none" stroke="#DED9D2" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+  <!-- Right annotation: explainer -->
+  <rect x="1230" y="390" width="310" height="84" rx="10" fill="white" filter="url(#s4b)"/>
+  <rect x="1537" y="390" width="3" height="84" rx="1.5" fill="#2B4D38"/>
+  <text x="1250" y="412" font-size="11" font-weight="600" fill="#1C1917">Transparent framing</text>
+  <text x="1250" y="432" font-size="11" fill="#78716C">The "why we ask" block replaces</text>
+  <text x="1250" y="448" font-size="11" fill="#78716C">silent defaults with honest context.</text>
+  <text x="1250" y="464" font-size="11" fill="#78716C">Donor trust, not donor pressure.</text>
+  <path d="M 1228 432 C 1180 432 1160 426 1163 426" fill="none" stroke="#DED9D2" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+  <!-- Bottom annotation: total -->
+  <rect x="60" y="510" width="310" height="64" rx="10" fill="white" filter="url(#s4b)"/>
+  <rect x="60" y="510" width="3" height="64" rx="1.5" fill="#2B4D38"/>
+  <text x="76" y="532" font-size="11" font-weight="600" fill="#1C1917">Total is unambiguous</text>
+  <text x="76" y="552" font-size="11" fill="#78716C">One number. What you're charged</text>
+  <text x="76" y="568" font-size="11" fill="#78716C">and why. No surprises.</text>
+  <path d="M 372 542 C 420 542 440 519 437 519" fill="none" stroke="#DED9D2" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+  <text x="80" y="870" font-size="10" letter-spacing="2" fill="#C0BAB2">raisely · fee opt-in experimentation · future-state concept</text>
+</svg>

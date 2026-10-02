@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personal Color Analysis: Your Palette, From Your Camera</title>
+<meta name="description" content="A browser-based take on personal color analysis: on-device face and color detection that grades every color against your skin tone and places you in a seasonal palette, no appointment required.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=Caveat:wght@700&display=swap">
+<link rel="stylesheet" href="../../assets/case.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="../../">Allen Kang</a>
+    <nav>
+      <a href="../../mastercard/">&larr; Back to overview</a>
+      <a href="../../assets/Allen-Kang-Resume.pdf">R&eacute;sum&eacute; (PDF)</a>
+    </nav>
+  </header>
+  <p class="cat">Computer Vision</p>
+  <h1>Personal Color Analysis: Your Palette, From Your Camera</h1>
+  <p class="sub">A browser-based take on personal color analysis: on-device face and color detection that grades every color against your skin tone and places you in a seasonal palette, no appointment required.</p>
+  <p><a class="btn btn-solid" href="https://color-analysis-three.vercel.app/" target="_blank" rel="noopener">Visit the live app &#8599;</a></p>
+  <dl class="meta-grid">
+    <div><dt>Role</dt><dd>Design &amp; build</dd></div>
+    <div><dt>Timeline</dt><dd>2026</dd></div>
+    <div><dt>Team</dt><dd>Solo, with Claude Code</dd></div>
+    <div><dt>Tools</dt><dd>React, Vite, TypeScript, MediaPipe, Radix UI</dd></div>
+  </dl>
+  <div class="cover" style="background:#0b1120"><img src="../../case-studies/color-analysis/cover.jpg" alt="Personal Color Analysis: Your Palette, From Your Camera"></div>
+  
+  <div class="prose">
+<h2>Make it tactile, not a verdict</h2>
+<p>Personal color analysis is normally a paid, in-person session: someone holds fabric to your face and you watch your skin either come alive or go grey. The lazy digital version takes a selfie and hands back a verdict, "you are an Autumn," and calls it done. I did not want a verdict. The value is in seeing it on yourself, so the core interaction is live draping: tap a swatch and it recolors your outfit in real time, the same hold-it-up-and-look that makes the real thing work. The season it lands on matters less than letting you feel why.</p>
+<h2>What I decided</h2>
+<p>The camera is the input, reading skin undertone and brightness off a live frame. Privacy was an architecture decision, not a line in a footer: the vision model runs entirely on your device, so nothing you show it ever leaves the browser. For something as personal as your own face, "we don't store it" only means anything if it was never sent in the first place.</p>
+<h2>The question underneath</h2>
+<p>It also asks a fair one: how much of a paid, gatekept ritual is really just interaction design and a webcam?</p>
+
+  </div>
+  <footer>
+    <span>&copy; 2026 Allen Kang</span>
+    <span><a href="../../mastercard/">Back to overview</a> &middot; <a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a></span>
+  </footer>
+</div>
+</body>
+</html>
