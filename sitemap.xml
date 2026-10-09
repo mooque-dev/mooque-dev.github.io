@@ -41,11 +41,6 @@
 <priority>0.6</priority>
 </url>
 <url>
-<loc>https://allenkang.com/changelog</loc>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-<url>
 <loc>https://allenkang.com/work/2024-wrapped</loc>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
