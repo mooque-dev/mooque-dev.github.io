@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://allenkang.com
+Sitemap: https://allenkang.com/sitemap.xml
