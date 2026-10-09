@@ -53,9 +53,28 @@ figcaption{font-size:14px;color:var(--muted);margin-top:10px;line-height:1.5}
 .kpi{border:1px solid var(--grid);border-radius:8px;padding:14px 16px;background:#fff}
 .kpi .l{font-size:13px;color:var(--t2)}
 .kpi .v{font-size:28px;font-weight:600;line-height:1.15;margin-top:2px}
-.kpi.hero{border-color:var(--b700);box-shadow:inset 3px 0 0 var(--b700)}
-.kpi.hero .v{font-size:56px;line-height:1;font-weight:700;letter-spacing:-.02em}
-.kpi.hero .s{font-size:13px;color:var(--t2);margin-top:6px}
+/* metric tabs: the counts double as the filter for the panels below */
+.mstrip{display:grid;grid-template-columns:1fr 196px;gap:28px;padding:20px 24px 4px;align-items:stretch}
+.mtabs{display:grid;grid-template-columns:1.5fr 1fr 1fr;border:1px solid var(--grid);border-radius:10px;overflow:hidden;background:#fff}
+.mtab{appearance:none;border:0;background:transparent;font:inherit;color:inherit;text-align:left;padding:14px 18px 16px;cursor:pointer;position:relative;display:flex;flex-direction:column;transition:background-color .15s}
+.mtab+.mtab{border-left:1px solid var(--grid)}
+.mtab:hover{background:#fafaf7}
+.mtab[aria-pressed="true"]{background:#f3f3ef}
+.mtab[aria-pressed="true"]::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:#0b0b0b}
+.mtab:focus-visible{outline:2px solid var(--seal);outline-offset:-2px}
+.mtab .l{font-size:13px;color:var(--t2)}
+.mtab .v{display:block;font-size:32px;font-weight:600;line-height:1.1;margin-top:4px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.mtab.hero .v{font-size:48px;font-weight:700;line-height:1;letter-spacing:-.02em}
+.mtab .s{font-size:12.5px;color:var(--t2);margin-top:auto;padding-top:8px}
+.mrow{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:6px}
+.mrow .trend{font-size:12px;color:var(--t2);text-align:right;line-height:1.3}
+.mrow .trend b{display:block;color:var(--t1);font-weight:600}
+.mctx{margin:0;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.mctx .h{font-size:12.5px;color:var(--t2)}
+.mctx div{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--grid);padding-top:10px}
+.mctx dt{font-size:13.5px}
+.mctx dd{margin:0;font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.wcount{font-size:12.5px;color:var(--t2);margin-top:4px}
 .cols{display:grid;grid-template-columns:1.75fr 1fr;gap:20px;padding:20px 24px 8px}
 .card{border:1px solid var(--grid);border-radius:8px;padding:18px 20px;background:#fff}
 .card h4{margin:0;font-size:15px;font-weight:600}
@@ -196,10 +215,6 @@ footer{margin:72px 0 56px;padding-top:24px;border-top:1px solid var(--border);co
 /* ---- v3: Observable Plot charts ---- */
 .plot svg{font-family:Inter,system-ui,sans-serif;overflow:visible}
 .plot [aria-label="tip"] text{font-size:12.5px}
-.kpi.hero{display:grid;grid-template-columns:1fr auto;align-items:end;column-gap:12px}
-.kpi.hero .l,.kpi.hero .s{grid-column:1/-1}
-.kpi.hero .trend{font-size:12.5px;color:var(--t2);text-align:right;line-height:1.3}
-.kpi.hero .trend b{color:var(--t1);font-weight:600;display:block}
 .card h4.ins{font-size:15.5px;line-height:1.35}
 .wtop .wd{font-weight:600}
 .wtop .ws{font-size:12.5px;color:var(--t2);font-weight:400;margin-left:6px}
@@ -347,15 +362,16 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
   <div class="phase">Before</div>
   <div class="shots"><figure class="shot"><button class="zoom" type="button" data-cap="Original dashboard. Names and logo blurred." aria-label="Enlarge: Original dashboard. Names and logo blurred."><img src="assets/then-dashboard.png" alt="Original dashboard with a donut chart, six rainbow stage cards and a status table" loading="lazy"><span class="pin" style="left:50.8%;top:10.9%">1</span><span class="pin" style="left:97.6%;top:40.9%">2</span><span class="pin" style="left:51.6%;top:54.5%">3</span></button><figcaption>Original dashboard. Names and logo blurred.</figcaption></figure></div>
   <div class="phase after">After</div>
-  <p class="try"><b>Try it</b>Focus a stage to filter the whole screen. Hover any bar for exact counts.</p>
+  <p class="try"><b>Try it</b>Click a number or focus a stage to filter the whole screen. Hover any bar for exact counts.</p>
   <div class="stage"><div class="app">
   <div class="appbar"><h3>Care pathway overview</h3><div class="filters"><span class="chip">Clinic: All</span><span class="chip">Pathway: All plans</span></div></div>
-  <div class="kpis">
-    <div class="kpi hero"><div class="l">Past target date</div><div class="v">106</div><div class="trend"><div id="spark" class="plot"></div><b>Up 18</b>over 12 weeks</div><div class="s">of 175 patients in active treatment</div></div>
-    <div class="kpi"><div class="l">Longest wait</div><div class="v">28 days</div></div>
-    <div class="kpi"><div class="l">In active treatment</div><div class="v">175</div></div>
-    <div class="kpi"><div class="l">Survivorship</div><div class="v">1,090</div></div>
-    <div class="kpi"><div class="l">Palliative care</div><div class="v">11</div></div>
+  <div class="mstrip">
+    <div class="mtabs" role="group" aria-label="Show patients">
+      <button type="button" class="mtab hero" data-band="late" aria-pressed="true"><span class="l">Past target date</span><span class="mrow"><span class="v" id="mv-late">106</span><span class="trend" id="mtrend"><span id="spark" class="plot"></span><b>Up 18</b>over 12 weeks</span></span><span class="s" id="ms-late">of 175 patients in active treatment</span></button>
+      <button type="button" class="mtab" data-band="15" aria-pressed="false"><span class="l">15+ days past target</span><span class="v" id="mv-15">30</span><span class="s" id="ms-15">Longest wait 28 days</span></button>
+      <button type="button" class="mtab" data-band="all" aria-pressed="false"><span class="l">In active treatment</span><span class="v" id="mv-all">175</span><span class="s" id="ms-all">69 on track</span></button>
+    </div>
+    <dl class="mctx"><span class="h">Outside active treatment</span><div><dt>Survivorship</dt><dd>1,090</dd></div><div><dt>Palliative care</dt><dd>11</dd></div></dl>
   </div>
   <div class="fbar" id="stagebar"><span class="fl">Focus a stage</span></div>
   <div class="cols">
@@ -370,6 +386,7 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
       <h4 class="ins" id="waitstitle">Longest waits, all stages</h4>
       <div class="d">Days past target. Shading marks 1-7, 8-14 and 15+ days. The tick is the stage median.</div>
       <ul class="waits" id="waits"></ul>
+      <div class="wcount" id="wcount"></div>
     </div>
   </div>
   <div class="illus">Illustrative data. Patient IDs are invented.</div>
@@ -530,8 +547,9 @@ S.forEach(s=>{const f=fixed[s.n]||{a:[],b:[],c:[]};
 const med={}; S.forEach(s=>{const v=P.filter(p=>p.stage===s.n).map(p=>p.past).sort((a,b)=>a-b); med[s.n]=v.length?v[Math.floor((v.length-1)/2)]:0;});
 const bands=["15+ days","8-14 days","1-7 days","On track"], fills={"15+ days":C.b700,"8-14 days":C.b500,"1-7 days":C.b250,"On track":C.ok}, ink={"15+ days":"#fff","8-14 days":"#fff","1-7 days":C.t1,"On track":C.t1};
 const rows=S.flatMap(s=>[["15+ days",s.a],["8-14 days",s.b],["1-7 days",s.c],["On track",s.t-s.a-s.b-s.c]].map(([band,v])=>({stage:s.n,band,v})));
-let stageSel=null;
-function drawStack(){const op=d=>(!stageSel||d.stage===stageSel)?1:0.22;
+let stageSel=null, band="late";
+const inBand=b=>band==="all"||(band==="15"?b==="15+ days":b!=="On track");
+function drawStack(){const op=d=>((!stageSel||d.stage===stageSel)&&inBand(d.band))?1:0.22;
   put("stack",Plot.plot({width:560,height:250,marginLeft:132,marginRight:110,marginTop:4,marginBottom:30,style,
     x:{domain:[0,70],ticks:[0,20,40,60],grid:true,label:"Patients",labelAnchor:"right",labelArrow:"none"},
     y:{domain:S.map(s=>s.n),label:null,padding:0.5,tickSize:0},
@@ -540,8 +558,9 @@ function drawStack(){const op=d=>(!stageSel||d.stage===stageSel)?1:0.22;
       Plot.text(rows,Plot.stackX({x:"v",y:"stage",order:bands,text:d=>d.v>=5?d.v:"",fill:d=>ink[d.band],fillOpacity:op,fontWeight:600})),
       Plot.text(S,{x:"t",y:"n",dx:8,textAnchor:"start",fill:C.t2,fillOpacity:d=>(!stageSel||d.n===stageSel)?1:0.35,text:d=>{const l=d.a+d.b+d.c; return l+" of "+d.t+" late, "+Math.round(l/d.t*100)+"%";}}),
       Plot.ruleX([0],{stroke:C.t2})]}));}
-function drawWaits(){const list=P.filter(p=>!stageSel||p.stage===stageSel).sort((a,b)=>b.past-a.past||a.id.localeCompare(b.id)).slice(0,6);
-  document.getElementById("waitstitle").textContent=stageSel?("Longest waits in "+stageSel.toLowerCase()):"Longest waits, all stages";
+function drawWaits(){const all=P.filter(p=>(!stageSel||p.stage===stageSel)&&(band!=="15"||p.past>=15)).sort((a,b)=>b.past-a.past||a.id.localeCompare(b.id)), list=all.slice(0,6);
+  document.getElementById("waitstitle").textContent=(band==="15"?"15+ days past target":"Longest waits")+(stageSel?(" in "+stageSel.toLowerCase()):", all stages");
+  document.getElementById("wcount").textContent=all.length>list.length?("Showing "+list.length+" of "+all.length+" patients"):"";
   const ul=document.getElementById("waits"); ul.innerHTML="";
   list.forEach(p=>{const li=document.createElement("li");
     li.innerHTML=`<div class="wtop"><b>${p.id}</b><span class="wd">+${p.past} days<span class="ws">median +${med[p.stage]}</span></span></div><div class="bul plot"></div><div class="wg">${glyph(p.plan,p.cur)}</div>`;
@@ -551,7 +570,17 @@ function drawWaits(){const list=P.filter(p=>!stageSel||p.stage===stageSel).sort(
         Plot.tickX([med[p.stage]],{x:d=>d,stroke:C.t1,strokeWidth:2.5})]});
     el.setAttribute("role","img"); el.setAttribute("aria-label",`${p.id}: ${p.past} days past target in ${p.stage.toLowerCase()}, stage median ${med[p.stage]}`);
     li.querySelector(".bul").replaceChildren(el); ul.appendChild(li);});}
-function setStage(v){stageSel=v; chips("stagebar",[[null,"All stages"],...S.map(s=>[s.n,s.n])],stageSel,setStage); drawStack(); drawWaits();}
+function drawMetrics(){const ss=S.filter(s=>!stageSel||s.n===stageSel), sum=f=>ss.reduce((n,s)=>n+f(s),0),
+    t=sum(s=>s.t), late=sum(s=>s.a+s.b+s.c), a15=sum(s=>s.a), where=stageSel?("in "+stageSel.toLowerCase()):"in active treatment",
+    longest=Math.max(0,...P.filter(p=>!stageSel||p.stage===stageSel).map(p=>p.past)), fmt=n=>n.toLocaleString("en-US");
+  const set=(id,v)=>{document.getElementById(id).textContent=v;};
+  set("mv-late",fmt(late)); set("ms-late","of "+fmt(t)+" patients "+where);
+  set("mv-15",fmt(a15)); set("ms-15",a15?("Longest wait "+longest+" days"):"No one this late");
+  set("mv-all",fmt(t)); set("ms-all",fmt(t-late)+" on track");
+  document.getElementById("mtrend").style.visibility=stageSel?"hidden":"visible";
+  document.querySelectorAll(".mtab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.band===band)));}
+document.querySelectorAll(".mtab").forEach(b=>b.addEventListener("click",()=>{band=b.dataset.band; drawMetrics(); drawStack(); drawWaits();}));
+function setStage(v){stageSel=v; chips("stagebar",[[null,"All stages"],...S.map(s=>[s.n,s.n])],stageSel,setStage); drawMetrics(); drawStack(); drawWaits();}
 setStage(null);
 
 /* ===== 2. patient timeline ===== */
