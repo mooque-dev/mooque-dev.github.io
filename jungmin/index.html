@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Lunch Counter</title>
+<style>
+  :root { --bg:#f7f6f3; --card:#fff; --ink:#1d1d1f; --muted:#6b6b70; --line:#e4e2dc; --accent:#2f6f4f; --err:#b3261e; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#151516; --card:#1f1f21; --ink:#f2f2f2; --muted:#a0a0a6; --line:#333336; --accent:#6fcf97; --err:#ff8a80; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  main { max-width:560px; margin:0 auto; padding:40px 16px; }
+  h1 { font-size:24px; margin:0 0 4px; }
+  p.sub { color:var(--muted); margin:0 0 24px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; }
+  input[type=password] { width:100%; padding:12px; font-size:16px; border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--ink); }
+  button { margin-top:12px; width:100%; padding:12px; font-size:16px; border:0; border-radius:10px; background:var(--accent); color:#fff; cursor:pointer; }
+  .err { color:var(--err); margin-top:10px; min-height:1.5em; }
+  #drop { border:2px dashed var(--line); border-radius:14px; padding:36px 16px; text-align:center; cursor:pointer; color:var(--muted); }
+  #drop.over { border-color:var(--accent); color:var(--accent); }
+  .file { margin:20px 0 4px; font-weight:600; word-break:break-word; }
+  .range { color:var(--muted); font-size:14px; margin-bottom:10px; }
+  table { width:100%; border-collapse:collapse; }
+  td { padding:10px 4px; border-bottom:1px solid var(--line); }
+  td.n { text-align:right; font-weight:700; font-size:20px; font-variant-numeric:tabular-nums; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Lunch Counter</h1>
+  <p class="sub">Upload a Volante sales report PDF to see net quantities.</p>
+
+  <form id="gate" class="card">
+    <input id="pw" type="password" placeholder="Password" autocomplete="current-password" autofocus>
+    <button type="submit">Enter</button>
+    <div class="err" id="gateErr"></div>
+  </form>
+
+  <section id="app" hidden>
+    <label id="drop" class="card">
+      <input id="file" type="file" accept="application/pdf" multiple hidden>
+      Tap to choose PDF(s), or drop them here
+    </label>
+    <div id="results"></div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const HASH = "977cf8c97f6ffa2518898a8361a44ee1dee2316b391be24b1d5d82769659ee50";
+const ITEMS = [
+  ["KoreanLunch", "Korean Lunch"],
+  ["KoreanMainDish", "Korean Main Dish"],
+  ["InternationalLunch", "International Lunch"],
+  ["InternationalMainDish", "International Main Dish"],
+  ["VegetarianLunch", "Vegetarian Lunch"],
+  ["BoxedLunch", "Boxed Lunch"],
+];
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+async function sha256(s) {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+function unlock() {
+  document.getElementById("gate").hidden = true;
+  document.getElementById("app").hidden = false;
+}
+try { if (sessionStorage.getItem("jm-ok") === HASH) unlock(); } catch (e) {}
+
+document.getElementById("gate").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (await sha256(document.getElementById("pw").value) === HASH) {
+    try { sessionStorage.setItem("jm-ok", HASH); } catch (e) {}
+    unlock();
+  } else {
+    document.getElementById("gateErr").textContent = "Wrong password.";
+  }
+});
+
+// Rebuild table rows from positioned text items.
+async function readRows(buf) {
+  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+  const rows = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const { items } = await (await pdf.getPage(p)).getTextContent();
+    const lines = [];
+    for (const it of items) {
+      if (!it.str.trim()) continue;
+      const y = it.transform[5], x = it.transform[4];
+      let line = lines.find(l => Math.abs(l.y - y) < 3);
+      if (!line) lines.push(line = { y, parts: [] });
+      line.parts.push({ x, s: it.str });
+    }
+    lines.sort((a, b) => b.y - a.y);
+    for (const l of lines) rows.push(l.parts.sort((a, b) => a.x - b.x).map(t => t.s).join(" "));
+  }
+  return rows;
+}
+
+function extract(rows) {
+  const out = {};
+  let range = "";
+  for (const row of rows) {
+    const compact = row.replace(/\s+/g, "");
+    if (!range && /(Mon|Tue|Wed|Thu|Fri|Sat|Sun).*\d{4}/.test(compact)) range = row.replace(/\s+/g, " ").replace(/(\S) (?=\S )/g, "$1");
+    for (const [key] of ITEMS) {
+      if (!new RegExp(key + "(?=[\\d-])", "i").test(compact)) continue;
+      const nums = row.match(/-?\d[\d,]*\.\d{2}/g) || [];
+      if (nums.length >= 2) out[key] = (out[key] || 0) + parseFloat(nums[nums.length - 2].replace(/,/g, ""));
+    }
+  }
+  return { out, range };
+}
+
+async function handle(files) {
+  const box = document.getElementById("results");
+  box.innerHTML = "";
+  for (const f of files) {
+    const wrap = document.createElement("div");
+    wrap.innerHTML = `<div class="file"></div><div class="range">Reading…</div>`;
+    wrap.querySelector(".file").textContent = f.name;
+    box.appendChild(wrap);
+    try {
+      const { out, range } = extract(await readRows(await f.arrayBuffer()));
+      wrap.querySelector(".range").textContent = range;
+      const t = document.createElement("table");
+      for (const [key, label] of ITEMS) {
+        const tr = t.insertRow();
+        tr.insertCell().textContent = label;
+        const c = tr.insertCell(); c.className = "n";
+        c.textContent = key in out ? out[key] : "0";
+      }
+      wrap.appendChild(t);
+    } catch (err) {
+      wrap.querySelector(".range").textContent = "Couldn't read this PDF: " + err.message;
+    }
+  }
+}
+
+const drop = document.getElementById("drop"), input = document.getElementById("file");
+input.addEventListener("change", () => handle([...input.files]));
+["dragover", "dragenter"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => handle([...e.dataTransfer.files].filter(f => f.type === "application/pdf")));
+</script>
+</body>
+</html>
