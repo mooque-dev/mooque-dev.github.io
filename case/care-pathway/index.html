@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Cancer Care Dashboards, Revisited | Allen Kang</title><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div style="background:#111;color:#eee;font:500 14px/1 Inter,system-ui,sans-serif;padding:12px 0"><div style="max-width:1152px;margin:0 auto;padding:0 24px;display:flex;gap:18px;align-items:center"><a href="/" style="color:#fff;text-decoration:none;font-weight:600"><svg aria-hidden="true" width="0.95em" height="0.95em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.13em;margin-right:4px"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Allen Kang</a><a href="/work" style="color:#bbb;text-decoration:none">All work</a></div></div><title>Care Pathway Dashboard</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Cancer Care Dashboards, Revisited | Allen Kang</title><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div style="background:#111;color:#eee;font:500 14px/1 Inter,system-ui,sans-serif;padding:12px 0"><div style="max-width:1152px;margin:0 auto;padding:0 24px;display:flex;gap:18px;align-items:center"><a href="/work" style="color:#fff;text-decoration:none;font-weight:600"><svg aria-hidden="true" width="0.95em" height="0.95em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.13em;margin-right:4px"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>All work</a></div></div><title>Care Pathway Dashboard</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap">
 <style>
@@ -313,7 +313,17 @@ body{font-size:18px}
 .slot{border:2px dashed var(--border);border-radius:10px;padding:36px 24px;text-align:center;color:var(--muted);font-size:15px;background:var(--card)}
 .slot b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
 .try{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:15.5px;color:var(--muted);margin:0 0 14px;max-width:1120px}
-.try b{color:var(--ink);font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;background:var(--need);color:var(--needink);padding:2px 8px;border-radius:4px}
+.try b{font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:2px 8px;border-radius:4px}
+.partdiv{margin:8px 0 56px;padding:28px 0 0;border-top:1px solid var(--border);max-width:760px}
+.partdiv .ck{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--seal)}
+.partdiv h2{font-size:30px;margin:8px 0 14px}
+.partdiv p{font-size:17px;line-height:1.6;margin:0 0 14px}
+.dots svg{display:block;overflow:visible;font-family:Inter,system-ui,sans-serif}
+.dots circle{cursor:pointer;transition:opacity .2s}
+.dots circle:hover{stroke:#0b0b0b;stroke-width:1.5}
+.wbtn{all:unset;display:block;width:100%;cursor:pointer;box-sizing:border-box;border-radius:6px}
+.wbtn:hover .wtop b{text-decoration:underline}
+.wbtn:focus-visible{outline:2px solid var(--seal);outline-offset:3px}
 .changes{border-collapse:collapse;width:100%;max-width:1120px;margin-top:28px;font-size:16.5px}
 .changes th{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 18px 8px 0;border-bottom:1px solid var(--border)}
 .changes td{padding:14px 18px 14px 0;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55}
@@ -331,7 +341,7 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
 @media(max-width:860px){.shots.n2,.shots.n3,.glance{grid-template-columns:1fr}.chead h2{font-size:30px}.chead .num{font-size:42px}.changes td:nth-child(2){width:auto}}
 </style>
 <div class="banner"><div class="wrap"><span>Names, IDs, hospitals and logos in the original screens are blurred. Click any original screen to enlarge it.</span></div></div>
-<nav class="cnav" aria-label="Chapters"><div class="wrap"><a href="#overview" aria-current="false">Overview</a><a href="#pathway" aria-current="false">01 Care pathway</a><a href="#patient" aria-current="false">02 Patient view</a><a href="#conferences" aria-current="false">03 Conferences</a><a href="#regions" aria-current="false">04 Regions</a><a href="#patterns" aria-current="false">05 Patterns</a><a href="#proof" aria-current="false">06 Proof</a></div></nav>
+<nav class="cnav" aria-label="Chapters"><div class="wrap"><a href="#overview" aria-current="false">Overview</a><a href="#patient" aria-current="false">01 Patient view</a><a href="#pathway" aria-current="false">02 Care pathway</a><a href="#conferences" aria-current="false">03 Conferences</a><a href="#regions" aria-current="false">04 Regions</a><a href="#patterns" aria-current="false">05 Patterns</a><a href="#proof" aria-current="false">06 Proof</a></div></nav>
 <div class="wrap">
 <header class="hero" id="overview" data-spy>
   <div class="eyebrow">Case study &middot; Healthcare &middot; Data visualization</div>
@@ -356,13 +366,28 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
     <dt>Result</dt><dd>My redesign was never tested; funding ran out first. Below is how I would measure it, against the live tool&rsquo;s published usability score as the bar to beat.</dd>
   </dl>
 </header>
-<section class="chapter" id="pathway" data-spy>
-  <div class="chead"><span class="num">01</span><span class="ck">Care pathway dashboard</span><h2>A headline number has to add up</h2></div>
-  <p class="csum">The dashboard clinicians opened first: how many patients are in each stage of treatment, and who is late.</p>
+<section class="chapter" id="patient" data-spy>
+  <div class="chead"><span class="num">01</span><span class="ck">Patient view</span><h2>Start with one patient</h2></div>
+  <p class="csum">PT-0938&rsquo;s plan gives surgery 28 days. Today is day 36 of it. Before a whole clinic, the question for one person: where are they in treatment, and are they on schedule?</p>
+  <div class="phase">Before</div>
+  <div class="shots" style="grid-template-columns:minmax(0,1fr) 190px"><figure class="shot"><button class="zoom" type="button" data-cap="Original journey stepper" aria-label="Enlarge: Original journey stepper"><img src="assets/then-stepper.png" alt="Original stepper: diagnosis and chemotherapy done, surgery current" loading="lazy"><span class="pin" style="left:54%;top:36%">1</span></button><figcaption>Original journey stepper</figcaption></figure><figure class="shot"><button class="zoom" type="button" data-cap="Original progress ring" aria-label="Enlarge: Original progress ring"><img src="assets/then-ring.png" alt="Ring reading 15 days of 28" loading="lazy"><span class="pin" style="left:80%;top:20%">2</span></button><figcaption>Original progress ring</figcaption></figure></div>
+  <div class="phase after">After</div>
+  <p class="try"><b>Try it</b>Switch between patients, or pick anyone from the clinic view in the next section.</p>
+  <div class="stage" id="timeline"><div class="gcard">
+  <div class="fbar" id="ptbar" style="margin-bottom:16px"><span class="fl">Patient</span></div>
+  <div class="gh"><h4 id="gtitle">Surgery is 8 days past its 28-day target</h4><span class="late" id="gchip">Day 36 in stage</span></div>
+  <div class="gd">Planned against actual, in days since diagnosis. Stages are drawn to scale.</div>
+  <div id="gantt" class="plot gplot"></div>
+  <div class="glegend" style="margin-left:0"><span><i style="background:#9a9993"></i>Completed</span><span><i style="background:#86b6ef"></i>In stage, within target</span><span><i style="background:#0d366b"></i>Past target</span><span><i style="border:1.5px dashed #b9b8b1"></i>Not yet reached</span></div>
+</div></div>
+  <table class="changes"><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td><span class="n">1</span></td><td><b>The stepper shows state, not time.</b> A patient 8 days late looks identical to one who started today.</td><td><b>Planned against actual on one time scale.</b> Stage lengths are drawn to scale and the delay shows where it happened.</td></tr><tr><td><span class="n">2</span></td><td><b>The ring never says what 28 is.</b> No target marker, and its orange means "current stage" one screen over.</td><td><b>The ring becomes a sentence.</b> "Surgery is 8 days past its 28-day target."</td></tr></tbody></table>
+</section><section class="chapter" id="pathway" data-spy>
+  <div class="chead"><span class="num">02</span><span class="ck">Care pathway dashboard</span><h2>From one patient to all 175</h2></div>
+  <p class="csum">The dashboard clinicians opened first: how many patients are in each stage, and who is late. In the redesign every patient is a dot, so you can see where delays pile up without losing the people inside them.</p>
   <div class="phase">Before</div>
   <div class="shots"><figure class="shot"><button class="zoom" type="button" data-cap="Original dashboard. Names and logo blurred." aria-label="Enlarge: Original dashboard. Names and logo blurred."><img src="assets/then-dashboard.png" alt="Original dashboard with a donut chart, six rainbow stage cards and a status table" loading="lazy"><span class="pin" style="left:50.8%;top:10.9%">1</span><span class="pin" style="left:97.6%;top:40.9%">2</span><span class="pin" style="left:51.6%;top:54.5%">3</span></button><figcaption>Original dashboard. Names and logo blurred.</figcaption></figure></div>
   <div class="phase after">After</div>
-  <p class="try"><b>Try it</b>Click a number or focus a stage to filter the whole screen. Hover any bar for exact counts.</p>
+  <p class="try"><b>Try it</b>Click a number or a stage to filter. Click any dot, or a patient in the list, to open their timeline above.</p>
   <div class="stage"><div class="app">
   <div class="appbar"><h3>Care pathway overview</h3><div class="filters"><span class="chip">Clinic: All</span><span class="chip">Pathway: All plans</span></div></div>
   <div class="mstrip">
@@ -376,43 +401,31 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
   <div class="fbar" id="stagebar"><span class="fl">Focus a stage</span></div>
   <div class="cols">
     <div class="card">
-      <h4 class="ins">Radiation has the most long waits. Surgery has the highest share.</h4>
-      <div class="d">Patients in active treatment, by stage and days past target date</div>
+      <h4 class="ins">Radiation has the most late patients. The longest waits are in surgery.</h4>
+      <div class="d">Every dot is one patient, placed by days past their target date. Left of the dashed line is on track.</div>
       <div class="legend"><span><i style="background:#0d366b"></i>15+ days</span><span><i style="background:#256abf"></i>8-14 days</span><span><i style="background:#86b6ef"></i>1-7 days</span><span><i style="background:#dcdbd5"></i>On track</span></div>
-      <div id="stack" class="plot"></div>
+      <div id="stack" class="dots"></div>
       <details class="tv"><summary>Table view</summary><table class="tv"><thead><tr><th>Stage</th><th>Active</th><th>15+ days</th><th>8-14 days</th><th>1-7 days</th><th>On track</th></tr></thead><tbody id="stacktable"></tbody></table></details>
     </div>
     <div class="card">
       <h4 class="ins" id="waitstitle">Longest waits, all stages</h4>
-      <div class="d">Days past target. Shading marks 1-7, 8-14 and 15+ days. The tick is the stage median.</div>
+      <div class="d">Days past target. The tick is the median for that stage. Click a patient to see their timeline.</div>
       <ul class="waits" id="waits"></ul>
       <div class="wcount" id="wcount"></div>
     </div>
   </div>
-  <div class="illus">Illustrative data. Patient IDs are invented.</div>
+  <div class="illus">Illustrative data with invented patient IDs. The same patients appear in every view on this page.</div>
   <span class="pin" style="left:-13px;top:96px">1</span>
   <span class="pin" style="left:-13px;top:350px">2</span>
   <span class="pin" style="right:-13px;top:350px">3</span>
 </div></div>
-  <table class="changes"><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td><span class="n">1</span></td><td><b>The donut says 158 patients; the stage cards add to 175.</b> It only reconciles if three stages use totals and two use delayed counts.</td><td><b>One number leads.</b> 106 of 175 patients are past target, with a 12-week trend. Every total reconciles.</td></tr><tr><td><span class="n">2</span></td><td><b>Six rainbow hues for an ordered sequence.</b> Amber means Radiation in one place and "Attention" in another. "10/12" is never labeled.</td><td><b>Stacked bars and one blue ramp.</b> Length is workload, shade is lateness, and the title states the finding.</td></tr><tr><td><span class="n">3</span></td><td><b>Status with no rule.</b> Why is 18 days "Attention" and 26 "Delayed"? Pale pills, tint on tint.</td><td><b>Bullet graphs.</b> Days past target against visible bands and the stage median.</td></tr></tbody></table>
-</section><section class="chapter" id="patient" data-spy>
-  <div class="chead"><span class="num">02</span><span class="ck">Patient view</span><h2>Show time as time</h2></div>
-  <p class="csum">Where one patient is in their treatment, and whether they are on schedule.</p>
-  <div class="phase">Before</div>
-  <div class="shots" style="grid-template-columns:minmax(0,1fr) 190px"><figure class="shot"><button class="zoom" type="button" data-cap="Original journey stepper" aria-label="Enlarge: Original journey stepper"><img src="assets/then-stepper.png" alt="Original stepper: diagnosis and chemotherapy done, surgery current" loading="lazy"><span class="pin" style="left:54%;top:36%">1</span></button><figcaption>Original journey stepper</figcaption></figure><figure class="shot"><button class="zoom" type="button" data-cap="Original progress ring" aria-label="Enlarge: Original progress ring"><img src="assets/then-ring.png" alt="Ring reading 15 days of 28" loading="lazy"><span class="pin" style="left:80%;top:20%">2</span></button><figcaption>Original progress ring</figcaption></figure></div>
-  <div class="phase after">After</div>
-  <p class="try"><b>Try it</b>Switch between patients to compare how each one is tracking.</p>
-  <div class="stage"><div class="gcard">
-  <div class="fbar" id="ptbar" style="margin-bottom:16px"><span class="fl">Patient</span></div>
-  <div class="gh"><h4 id="gtitle">Surgery is 8 days past its 28-day target</h4><span class="late" id="gchip">Day 36 in stage</span></div>
-  <div class="gd">Planned against actual, in days since diagnosis. Stages are drawn to scale.</div>
-  <div id="gantt" class="plot gplot"></div>
-  <div class="glegend" style="margin-left:0"><span><i style="background:#9a9993"></i>Completed</span><span><i style="background:#86b6ef"></i>In stage, within target</span><span><i style="background:#0d366b"></i>Past target</span><span><i style="border:1.5px dashed #b9b8b1"></i>Not yet reached</span></div>
-</div></div>
-  <table class="changes"><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td><span class="n">1</span></td><td><b>The stepper shows state, not time.</b> A patient 8 days late looks identical to one who started today.</td><td><b>Planned against actual on one time scale.</b> Stage lengths are drawn to scale and the delay shows where it happened.</td></tr><tr><td><span class="n">2</span></td><td><b>The ring never says what 28 is.</b> No target marker, and its orange means "current stage" one screen over.</td><td><b>The ring becomes a sentence.</b> "Surgery is 8 days past its 28-day target."</td></tr></tbody></table>
+  <table class="changes"><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td><span class="n">1</span></td><td><b>The donut says 158 patients; the stage cards add to 175.</b> It only reconciles if three stages use totals and two use delayed counts.</td><td><b>One number leads.</b> 106 of 175 patients are past target, with a 12-week trend. Every total reconciles.</td></tr><tr><td><span class="n">2</span></td><td><b>Six rainbow hues for an ordered sequence.</b> Amber means Radiation in one place and "Attention" in another. "10/12" is never labeled.</td><td><b>One dot per patient, one blue ramp.</b> Position is lateness, nobody disappears into a bar, and the title states the finding.</td></tr><tr><td><span class="n">3</span></td><td><b>Status with no rule.</b> Why is 18 days "Attention" and 26 "Delayed"? Pale pills, tint on tint.</td><td><b>Bullet graphs.</b> Days past target against visible bands and the stage median.</td></tr></tbody></table>
 </section><section class="chapter" id="conferences" data-spy>
+  <div class="partdiv"><span class="ck">Part two</span><h2>The conference tool</h2>
+  <p>The second product served a smaller, more specialized group. Before a patient&rsquo;s treatment is set, their case goes to a <b>multidisciplinary cancer conference (MCC)</b>: surgeons, medical and radiation oncologists, pathologists, radiologists and nurse navigators review it together and agree on a plan. Coordinators run these sessions every week for each cancer type, and program leads report on them by hospital and region.</p>
+  <p>The clinician dashboard answers &ldquo;who needs me today?&rdquo; The conference tool answers three different questions: which cases are ready to discuss, did the right specialists attend, and is volume keeping up?</p></div>
   <div class="chead"><span class="num">03</span><span class="ck">Cancer conference dashboard</span><h2>One filter, every panel</h2></div>
-  <p class="csum">The tool teams used to run multidisciplinary cancer conferences: which cases to discuss, who attended, and how volume is trending.</p>
+  <p class="csum">For the coordinators who run each week&rsquo;s sessions: which cases to discuss, who attended, and how volume is trending.</p>
   <div class="phase">Before</div>
   <div class="shots n3"><figure class="shot"><button class="zoom" type="button" data-cap="Overview" aria-label="Enlarge: Overview"><img src="assets/then-mcc-overview.webp" alt="Original conference overview with a five-line chart and attendee list. Names blurred." loading="lazy"><span class="pin" style="left:48%;top:38%">1</span><span class="pin" style="left:82.5%;top:4%">2</span><span class="pin" style="left:72%;top:52%">3</span><span class="pin" style="left:21%;top:15%">5</span></button><figcaption>Overview</figcaption></figure><figure class="shot"><button class="zoom" type="button" data-cap="Expanded patient table" aria-label="Enlarge: Expanded patient table"><img src="assets/then-mcc-patients.webp" alt="Original expanded patient table. Names blurred." loading="lazy"><span class="pin" style="left:20.5%;top:70%">4</span><span class="pin" style="left:41%;top:26%">4</span></button><figcaption>Expanded patient table</figcaption></figure><figure class="shot"><button class="zoom" type="button" data-cap="Cancer-type portal" aria-label="Enlarge: Cancer-type portal"><img src="assets/then-mcc-portal.webp" alt="Original cancer-type portal. Names blurred." loading="lazy"><span class="pin" style="left:37%;top:3.8%">2</span><span class="pin" style="left:13.5%;top:34%">2</span></button><figcaption>Cancer-type portal</figcaption></figure></div>
   <div class="phase after">After</div>
@@ -441,7 +454,7 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
   <table class="changes"><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td><span class="n">1</span></td><td><b>Five hues, one tangle.</b> The lines cross constantly, so no trend reads.</td><td><b>One highlighted line.</b> The other types stay gray for context, and the title states the change.</td></tr><tr><td><span class="n">2</span></td><td><b>Filters that don't filter.</b> The view says August 2021 to July 2022; the chart shows January to December 2022. The portal is titled Breast while its filter says Urologic.</td><td><b>One filter drives every panel.</b> Counts, trend, attendance and table all follow the cancer type, and the counts add up to the total.</td></tr><tr><td><span class="n">3</span></td><td><b>The same people again and again.</b> The attendee list repeats three clinicians, with avatar colors that mean nothing.</td><td><b>Attendance by specialty against an 80% target.</b> Each specialty once; the status line names who is below target.</td></tr><tr><td><span class="n">4</span></td><td><b>Rows that change their story.</b> The table repeats rows, mixes cancer type with receptor status, and a "Rectal" case becomes "Urologic" when opened.</td><td><b>Separate receptor column, expandable rows.</b> Each row opens to the patient's pathway and the conference recommendation.</td></tr><tr><td><span class="n">5</span></td><td><b>"75/96" with no label.</b> Seventy-five of ninety-six what?</td><td><b>"28 of 34 cases discussed this week,"</b> with a meter and the percentage spelled out.</td></tr></tbody></table>
 </section><section class="chapter" id="regions" data-spy>
   <div class="chead"><span class="num">04</span><span class="ck">Regional view</span><h2>Decide the question before the chart</h2></div>
-  <p class="csum">A regional summary of conference sessions by hospital, for program leads.</p>
+  <p class="csum">For program leads comparing hospitals across a region: where conference sessions happen, and how many.</p>
   <div class="phase">Before</div>
   <div class="shots n2"><figure class="shot"><button class="zoom" type="button" data-cap="Wireframe" aria-label="Enlarge: Wireframe"><img src="assets/then-mcc-wireframe.webp" alt="Original wireframe with a box reading insert graph here. Names and IDs blurred." loading="lazy"><span class="pin" style="left:37%;top:33%">1</span></button><figcaption>Wireframe</figcaption></figure><figure class="shot"><button class="zoom" type="button" data-cap="As shipped. Hospital names and IDs blurred." aria-label="Enlarge: As shipped. Hospital names and IDs blurred."><img src="assets/then-mcc-region.webp" alt="Original regional view with a vertical bar chart and hospital table" loading="lazy"><span class="pin" style="left:52%;top:74%">2</span><span class="pin" style="left:88%;top:5.2%">3</span><span class="pin" style="left:16%;top:73%">3</span><span class="pin" style="left:25%;top:24%">4</span></button><figcaption>As shipped. Hospital names and IDs blurred.</figcaption></figure></div>
   <div class="phase after">After</div>
@@ -545,31 +558,47 @@ S.forEach(s=>{const f=fixed[s.n]||{a:[],b:[],c:[]};
   [["a",15,19],["b",8,14],["c",1,7]].forEach(([k,lo,hi])=>{const fx=f[k]||[];
     for(let i=0;i<s[k];i++){const x=fx[i]; P.push({id:x?x[0]:newId(),past:x?x[1]:ri(lo,hi),stage:s.n,plan:(x&&x[2])||s.plan,cur:s.cur});}});});
 const med={}; S.forEach(s=>{const v=P.filter(p=>p.stage===s.n).map(p=>p.past).sort((a,b)=>a-b); med[s.n]=v.length?v[Math.floor((v.length-1)/2)]:0;});
-const bands=["15+ days","8-14 days","1-7 days","On track"], fills={"15+ days":C.b700,"8-14 days":C.b500,"1-7 days":C.b250,"On track":C.ok}, ink={"15+ days":"#fff","8-14 days":"#fff","1-7 days":C.t1,"On track":C.t1};
+// Patients still within target, as negative days (days left), so the dot view shows all 175.
+S.forEach(s=>{for(let i=0;i<s.t-s.a-s.b-s.c;i++) P.push({id:newId(),past:-ri(1,20),stage:s.n,plan:s.plan,cur:s.cur});});
+const bandOf=p=>p.past>=15?"15+ days":p.past>=8?"8-14 days":p.past>=1?"1-7 days":"On track";
+const bands=["15+ days","8-14 days","1-7 days","On track"], fills={"15+ days":C.b700,"8-14 days":C.b500,"1-7 days":C.b250,"On track":"#bdbcb5"}, ink={"15+ days":"#fff","8-14 days":"#fff","1-7 days":C.t1,"On track":C.t1};
 const rows=S.flatMap(s=>[["15+ days",s.a],["8-14 days",s.b],["1-7 days",s.c],["On track",s.t-s.a-s.b-s.c]].map(([band,v])=>({stage:s.n,band,v})));
-let stageSel=null, band="late";
+let stageSel=null, band="late", ptSel="PT-0938";
 const inBand=b=>band==="all"||(band==="15"?b==="15+ days":b!=="On track");
-function drawStack(){const op=d=>((!stageSel||d.stage===stageSel)&&inBand(d.band))?1:0.22;
-  put("stack",Plot.plot({width:560,height:250,marginLeft:132,marginRight:110,marginTop:4,marginBottom:30,style,
-    x:{domain:[0,70],ticks:[0,20,40,60],grid:true,label:"Patients",labelAnchor:"right",labelArrow:"none"},
-    y:{domain:S.map(s=>s.n),label:null,padding:0.5,tickSize:0},
-    color:{domain:bands,range:bands.map(b=>fills[b])},
-    marks:[Plot.barX(rows,Plot.stackX({x:"v",y:"stage",fill:"band",fillOpacity:op,order:bands,insetRight:2,channels:{Patients:"v",Lateness:"band"},tip:{format:{x:false,y:true,fill:false,fillOpacity:false}}})),
-      Plot.text(rows,Plot.stackX({x:"v",y:"stage",order:bands,text:d=>d.v>=5?d.v:"",fill:d=>ink[d.band],fillOpacity:op,fontWeight:600})),
-      Plot.text(S,{x:"t",y:"n",dx:8,textAnchor:"start",fill:C.t2,fillOpacity:d=>(!stageSel||d.n===stageSel)?1:0.35,text:d=>{const l=d.a+d.b+d.c; return l+" of "+d.t+" late, "+Math.round(l/d.t*100)+"%";}}),
-      Plot.ruleX([0],{stroke:C.t2})]}));}
-function drawWaits(){const all=P.filter(p=>(!stageSel||p.stage===stageSel)&&(band!=="15"||p.past>=15)).sort((a,b)=>b.past-a.past||a.id.localeCompare(b.id)), list=all.slice(0,6);
+function drawStack(){
+  const W=560,ML=136,MR=14,RH=60,MT=22,MB=34,H=MT+S.length*RH+MB,lo=-21,hi=30;
+  const x=v=>ML+(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo)*(W-ML-MR);
+  const NS="http://www.w3.org/2000/svg", el=(t,a,txt)=>{const n=document.createElementNS(NS,t); for(const k in a) n.setAttribute(k,a[k]); if(txt!=null) n.textContent=txt; return n;};
+  const svg=el("svg",{width:W,height:H,viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":"Every patient in active treatment as a dot, by stage and days past target"});
+  [-14,-7,0,7,14,21,28].forEach(t=>{svg.appendChild(el("line",{x1:x(t),x2:x(t),y1:MT-6,y2:H-MB+4,stroke:t===0?"#52514e":"#e6e5e0","stroke-dasharray":t===0?"4,3":"",}));
+    svg.appendChild(el("text",{x:x(t),y:H-MB+20,"text-anchor":"middle","font-size":"12",fill:"#52514e"},t>0?"+"+t:String(t)));});
+  svg.appendChild(el("text",{x:x(0),y:MT-10,"text-anchor":"middle","font-size":"12","font-weight":"600",fill:"#0b0b0b"},"Target date"));
+  svg.appendChild(el("text",{x:ML,y:H-2,"font-size":"12",fill:"#52514e"},"\u2190 on track, days left"));
+  svg.appendChild(el("text",{x:W-MR,y:H-2,"text-anchor":"end","font-size":"12",fill:"#52514e"},"days past target \u2192"));
+  S.forEach((st,r)=>{const cy=MT+r*RH+RH/2, on=!stageSel||st.n===stageSel, late=st.a+st.b+st.c;
+    svg.appendChild(el("text",{x:ML-14,y:cy-2,"text-anchor":"end","font-size":"13.5",fill:"#0b0b0b",opacity:on?1:.35},st.n));
+    svg.appendChild(el("text",{x:ML-14,y:cy+14,"text-anchor":"end","font-size":"12",fill:"#52514e",opacity:on?1:.35},late+" of "+st.t+" late"));
+    const used={};
+    P.filter(p=>p.stage===st.n).sort((a,b)=>a.past-b.past||a.id.localeCompare(b.id)).forEach(p=>{
+      const cx=x(p.past), k=Math.round(cx/7), n=used[k]=(used[k]||0)+1;
+      const off=Math.max(-25,Math.min(25,(n%2?-1:1)*Math.floor(n/2)*6.4)), b=bandOf(p), sel=p.id===ptSel;
+      const c=el("circle",{cx,cy:cy+off,r:sel?5.5:3.4,fill:fills[b],stroke:sel?"#0b0b0b":"#fff","stroke-width":sel?2.5:.8,opacity:!on?.12:inBand(b)?1:.45});
+      c.appendChild(el("title",{},`${p.id} \u00b7 ${p.stage} \u00b7 ${p.past>0?p.past+" days past target":(-p.past)+" days left"}`));
+      c.addEventListener("click",()=>openPt(p.id)); svg.appendChild(c);});});
+  document.getElementById("stack").replaceChildren(svg);}
+function drawWaits(){const all=P.filter(p=>(!stageSel||p.stage===stageSel)&&(band==="all"||(band==="15"?p.past>=15:p.past>0))).sort((a,b)=>b.past-a.past||a.id.localeCompare(b.id)), list=all.slice(0,6);
   document.getElementById("waitstitle").textContent=(band==="15"?"15+ days past target":"Longest waits")+(stageSel?(" in "+stageSel.toLowerCase()):", all stages");
   document.getElementById("wcount").textContent=all.length>list.length?("Showing "+list.length+" of "+all.length+" patients"):"";
   const ul=document.getElementById("waits"); ul.innerHTML="";
   list.forEach(p=>{const li=document.createElement("li");
-    li.innerHTML=`<div class="wtop"><b>${p.id}</b><span class="wd">+${p.past} days<span class="ws">median +${med[p.stage]}</span></span></div><div class="bul plot"></div><div class="wg">${glyph(p.plan,p.cur)}</div>`;
+    li.innerHTML=`<button type="button" class="wbtn"><div class="wtop"><b>${p.id}</b><span class="wd">${p.past>0?"+"+p.past+" days":"On track"}<span class="ws">${p.stage}, median +${med[p.stage]}</span></span></div><div class="bul plot"></div></button>`;
+    li.querySelector("button").addEventListener("click",()=>openPt(p.id));
     const el=Plot.plot({width:296,height:22,margin:0,axis:null,style,x:{domain:[0,30]},
       marks:[Plot.rectX([{a:0,b:7},{a:7,b:14},{a:14,b:30}],{x1:"a",x2:"b",fill:(d,i)=>["#efeee9","#e4e3dd","#d6d5ce"][i]}),
         Plot.rectX([{a:0,b:p.past}],{x1:"a",x2:"b",fill:C.b700,insetTop:7,insetBottom:7}),
         Plot.tickX([med[p.stage]],{x:d=>d,stroke:C.t1,strokeWidth:2.5})]});
     el.setAttribute("role","img"); el.setAttribute("aria-label",`${p.id}: ${p.past} days past target in ${p.stage.toLowerCase()}, stage median ${med[p.stage]}`);
-    li.querySelector(".bul").replaceChildren(el); ul.appendChild(li);});}
+    li.querySelector(".bul").replaceChildren(el); el.setAttribute("aria-hidden","true"); ul.appendChild(li);});}
 function drawMetrics(){const ss=S.filter(s=>!stageSel||s.n===stageSel), sum=f=>ss.reduce((n,s)=>n+f(s),0),
     t=sum(s=>s.t), late=sum(s=>s.a+s.b+s.c), a15=sum(s=>s.a), where=stageSel?("in "+stageSel.toLowerCase()):"in active treatment",
     longest=Math.max(0,...P.filter(p=>!stageSel||p.stage===stageSel).map(p=>p.past)), fmt=n=>n.toLocaleString("en-US");
@@ -584,32 +613,34 @@ function setStage(v){stageSel=v; chips("stagebar",[[null,"All stages"],...S.map(
 setStage(null);
 
 /* ===== 2. patient timeline ===== */
-const plan=[["Diagnosis",0,21],["Chemotherapy",21,105],["Surgery",105,133],["Radiation",133,175],["Survivorship",175,210]];
-const PTS={
- "PT-0938":{stage:"Surgery",target:28,start:105,today:141,done:[["Diagnosis",0,21],["Chemotherapy",21,105]]},
- "PT-0417":{stage:"Surgery",target:28,start:105,today:161,done:[["Diagnosis",0,21],["Chemotherapy",21,105]]},
- "PT-0552":{stage:"Radiation",target:42,start:133,today:195,done:[["Diagnosis",0,21],["Chemotherapy",21,105],["Surgery",105,133]]}};
-let ptSel="PT-0938";
-function drawGantt(){const p=PTS[ptSel], inStage=p.today-p.start, over=Math.max(0,inStage-p.target), tEnd=p.start+Math.min(inStage,p.target);
-  document.getElementById("gtitle").textContent=`${p.stage} is ${over} days past its ${p.target}-day target`;
-  document.getElementById("gchip").textContent=`Day ${inStage} in stage`;
-  const pl=plan.map(([n,a,b])=>({n,a,b,row:"Planned"}));
-  const act=[...p.done.map(([n,a,b])=>({n,a,b,k:"done",lab:"Done"})),{n:p.stage+", within target",a:p.start,b:tEnd,k:"wi",lab:p.target+" days"}];
-  if(over) act.push({n:p.stage+", past target",a:tEnd,b:p.today,k:"ov",lab:"+"+over});
+const DUR={D:21,C:84,S:28,R:42,V:35}, LONG={D:"Diagnosis",C:"Chemotherapy",S:"Surgery",R:"Radiation",V:"Survivorship"};
+const FEATURED=["PT-0938","PT-0417","PT-0552"];
+function timelineOf(p){let t=0; const segs=[...p.plan].map(k=>{const sg={k,n:LONG[k],a:t,b:t+DUR[k]}; t+=DUR[k]; return sg;});
+  const cur=segs.find(g=>g.k===p.cur), target=DUR[p.cur], inStage=target+p.past;
+  return {segs,total:t,cur,target,inStage,today:cur.a+inStage,over:Math.max(0,p.past)};}
+function drawGantt(){const p=P.find(q=>q.id===ptSel), tl=timelineOf(p), tEnd=tl.cur.a+Math.min(tl.inStage,tl.target);
+  document.getElementById("gtitle").textContent=tl.over?`${tl.cur.n} is ${tl.over} days past its ${tl.target}-day target`:`${tl.cur.n} is on track: day ${tl.inStage} of ${tl.target}`;
+  document.getElementById("gchip").textContent=`${p.id} \u00b7 day ${tl.inStage} in stage`;
+  const pl=tl.segs.map(g=>({n:g.n,a:g.a,b:g.b,row:"Planned"}));
+  const act=[...tl.segs.filter(g=>g.b<=tl.cur.a).map(g=>({n:g.n,a:g.a,b:g.b,k:"done",lab:"Done"})),{n:tl.cur.n+", within target",a:tl.cur.a,b:tEnd,k:"wi",lab:Math.min(tl.inStage,tl.target)+" days"}];
+  if(tl.over) act.push({n:tl.cur.n+", past target",a:tEnd,b:tl.today,k:"ov",lab:"+"+tl.over});
   act.forEach(d=>d.row="Actual");
   const kf={done:C.done,wi:C.b250,ov:C.b700}, kt={done:C.t1,wi:C.t1};
+  const ticks=[]; for(let v=0;v<=tl.total;v+=35) ticks.push(v);
   put("gantt",Plot.plot({width:848,height:148,marginLeft:70,marginRight:8,marginTop:30,marginBottom:30,style,
-    x:{domain:[0,210],ticks:[0,35,70,105,140,175,210],axis:"top",grid:true,label:null},
+    x:{domain:[0,tl.total],ticks,axis:"top",grid:true,label:null},
     y:{domain:["Planned","Actual"],label:null,padding:0.3,tickSize:0},
     marks:[Plot.barX(pl,{x1:"a",x2:"b",y:"row",fill:C.ok,insetRight:2,title:d=>d.n+": day "+d.a+" to "+d.b,tip:true}),
       Plot.text(pl,{x:"a",y:"row",text:"n",dx:8,textAnchor:"start",fontWeight:600}),
       Plot.barX(act,{x1:"a",x2:"b",y:"row",fill:d=>kf[d.k],insetRight:2,title:d=>d.n+": day "+d.a+" to "+d.b,tip:true}),
-      Plot.barX([{a:p.today,b:210,row:"Actual"}],{x1:"a",x2:"b",y:"row",fill:"none",stroke:"#b9b8b1",strokeDasharray:"4,3"}),
+      Plot.barX([{a:tl.today,b:tl.total,row:"Actual"}],{x1:"a",x2:"b",y:"row",fill:"none",stroke:"#b9b8b1",strokeDasharray:"4,3"}),
       Plot.text(act.filter(d=>d.k!=="ov"),{x:"a",y:"row",text:"lab",dx:8,textAnchor:"start",fill:d=>kt[d.k],fontWeight:600}),
       Plot.text(act.filter(d=>d.k==="ov"),{x:d=>(d.a+d.b)/2,y:"row",text:"lab",textAnchor:"middle",fill:"#fff",fontWeight:700}),
-      Plot.ruleX([p.today],{stroke:C.t1,strokeWidth:2}),
-      Plot.text([p.today],{x:d=>d,frameAnchor:"bottom",dy:22,text:()=>"Today, day "+p.today,fontWeight:600})]}));}
-function setPt(v){ptSel=v; chips("ptbar",Object.keys(PTS).map(k=>[k,k+" · "+PTS[k].stage]),ptSel,setPt); drawGantt();}
+      Plot.tickX([tl.today],{x:d=>d,y:()=>"Actual",stroke:C.t1,strokeWidth:2.5}),
+      Plot.text([tl.today],{x:d=>d,frameAnchor:"bottom",dy:22,text:()=>"Today, day "+tl.today,fontWeight:600})]}));}
+function setPt(v){ptSel=v; const ids=FEATURED.includes(v)?FEATURED:[...FEATURED,v];
+  chips("ptbar",ids.map(k=>[k,k+" \u00b7 "+P.find(q=>q.id===k).stage]),ptSel,setPt); drawGantt(); drawStack();}
+function openPt(id){setPt(id); document.getElementById("timeline").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});}
 setPt(ptSel);
 
 /* ===== 3. conferences ===== */
@@ -672,7 +703,8 @@ put("sus",Plot.plot({width:760,height:150,marginLeft:180,marginRight:60,marginTo
     Plot.text([68],{x:d=>d,frameAnchor:"top",dy:-16,text:()=>"Average 68",fill:"currentColor",fontWeight:600}),
     Plot.link([{a:76.3,b:86.3}],{x1:"a",x2:"b",y1:()=>"Chemotherapy Clinic",y2:()=>"Chemotherapy Clinic",stroke:"#3987e5",strokeWidth:3,markerEnd:"arrow"}),
     Plot.dot(SUS,{x:"v",y:"site",r:6,fill:d=>d.when==="Week 1.5"?"#9a9993":"#3987e5",stroke:"currentColor",strokeWidth:0,title:d=>d.site+", "+d.when+": "+d.v,tip:true}),
-    Plot.text(SUS,{x:"v",y:"site",text:d=>d.v+(d.when==="Follow-up"?"":" ("+d.when.toLowerCase()+")"),dy:-14,fill:"currentColor",fontWeight:d=>d.when==="Week 1.5"?400:700})]}));
+    Plot.text(SUS.filter(d=>d.when!=="Week 1.5"),{x:"v",y:"site",text:d=>d.v+(d.when==="Follow-up"?"":" ("+d.when.toLowerCase()+")"),dy:-14,fill:"currentColor",fontWeight:700}),
+    Plot.text(SUS.filter(d=>d.when==="Week 1.5"),{x:"v",y:"site",text:d=>d.v+" ("+d.when.toLowerCase()+")",dx:-12,textAnchor:"end",fill:"currentColor"})]}));
 
 /* ===== 4. regions ===== */
 const REG={"Ontario Health Central": {"hosp": [18, 72, 49, 39, 21, 17, 64], "pts": [["PT-7712", "Mar 30, 2022", "B"], ["PT-6045", "Mar 24, 2022", "G"], ["PT-5198", "Mar 17, 2022", "C"], ["PT-4830", "Mar 9, 2022", "B"], ["PT-3367", "Feb 28, 2022", "D"]]}, "Ontario Health East": {"hosp": [58, 26, 51, 12, 44, 30], "pts": [["PT-8120", "Mar 29, 2022", "A"], ["PT-7004", "Mar 21, 2022", "C"], ["PT-6631", "Mar 15, 2022", "E"], ["PT-5512", "Mar 3, 2022", "A"], ["PT-4409", "Feb 22, 2022", "B"]]}, "Ontario Health North": {"hosp": [22, 8, 15, 19, 11], "pts": [["PT-9015", "Mar 28, 2022", "A"], ["PT-8338", "Mar 14, 2022", "D"], ["PT-7461", "Feb 25, 2022", "C"], ["PT-6629", "Feb 9, 2022", "A"], ["PT-5873", "Jan 27, 2022", "E"]]}, "Ontario Health Toronto": {"hosp": [96, 47, 71, 88, 33, 64, 52], "pts": [["PT-9940", "Mar 31, 2022", "A"], ["PT-9217", "Mar 30, 2022", "D"], ["PT-8806", "Mar 25, 2022", "C"], ["PT-8150", "Mar 22, 2022", "F"], ["PT-7388", "Mar 18, 2022", "A"]]}, "Ontario Health West": {"hosp": [61, 24, 55, 19, 40, 28], "pts": [["PT-6670", "Mar 29, 2022", "A"], ["PT-6123", "Mar 23, 2022", "C"], ["PT-5590", "Mar 11, 2022", "E"], ["PT-5034", "Mar 2, 2022", "A"], ["PT-4478", "Feb 16, 2022", "B"]]}};
@@ -711,6 +743,7 @@ document.querySelectorAll(".zoom").forEach(z=>z.addEventListener("click",()=>{co
 const links=[...document.querySelectorAll(".cnav a")], map=new Map(links.map(a=>[a.getAttribute("href").slice(1),a]));
 const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.setAttribute("aria-current","false")); const a=map.get(e.target.id); if(a){a.setAttribute("aria-current","true"); a.scrollIntoView({block:"nearest",inline:"nearest"});}}});},{rootMargin:"-40% 0px -55% 0px"});
 if(links[0]) links[0].setAttribute("aria-current","true");
+addEventListener("scroll",()=>{if(scrollY<240){links.forEach(a=>a.setAttribute("aria-current","false")); links[0].setAttribute("aria-current","true");}},{passive:true});
 document.querySelectorAll("[data-spy]").forEach(s=>io.observe(s));
 })();
 </script>
