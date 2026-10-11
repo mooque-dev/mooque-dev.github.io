@@ -52,6 +52,15 @@
   .shift.day { background:#fff4d6; border:2px solid #d9a400; }
   .shift.night { background:#e6e9f7; border:2px solid #4a56a6; }
   .parts { display:block; font-size:18px; color:var(--muted); font-weight:500; margin-top:2px; }
+  #jump h2 { margin-bottom:8px; }
+  .jumpbtn { display:flex; align-items:center; gap:14px; width:100%; min-height:72px; margin-top:12px; padding:12px 16px; text-align:left;
+    font-size:22px; font-weight:700; line-height:1.25; color:var(--ink); background:#fff; border:2px solid var(--line); border-radius:14px; cursor:pointer; }
+  .jumpbtn .icon { font-size:30px; }
+  .jumpbtn .arrow { margin-left:auto; font-size:28px; color:var(--accent); }
+  .count { display:inline-block; font-size:18px; font-weight:700; color:#fff; background:var(--accent); border-radius:999px; padding:4px 14px; margin-bottom:12px; }
+  .when { font-size:26px; font-weight:800; line-height:1.25; }
+  .fname { font-size:18px; color:var(--muted); margin-top:6px; word-break:break-word; }
+  .top { display:block; margin:16px auto 0; font-size:20px; font-weight:700; color:var(--accent); background:none; border:0; padding:12px; cursor:pointer; }
   [hidden] { display:none !important; }
 </style>
 </head>
@@ -77,18 +86,19 @@
       <h2>Check a sales report <span class="ko">판매 보고서 확인</span></h2>
       <ol class="steps">
         <li>Press the green button below. <span class="ko">아래 초록색 버튼을 누르세요.</span></li>
-        <li>Choose the sales report PDF. <span class="ko">판매 보고서 PDF를 고르세요.</span></li>
+        <li>Choose one or more sales report PDFs. <span class="ko">판매 보고서 PDF를 하나 이상 고르세요.</span></li>
         <li>The numbers appear right away. <span class="ko">수량이 바로 나옵니다.</span></li>
       </ol>
-      <input id="file" type="file" accept="application/pdf,.pdf" hidden>
+      <input id="file" type="file" accept="application/pdf,.pdf" multiple hidden>
       <button type="button" class="btn" id="chooseBtn"><span class="icon" aria-hidden="true">📄</span> <span>Choose PDF<span class="ko" style="color:inherit">파일 선택</span></span></button>
     </div>
   </section>
 
   <!-- Step 3: results -->
   <section id="result" hidden aria-live="polite">
-    <div class="card" id="resultCard"></div>
-    <button type="button" class="btn secondary" id="againBtn"><span>Check another report<span class="ko" style="color:inherit">다른 보고서 확인</span></span></button>
+    <nav id="jump" class="card" hidden></nav>
+    <div id="cards"></div>
+    <button type="button" class="btn secondary" id="againBtn"><span>Check other reports<span class="ko" style="color:inherit">다른 보고서 확인</span></span></button>
   </section>
 </main>
 
@@ -187,41 +197,85 @@ function extract(rows) {
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-async function handle(file) {
-  if (!file) return;
-  const card = $("resultCard");
-  card.innerHTML = '<div class="loading">Reading the report…<span class="ko">보고서를 읽는 중…</span></div>';
+const MONTHS = "JanFebMarAprMayJunJulAugSepOctNovDec";
+// "Tue, Sep 29, 2026, 1:01 PM" -> sortable number and a short "Tue, Sep 29" label.
+function when(range) {
+  const m = range.match(/([A-Za-z]{3}),\s*([A-Za-z]{3})\s*(\d{1,2}),\s*(\d{4}),\s*(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (!m) return { sort: Infinity, label: "" };
+  const h = (+m[5] % 12) + (/pm/i.test(m[7]) ? 12 : 0);
+  return { sort: new Date(+m[4], MONTHS.indexOf(m[2]) / 3, +m[3], h, +m[6]).getTime(), label: `${m[1]}, ${m[2]} ${m[3]}` };
+}
+
+function shiftBadge(night) {
+  return night
+    ? `<div class="shift night"><span class="icon" aria-hidden="true">🌙</span><div>Overnight report<span class="ko">야간 보고서 · 11:00 PM – 1:00 PM</span></div></div>`
+    : `<div class="shift day"><span class="icon" aria-hidden="true">☀️</span><div>Afternoon report<span class="ko">오후 보고서 · 1:01 PM – 11:00 PM</span></div></div>`;
+}
+
+function reportHTML(r, i, total) {
+  if (r.error) return `<div class="card">${total > 1 ? `<span class="count">Report ${i + 1} of ${total}</span>` : ""}
+    <div class="fname">${esc(r.name)}</div>
+    <div class="msg err" role="alert">Sorry, this file could not be read. Please make sure it is the sales report PDF.<span class="ko">파일을 읽을 수 없습니다. 판매 보고서 PDF인지 확인해 주세요.</span></div></div>`;
+  return `<div class="card" id="report-${i}">` +
+    (total > 1 ? `<span class="count">Report ${i + 1} of ${total}</span>` : "") +
+    `<div class="when">${esc(r.label || "Sales report")}</div>` +
+    (r.range ? `<div class="report-date">${esc(r.range)}</div>` : "") +
+    `<div class="fname">📄 ${esc(r.name)}</div>` +
+    shiftBadge(r.night) +
+    `<div class="rows">` +
+    (r.night ? NIGHT_ROWS : DAY_ROWS).map(row => {
+      const n = row.keys.reduce((t, k) => t + (r.out[k] || 0), 0);
+      const parts = row.keys.length > 1 ? `<span class="parts">${row.keys.map(k => `${LABEL[k]} ${r.out[k] || 0}`).join(" + ")}</span>` : "";
+      return `<div class="row"><div class="name">${row.en}<span class="ko">${row.ko}</span>${parts}</div><div class="num${n ? "" : " zero"}">${n}</div></div>`;
+    }).join("") +
+    `</div><div class="note">Numbers are net quantity sold. <span class="ko">순 판매 수량입니다.</span></div>` +
+    (total > 1 ? `<button type="button" class="top" data-top>↑ Back to list <span class="ko" style="display:inline">· 목록으로</span></button>` : "") +
+    `</div>`;
+}
+
+async function handle(files) {
+  files = files.filter(Boolean);
+  if (!files.length) return;
+  $("jump").hidden = true;
+  $("cards").innerHTML = `<div class="card"><div class="loading">Reading ${files.length > 1 ? files.length + " reports" : "the report"}…<span class="ko">보고서를 읽는 중…</span></div></div>`;
   show("result");
-  try {
-    const { out, range, night } = extract(await readRows(await file.arrayBuffer()));
-    if (!Object.keys(out).length) throw new Error("none");
-    card.innerHTML =
-      `<div class="report-head">${esc(file.name)}</div>` +
-      (range ? `<div class="report-date">${esc(range)}</div>` : "") +
-      (night
-        ? `<div class="shift night"><span class="icon" aria-hidden="true">🌙</span><div>Overnight report<span class="ko">야간 보고서 · 11:00 PM – 1:00 PM</span></div></div>`
-        : `<div class="shift day"><span class="icon" aria-hidden="true">☀️</span><div>Afternoon report<span class="ko">오후 보고서 · 1:01 PM – 11:00 PM</span></div></div>`) +
-      `<div class="rows">` +
-      (night ? NIGHT_ROWS : DAY_ROWS).map(r => {
-        const n = r.keys.reduce((t, k) => t + (out[k] || 0), 0);
-        const parts = r.keys.length > 1 ? `<span class="parts">${r.keys.map(k => `${LABEL[k]} ${out[k] || 0}`).join(" + ")}</span>` : "";
-        return `<div class="row"><div class="name">${r.en}<span class="ko">${r.ko}</span>${parts}</div><div class="num${n ? "" : " zero"}">${n}</div></div>`;
-      }).join("") +
-      `</div><div class="note">Numbers are net quantity sold. <span class="ko">순 판매 수량입니다.</span></div>`;
-  } catch (err) {
-    card.innerHTML = '<div class="msg err" role="alert">Sorry, this file could not be read. Please make sure it is the sales report PDF.<span class="ko">파일을 읽을 수 없습니다. 판매 보고서 PDF인지 확인해 주세요.</span></div>';
+  const reports = await Promise.all(files.map(async f => {
+    try {
+      const r = extract(await readRows(await f.arrayBuffer()));
+      if (!Object.keys(r.out).length) throw new Error("none");
+      return { name: f.name, ...r, ...when(r.range) };
+    } catch (e) { return { name: f.name, error: true, sort: Infinity }; }
+  }));
+  // Oldest first, so the list reads like a calendar.
+  reports.sort((a, b) => a.sort - b.sort);
+  const total = reports.length;
+  $("cards").innerHTML = reports.map((r, i) => reportHTML(r, i, total)).join("");
+  if (total > 1) {
+    $("jump").innerHTML = `<h2>${total} reports <span class="ko">보고서 ${total}개</span></h2>
+      <div class="note" style="margin-top:0">Tap one to jump to it, or scroll down. <span class="ko">눌러서 이동하거나 아래로 내리세요.</span></div>` +
+      reports.map((r, i) => `<button type="button" class="jumpbtn" data-go="${i}">
+        <span class="icon" aria-hidden="true">${r.error ? "⚠️" : r.night ? "🌙" : "☀️"}</span>
+        <span>${esc(r.error ? r.name : r.label || r.name)}<span class="ko">${r.error ? "읽을 수 없음" : r.night ? "Overnight · 야간" : "Afternoon · 오후"}</span></span>
+        <span class="arrow" aria-hidden="true">↓</span></button>`).join("");
+    $("jump").hidden = false;
   }
 }
 
+document.addEventListener("click", e => {
+  const go = e.target.closest("[data-go]");
+  if (go) { const el = document.getElementById("report-" + go.dataset.go) || $("cards").children[go.dataset.go]; el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+  if (e.target.closest("[data-top]")) $("jump").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
 $("chooseBtn").addEventListener("click", () => { $("file").value = ""; $("file").click(); });
 $("againBtn").addEventListener("click", () => { $("file").value = ""; $("file").click(); });
-$("file").addEventListener("change", () => handle($("file").files[0]));
+$("file").addEventListener("change", () => handle([...$("file").files]));
 // Dropping a file anywhere also works on a computer.
 document.addEventListener("dragover", e => e.preventDefault());
 document.addEventListener("drop", e => {
   e.preventDefault();
   if (!$("gate").hidden) return;
-  handle([...e.dataTransfer.files].find(f => /pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)));
+  handle([...e.dataTransfer.files].filter(f => /pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)));
 });
 </script>
 </body>
