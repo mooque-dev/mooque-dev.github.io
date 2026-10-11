@@ -75,6 +75,16 @@ const money = n => "$" + n.toLocaleString("en-CA", { minimumFractionDigits: 2, m
 const CHEV = { up: "M6 15l6-6 6 6", down: "M6 9l6 6 6-6", left: "M15 6l-6 6 6 6", right: "M9 6l6 6-6 6" };
 // Rounded chevron in a soft circle (used instead of text arrows).
 const chev = dir => `<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="${CHEV[dir]}"/></svg></span>`;
+// Report-type icons (drawn, so they look the same on every phone).
+const ICON_PATHS = {
+  morning: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  evening: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  orbit:   '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  error:   '<path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.5v.01"/>',
+  file:    '<path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M14 3v5h5"/>',
+};
+const icon = kind => `<span class="ic ${kind}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[kind]}</svg></span>`;
+
 // Bare chevron for use inside button text.
 const ichev = dir => `<svg class="ichev" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="${CHEV[dir]}"/></svg>`;
 const say = (en, ko) => { $("status").textContent = document.documentElement.dataset.lang === "ko" ? ko : en; };
@@ -186,10 +196,10 @@ async function parse(file) {
 /* ---------- What each report looks like ---------- */
 
 const KIND = {
-  morning: { icon: "☀️", cls: "morning", name: T("Morning report", "오전 보고서"), hours: "11:00 PM – 1:00 PM" },
-  night:   { icon: "🌙", cls: "evening", name: T("Night report", "야간 보고서"), hours: "1:01 PM – 11:00 PM" },
-  orbit:   { icon: "🧾", cls: "orbit",   name: T("Orbit close-day report", "Orbit 마감 보고서"), hours: "11:00 PM – 10:59 PM" },
-  error:   { icon: "⚠️", name: T("Could not read this file", "이 파일을 읽을 수 없음") },
+  morning: { cls: "morning", name: T("Morning report", "오전 보고서"), hours: "11:00 PM – 1:00 PM" },
+  night:   { cls: "evening", name: T("Night report", "야간 보고서"), hours: "1:01 PM – 11:00 PM" },
+  orbit:   { cls: "orbit",   name: T("Orbit close-day report", "Orbit 마감 보고서"), short: T("Orbit report", "Orbit 보고서"), hours: "11:00 PM – 10:59 PM" },
+  error:   { cls: "error",   name: T("Could not read this file", "이 파일을 읽을 수 없음") },
 };
 // Why a file could not be opened, in plain words.
 const WHY = {
@@ -198,6 +208,11 @@ const WHY = {
   pages: T(`This PDF has too many pages (over ${MAX_PAGES}). It is not a sales report.`, `PDF 쪽수가 너무 많습니다 (${MAX_PAGES}쪽 초과). 매출 보고서가 아닙니다.`),
   slow:  T("This file took too long to read.", "파일을 읽는 데 너무 오래 걸렸습니다."),
   none:  T("No report numbers were found. Please make sure it is a sales report or Orbit report PDF.", "보고서 숫자를 찾지 못했습니다. 매출 보고서 또는 Orbit 보고서 PDF인지 확인해 주세요."),
+};
+// Short reasons for the list.
+const WHY_SHORT = {
+  size: T("Too big", "너무 큼"), type: T("Not a PDF", "PDF 아님"), pages: T("Too many pages", "쪽수 너무 많음"),
+  slow: T("Took too long", "너무 오래 걸림"), none: T("No report numbers found", "보고서 숫자 없음"),
 };
 const dateOf = r => r.label ? T(esc(r.label), esc(r.labelKo)) : esc(r.name);
 
@@ -220,11 +235,10 @@ function orbitRows(r) {
 
 function reportHTML(r, i, total) {
   const k = KIND[r.type];
-  const count = total > 1 ? `<span class="count">${T(`Report ${i + 1} of ${total}`, `보고서 ${i + 1} / ${total}`)}</span>` : "";
-  if (r.type === "error") return `<div class="card">${count}<div class="when" style="font-size:24px">📄 ${esc(r.name)}</div>
-    <div class="msg err" role="alert">${WHY[r.why]}</div></div>`;
-  return `<div class="card">${count}<div class="when">${dateOf(r)}</div>` +
-    `<div class="shift ${k.cls}"><span class="icon" aria-hidden="true">${k.icon}</span><div>${k.name}<span class="parts">${k.hours}</span></div></div>` +
+  if (r.type === "error") return `<div class="card"><div class="hero" role="alert" style="border-color:var(--err);background:var(--err-soft);align-items:flex-start">${icon("error")}<div>
+    <div class="when" style="font-size:22px">${esc(r.name)}</div><span class="kind" style="color:var(--err)">${WHY[r.why]}</span></div></div></div>`;
+  return `<div class="card"><div class="hero ${k.cls}">${icon(k.cls)}<div><div class="when">${dateOf(r)}</div>` +
+    `<span class="kind">${k.name}</span><span class="hours">${k.hours}</span></div></div>` +
     (r.type === "orbit" ? orbitRows(r) : lunchRows(r)) +
     `<div class="src">📄 ${esc(r.name)}${r.range ? `<br>${esc(r.range)}` : ""}</div></div>`;
 }
@@ -259,16 +273,20 @@ window.addEventListener("popstate", e => render(e.state || { v: signedIn ? "pick
 function renderList() {
   const n = reports.length;
   $("listTitle").innerHTML = T(`${n} report${n === 1 ? "" : "s"}`, `보고서 ${n}개`);
-  $("listItems").innerHTML = reports.map((r, i) => `<button type="button" class="listbtn${r.type === "error" ? " bad" : ""}" data-open="${i}">
-      <span class="icon" aria-hidden="true">${KIND[r.type].icon}</span>
-      <span>${r.type === "error" ? esc(r.name) : dateOf(r)}<span class="sub">${KIND[r.type].name}</span></span>
-      ${chev("right")}</button>`).join("");
+  $("listItems").innerHTML = reports.map((r, i) => {
+    const k = KIND[r.type];
+    return `<button type="button" class="listbtn ${r.type === "error" ? "bad" : k.cls}" data-open="${i}">
+      ${icon(k.cls)}
+      <span>${r.type === "error" ? esc(r.name) : dateOf(r)}<span class="sub">${r.type === "error" ? WHY_SHORT[r.why] : k.short || k.name}</span></span>
+      ${chev("right")}</button>`;
+  }).join("");
 }
 
 function renderDetail(st) {
   const n = reports.length, i = st.i;
   $("detailCard").innerHTML = reportHTML(reports[i], i, n);
-  $("backBtn").hidden = n < 2;
+  $("backBtn").parentNode.hidden = n < 2;
+  $("pos").innerHTML = n > 1 ? T(`${i + 1} of ${n}`, `${i + 1} / ${n}`) : "";
   $("backBtn").innerHTML = `${chev("left")}${T(`All reports (${n})`, `전체 보고서 (${n})`)}`;
   $("detailClear").hidden = n > 1;
   const short = r => r ? (r.type === "error" ? esc(r.name) : dateOf(r)) : "&nbsp;";
