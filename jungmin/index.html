@@ -96,6 +96,15 @@
     .row { padding:16px 0; }
     .lang button { min-width:76px; font-size:19px; }
   }
+  .shift.orbit { background:#f0ece4; border:2px solid #8a7a5c; }
+  .sect { margin-top:22px; font-size:18px; font-weight:800; letter-spacing:0.04em; text-transform:uppercase; color:var(--muted); border-bottom:3px solid var(--ink); padding-bottom:6px; }
+  .row.money .num { font-size:28px; font-weight:800; color:var(--ink); white-space:nowrap; }
+  .row.money { padding:14px 0; }
+  .row .name { min-width:0; }
+  /* Long amounts (register readings) go under their label so they never run off a phone screen. */
+  .row.stack { flex-direction:column; align-items:flex-start; gap:4px; }
+  .row.stack .num { text-align:left; }
+  .row.missing .num { color:#999; font-size:22px; }
   [hidden] { display:none !important; }
 </style>
 </head>
@@ -253,6 +262,62 @@ function extract(rows) {
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
+// Orbit "Close Day Report": label + amount rows. Each label is read from its first
+// appearance, which is the whole-store summary (later pages repeat it per register).
+const ORBIT = [
+  { sect: ["Register", "레지스터"], rows: [
+    ["zCounter", "Z Counter", "Z 카운터", "ZCounter", "int"],
+    ["current", "Current Reading", "현재 판독값", "CurrentReading(ZTotal)", "money"],
+    ["previous", "Previous Reading", "이전 판독값", "PreviousReading", "money"],
+    ["txCount", "Transaction Count", "거래 건수", "TransactionCount", "int"],
+  ] },
+  { sect: ["Sales", "매출"], rows: [
+    ["netSales", "Net Sales", "순매출", "NetSales", "money"],
+    ["voids", "Cashier Voids + Removes", "캐셔 취소 + 삭제", "CashierVoids+Removes", "money"],
+  ] },
+  { sect: ["Payments", "결제 수단"], rows: [
+    ["cash", "Cash", "현금", "Cash", "money"],
+    ["amex", "Amex", "아멕스", "AMEX", "money"],
+    ["visa", "VISA", "비자", "VISA", "money"],
+    ["debit", "Debit", "직불카드", "Debit", "money"],
+    ["master", "Mastercard", "마스터카드", "MASTER", "money"],
+    ["zipthru", "Zipthru Redemption", "Zipthru 사용", "ZipthruRedemption", "money"],
+  ] },
+  { sect: ["Taxes (net)", "세금 (순)"], rows: [
+    ["gst", "GST", "GST", "GST", "money"],
+    ["hstC", "HST 8% C (ON)", "HST 8% C (ON)", "HST8%C(ON)", "money"],
+    ["hstF", "HST 8% F (ON)", "HST 8% F (ON)", "HST8%F(ON)", "money"],
+  ] },
+];
+
+function extractOrbit(rows) {
+  const out = {};
+  const want = new Map(ORBIT.flatMap(g => g.rows).map(r => [r[3].toLowerCase(), r[0]]));
+  for (const row of rows) {
+    const tokens = row.trim().split(/\s+/);
+    const nums = [];
+    while (tokens.length > 1 && /^-?[\d,]*\.?\d+$/.test(tokens[tokens.length - 1])) nums.unshift(tokens.pop());
+    if (!nums.length) continue;
+    const key = want.get(tokens.join("").toLowerCase());
+    // Summary lines have one amount; GST/HST lines are "count amount". Take the last number.
+    if (key && !(key in out)) out[key] = parseFloat(nums[nums.length - 1].replace(/,/g, ""));
+  }
+  return out;
+}
+
+const money = n => "$" + n.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+function orbitHTML(r) {
+  return `<div class="shift orbit"><span class="icon" aria-hidden="true">🧾</span><div>${T("Orbit close-day report", "Orbit 마감 보고서")}<span class="parts">11:00 PM – 10:59 PM</span></div></div>` +
+    ORBIT.map(g => `<div class="sect">${T(g.sect[0], g.sect[1])}</div><div class="rows" style="margin-top:0">` +
+      g.rows.map(([k, en, ko, , kind]) => {
+        const v = r.orbit[k];
+        const txt = v == null ? T("Not found", "없음") : kind === "money" ? money(v) : v.toLocaleString("en-CA");
+        const long = txt.length > 11;
+        return `<div class="row money${long ? " stack" : ""}${v == null ? " missing" : ""}"><div class="name">${T(en, ko)}</div><div class="num">${txt}</div></div>`;
+      }).join("") + `</div>`).join("");
+}
+
 const MONTHS = "JanFebMarAprMayJunJulAugSepOctNovDec";
 // "Tue, Sep 29, 2026, 1:01 PM" -> sortable number and a short "Tue, Sep 29" label.
 function when(range) {
@@ -278,7 +343,7 @@ function reportHTML(r, i, total) {
     `<div class="when">${r.label ? T(esc(r.label), esc(r.labelKo)) : T("Sales report", "판매 보고서")}</div>` +
     (r.range ? `<div class="report-date">${esc(r.range)}</div>` : "") +
     `<div class="fname">📄 ${esc(r.name)}</div>` +
-    shiftBadge(r.morning) +
+    (r.orbit ? orbitHTML(r) + (total > 1 ? `<button type="button" class="top" data-top>${chev("up")}${T("Back to list", "목록으로")}</button>` : "") + `</div>` : shiftBadge(r.morning) +
     `<div class="rows">` +
     (r.morning ? MORNING_ROWS : EVENING_ROWS).map(row => {
       const n = row.keys.reduce((t, k) => t + (r.out[k] || 0), 0);
@@ -287,7 +352,7 @@ function reportHTML(r, i, total) {
     }).join("") +
     `</div><div class="note">${T("Numbers are net quantity sold.", "순 판매 수량입니다.")}</div>` +
     (total > 1 ? `<button type="button" class="top" data-top>${chev("up")}${T("Back to list", "목록으로")}</button>` : "") +
-    `</div>`;
+    `</div>`);
 }
 
 async function handle(files) {
@@ -298,7 +363,15 @@ async function handle(files) {
   show("result");
   const reports = await Promise.all(files.map(async f => {
     try {
-      const r = extract(await readRows(await f.arrayBuffer()));
+      const rows = await readRows(await f.arrayBuffer());
+      const r = extract(rows);
+      if (rows.some(x => /CloseDayReport/i.test(x.replace(/\s+/g, "")))) {
+        const orbit = extractOrbit(rows);
+        if (!Object.keys(orbit).length) throw new Error("none");
+        // The business day is the day the report ends (11 PM the night before → 10:59 PM).
+        const end = when(r.range.split(/\s[–-]\s/).pop());
+        return { name: f.name, range: r.range, orbit, sort: when(r.range).sort, label: end.label, labelKo: end.labelKo };
+      }
       if (!Object.keys(r.out).length) throw new Error("none");
       return { name: f.name, ...r, ...when(r.range) };
     } catch (e) { return { name: f.name, error: true, sort: Infinity }; }
@@ -311,8 +384,8 @@ async function handle(files) {
     $("jump").innerHTML = `<h2>${T(`${total} reports`, `보고서 ${total}개`)}</h2>
       <div class="note" style="margin-top:0">${T("Tap one to jump to it, or scroll down.", "눌러서 이동하거나 아래로 내리세요.")}</div>` +
       reports.map((r, i) => `<button type="button" class="jumpbtn" data-go="${i}">
-        <span class="icon" aria-hidden="true">${r.error ? "⚠️" : r.morning ? "☀️" : "🌙"}</span>
-        <span>${r.error ? esc(r.name) : r.label ? T(esc(r.label), esc(r.labelKo)) : esc(r.name)}<span class="parts">${r.error ? T("Could not read", "읽을 수 없음") : r.morning ? T("Morning report", "오전 보고서") : T("Night report", "야간 보고서")}</span></span>
+        <span class="icon" aria-hidden="true">${r.error ? "⚠️" : r.orbit ? "🧾" : r.morning ? "☀️" : "🌙"}</span>
+        <span>${r.error ? esc(r.name) : r.label ? T(esc(r.label), esc(r.labelKo)) : esc(r.name)}<span class="parts">${r.error ? T("Could not read", "읽을 수 없음") : r.orbit ? T("Orbit close-day report", "Orbit 마감 보고서") : r.morning ? T("Morning report", "오전 보고서") : T("Night report", "야간 보고서")}</span></span>
         ${chev("down")}</button>`).join("");
     $("jump").hidden = false;
   }
