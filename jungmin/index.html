@@ -65,11 +65,13 @@
   .jumpbtn { display:flex; align-items:center; gap:14px; width:100%; min-height:72px; margin-top:12px; padding:12px 16px; text-align:left;
     font-size:22px; font-weight:700; line-height:1.25; color:var(--ink); background:#fff; border:2px solid var(--line); border-radius:14px; cursor:pointer; }
   .jumpbtn .icon { font-size:30px; }
-  .jumpbtn .arrow { margin-left:auto; font-size:28px; color:var(--accent); }
+  .chev { flex:none; width:44px; height:44px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; }
+  .chev svg { width:24px; height:24px; }
+  .jumpbtn .chev { margin-left:auto; }
   .count { display:inline-block; font-size:18px; font-weight:700; color:#fff; background:var(--accent); border-radius:999px; padding:4px 14px; margin-bottom:12px; }
   .when { font-size:26px; font-weight:800; line-height:1.25; }
   .fname { font-size:18px; color:var(--muted); margin-top:6px; word-break:break-word; }
-  .top { display:block; margin:16px auto 0; font-size:20px; font-weight:700; color:var(--accent); background:none; border:0; padding:12px; cursor:pointer; }
+  .top { display:flex; align-items:center; gap:10px; margin:16px auto 0; font-size:20px; font-weight:700; color:var(--accent); background:none; border:0; padding:12px; cursor:pointer; }
   [hidden] { display:none !important; }
 </style>
 </head>
@@ -92,7 +94,7 @@
       <button type="button" class="show" id="toggle"><span class="en">Show</span><span class="ko">보기</span></button>
     </div>
     <div class="msg err" id="gateErr" role="alert" hidden></div>
-    <button type="submit" class="btn"><span class="en">Sign in</span><span class="ko">들어가기</span> <span aria-hidden="true">→</span></button>
+    <button type="submit" class="btn"><span class="en">Sign in</span><span class="ko">들어가기</span></button>
   </form>
 
   <!-- Step 2: pick a file -->
@@ -141,6 +143,8 @@ const MORNING_ROWS = [
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
 const $ = id => document.getElementById(id);
+// Rounded chevron in a soft circle (used instead of text arrows).
+const chev = dir => `<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="${dir === "up" ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"}"/></svg></span>`;
 const T = (en, ko) => `<span class="en">${en}</span><span class="ko">${ko}</span>`;
 
 // Language: remembered on this device; first visit follows the phone's language.
@@ -210,7 +214,7 @@ function extract(rows) {
   let range = "";
   for (const row of rows) {
     const compact = row.replace(/\s+/g, "");
-    if (!range && /(Mon|Tue|Wed|Thu|Fri|Sat|Sun).*\d{4}/.test(compact)) range = compact.replace(/,/g, ", ").replace(/([A-Za-z]{3})(\d)/g, "$1 $2").replace(/(\d)(AM|PM)/g, "$1 $2").replace(/-{2,}/, "  →  ");
+    if (!range && /(Mon|Tue|Wed|Thu|Fri|Sat|Sun).*\d{4}/.test(compact)) range = compact.replace(/,/g, ", ").replace(/([A-Za-z]{3})(\d)/g, "$1 $2").replace(/(\d)(AM|PM)/g, "$1 $2").replace(/-{2,}/, " – ");
     for (const [key] of ITEMS) {
       if (!new RegExp(key + "(?=[\\d-])", "i").test(compact)) continue;
       const nums = row.match(/-?\d[\d,]*\.\d{2}/g) || [];
@@ -258,7 +262,7 @@ function reportHTML(r, i, total) {
       return `<div class="row"><div class="name">${T(row.en, row.ko)}${parts}</div><div class="num${n ? "" : " zero"}">${n}</div></div>`;
     }).join("") +
     `</div><div class="note">${T("Numbers are net quantity sold.", "순 판매 수량입니다.")}</div>` +
-    (total > 1 ? `<button type="button" class="top" data-top>↑ ${T("Back to list", "목록으로")}</button>` : "") +
+    (total > 1 ? `<button type="button" class="top" data-top>${chev("up")}${T("Back to list", "목록으로")}</button>` : "") +
     `</div>`;
 }
 
@@ -285,7 +289,7 @@ async function handle(files) {
       reports.map((r, i) => `<button type="button" class="jumpbtn" data-go="${i}">
         <span class="icon" aria-hidden="true">${r.error ? "⚠️" : r.morning ? "☀️" : "🌙"}</span>
         <span>${r.error ? esc(r.name) : r.label ? T(esc(r.label), esc(r.labelKo)) : esc(r.name)}<span class="parts">${r.error ? T("Could not read", "읽을 수 없음") : r.morning ? T("Morning report", "오전 보고서") : T("Night report", "야간 보고서")}</span></span>
-        <span class="arrow" aria-hidden="true">↓</span></button>`).join("");
+        ${chev("down")}</button>`).join("");
     $("jump").hidden = false;
   }
 }
