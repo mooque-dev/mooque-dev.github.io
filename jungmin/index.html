@@ -7,10 +7,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Lunch Counter">
+<meta name="apple-mobile-web-app-title" content="Sales Reports">
 <meta name="format-detection" content="telephone=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Lunch Counter</title>
+<title>Sales Reports</title>
 <script>
   // Pick the language before anything is drawn, so both never flash on screen.
   try { document.documentElement.dataset.lang = localStorage.getItem("jm-lang") || (/^ko/i.test(navigator.language) ? "ko" : "en"); }
@@ -18,7 +18,7 @@
 </script>
 <style>
   :root {
-    --bg:#fbf8f1; --card:#ffffff; --ink:#111111; --muted:#444444; --line:#cfc8b8;
+    --bg:#fbf8f1; --card:#ffffff; --ink:#111111; --muted:#444444; --faint:#666666; --line:#cfc8b8;
     --accent:#1f5c3d; --accent-ink:#ffffff; --accent-soft:#e3f0e8; --err:#9b1c1c; --err-soft:#fde8e8;
   }
   * { box-sizing:border-box; }
@@ -26,100 +26,119 @@
   button, input { font-family:inherit; touch-action:manipulation; }
   body { margin:0; background:var(--bg); color:var(--ink); word-break:keep-all; overflow-wrap:anywhere; font:22px/1.5 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif; }
   main { max-width:620px; margin:0 auto; padding:calc(24px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-left)) calc(40px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-right)); }
-  #cards .card { scroll-margin-top:12px; }
-  /* Keep "Check other reports" within thumb reach at the bottom of the screen. */
-  .dock { position:sticky; bottom:0; margin:24px -16px calc(-40px - env(safe-area-inset-bottom)); padding:12px 16px calc(12px + env(safe-area-inset-bottom));
-    background:linear-gradient(to bottom, rgba(251,248,241,0), var(--bg) 30%); }
-  .dock .btn { margin-top:0; box-shadow:0 4px 16px rgba(0,0,0,0.12); }
   h1 { font-size:36px; line-height:1.2; margin:0 0 8px; }
-  h2 { font-size:28px; margin:0 0 16px; }
+  h2 { font-size:28px; line-height:1.25; margin:0 0 12px; }
   html[data-lang="en"] .ko, html[data-lang="ko"] .en { display:none !important; }
+  .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  [hidden] { display:none !important; }
+
   header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
   .lang { display:flex; border:3px solid var(--accent); border-radius:999px; overflow:hidden; flex:none; }
   .lang button { min-height:52px; min-width:84px; padding:6px 16px; font-size:20px; font-weight:700; border:0; background:#fff; color:var(--accent); cursor:pointer; }
   .lang button[aria-pressed="true"] { background:var(--accent); color:#fff; }
+
   .card { background:var(--card); border:2px solid var(--line); border-radius:20px; padding:24px; margin-top:24px; }
   label.field { display:block; font-weight:700; margin-bottom:10px; }
   .pwrow { display:flex; gap:10px; }
-  input[type=password], input[type=text] {
-    flex:1; min-width:0; font-size:26px; padding:16px; border:3px solid var(--ink); border-radius:14px; background:#fff; color:var(--ink);
-  }
+  input[type=password], input[type=text] { flex:1; min-width:0; font-size:26px; padding:16px; border:3px solid var(--ink); border-radius:14px; background:#fff; color:var(--ink); }
   input:focus, button:focus-visible { outline:4px solid #e0a100; outline-offset:2px; }
-  .btn {
-    text-align:center; line-height:1.25; padding:12px 16px;
-    display:flex; align-items:center; justify-content:center; gap:12px; width:100%; min-height:76px; margin-top:18px;
-    font-size:26px; font-weight:700; border:0; border-radius:16px; background:var(--accent); color:var(--accent-ink); cursor:pointer;
-  }
+  .show { flex:none; min-width:96px; font-size:20px; font-weight:700; border:3px solid var(--ink); border-radius:14px; background:#fff; color:var(--ink); cursor:pointer; }
+
+  .btn { display:flex; align-items:center; justify-content:center; gap:12px; width:100%; min-height:76px; margin-top:18px; padding:12px 16px;
+    text-align:center; line-height:1.25; font-size:26px; font-weight:700; border:0; border-radius:16px; background:var(--accent); color:var(--accent-ink); cursor:pointer; }
   .btn:active { transform:scale(0.99); }
   .btn.secondary { background:#fff; color:var(--accent); border:3px solid var(--accent); }
-  .show { flex:none; min-width:96px; font-size:20px; font-weight:700; border:3px solid var(--ink); border-radius:14px; background:#fff; color:var(--ink); cursor:pointer; }
+  .btn:disabled { opacity:0.35; cursor:default; transform:none; }
+  .btn .plus { font-size:34px; line-height:1; font-weight:600; }
+  .linkbtn { display:block; margin:20px auto 0; min-height:52px; padding:10px 18px; font-size:20px; font-weight:700; color:var(--muted); background:none; border:0; text-decoration:underline; text-underline-offset:4px; cursor:pointer; }
+
   .msg { margin-top:16px; padding:16px; border-radius:14px; font-weight:700; }
   .msg.err { background:var(--err-soft); color:var(--err); border:2px solid var(--err); }
   .steps { margin:0; padding-left:1.3em; }
-  .steps li { margin-bottom:8px; }
+  .steps li { margin-bottom:10px; }
+  .tip { display:block; font-size:19px; color:var(--muted); margin-top:4px; }
   .icon { font-size:34px; line-height:1; }
-  .loading { text-align:center; font-size:26px; font-weight:700; padding:32px 0; }
-  .report-head { font-weight:700; word-break:break-word; }
-  .report-date { color:var(--muted); margin-top:4px; }
-  .rows { margin-top:16px; }
-  .row { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 0; border-top:2px solid var(--line); }
-  .row:first-child { border-top:0; }
-  .name { font-weight:700; font-size:24px; line-height:1.3; }
-  .num { font-size:52px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; min-width:2ch; text-align:right; color:var(--accent); }
-  .num.zero { color:#888; }
-  .note { color:var(--muted); font-size:20px; margin-top:12px; }
-  .shift { display:flex; align-items:center; gap:12px; margin-top:14px; padding:14px 16px; border-radius:14px; font-weight:700; font-size:22px; line-height:1.3; }
-  .shift .icon { font-size:32px; }
-  .shift.evening { background:#e6e9f7; border:2px solid #4a56a6; }
-  .shift.morning { background:#fff4d6; border:2px solid #d9a400; }
-  .parts { display:block; font-size:18px; color:var(--muted); font-weight:500; margin-top:2px; }
-  #jump h2 { margin-bottom:8px; }
-  .jumpbtn { display:flex; align-items:center; gap:14px; width:100%; min-height:72px; margin-top:12px; padding:12px 16px; text-align:left;
-    font-size:22px; font-weight:700; line-height:1.25; color:var(--ink); background:#fff; border:2px solid var(--line); border-radius:14px; cursor:pointer; }
-  .jumpbtn .icon { font-size:30px; }
+  .loading { text-align:center; font-size:26px; font-weight:700; padding:28px 0 12px; }
+  .bar { height:14px; border-radius:999px; background:var(--accent-soft); overflow:hidden; margin:8px 0 12px; }
+  .bar > div { height:100%; width:0; background:var(--accent); transition:width .2s; }
+
+  /* Bottom bar: the main action stays within thumb reach. */
+  .dock { position:sticky; bottom:0; z-index:2; margin:24px -16px calc(-40px - env(safe-area-inset-bottom)); padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    background:linear-gradient(to bottom, rgba(251,248,241,0), var(--bg) 30%); }
+  .dock .btn { margin-top:0; box-shadow:0 4px 16px rgba(0,0,0,0.12); }
+  .navrow { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .navrow .btn { flex-direction:column; gap:0; font-size:22px; min-height:76px; padding:8px 10px; }
+  .navrow .btn > span { display:inline-flex; align-items:center; gap:4px; }
+  .ichev { width:22px; height:22px; flex:none; }
+  .navrow .btn small { display:block; font-size:16px; font-weight:600; margin-top:2px; }
+
   .chev { flex:none; width:44px; height:44px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; }
   .chev svg { width:24px; height:24px; }
-  .jumpbtn .chev { margin-left:auto; }
-  .count { display:inline-block; font-size:18px; font-weight:700; color:#fff; background:var(--accent); border-radius:999px; padding:4px 14px; margin-bottom:12px; }
-  .when { font-size:26px; font-weight:800; line-height:1.25; }
-  .fname { font-size:18px; color:var(--muted); margin-top:6px; word-break:break-word; }
-  .top { display:flex; align-items:center; gap:10px; margin:16px auto 0; font-size:20px; font-weight:700; color:var(--accent); background:none; border:0; padding:12px; cursor:pointer; }
+
+  /* Report list */
+  .listbtn { display:flex; align-items:center; gap:14px; width:100%; min-height:80px; margin-top:12px; padding:12px 14px 12px 16px; text-align:left;
+    font-size:23px; font-weight:800; line-height:1.25; color:var(--ink); background:#fff; border:2px solid var(--line); border-radius:16px; cursor:pointer; }
+  .listbtn:active { background:var(--accent-soft); }
+  .listbtn .icon { font-size:32px; }
+  .listbtn .chev { margin-left:auto; }
+  .listbtn.bad { border-color:var(--err); }
+  .sub { display:block; font-size:18px; color:var(--muted); font-weight:500; margin-top:2px; }
+
+  /* One report */
+  .backbtn { display:flex; align-items:center; gap:10px; min-height:56px; margin-top:20px; padding:6px 16px 6px 6px; font-size:22px; font-weight:700;
+    color:var(--accent); background:#fff; border:2px solid var(--line); border-radius:999px; cursor:pointer; }
+  .count { display:inline-block; font-size:18px; font-weight:700; color:#fff; background:var(--accent); border-radius:999px; padding:4px 14px; margin-bottom:10px; }
+  .when { font-size:30px; font-weight:800; line-height:1.2; }
+  .shift { display:flex; align-items:center; gap:12px; margin-top:14px; padding:14px 16px; border-radius:14px; font-weight:700; font-size:22px; line-height:1.3; }
+  .shift .icon { font-size:32px; }
+  .shift .parts { white-space:nowrap; }
+  .shift.evening { background:#e6e9f7; border:2px solid #4a56a6; }
+  .shift.morning { background:#fff4d6; border:2px solid #d9a400; }
+  .shift.orbit { background:#f0ece4; border:2px solid #8a7a5c; }
+  .rows { margin-top:12px; }
+  .row { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 0; border-top:2px solid var(--line); }
+  .row:first-child { border-top:0; }
+  .row .name { min-width:0; font-weight:700; font-size:24px; line-height:1.3; }
+  .num { font-size:52px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; min-width:2ch; text-align:right; color:var(--accent); }
+  .num.zero { color:var(--faint); }
+  .parts { display:block; font-size:18px; color:var(--muted); font-weight:500; margin-top:2px; }
+  .sect { margin-top:24px; font-size:18px; font-weight:800; letter-spacing:0.04em; text-transform:uppercase; color:var(--muted); border-bottom:3px solid var(--ink); padding-bottom:6px; }
+  .row.money { padding:14px 0; }
+  .row.money .num { font-size:28px; color:var(--ink); white-space:nowrap; }
+  /* Long amounts (register readings) go under their label so they never run off a phone screen. */
+  .row.stack { flex-direction:column; align-items:flex-start; gap:4px; }
+  .row.stack .num { text-align:left; }
+  .row.missing .num { color:var(--faint); font-size:22px; }
+  .note { color:var(--muted); font-size:20px; margin-top:12px; }
+  .src { margin-top:20px; padding-top:14px; border-top:2px dashed var(--line); font-size:17px; color:var(--muted); line-height:1.4; }
+
   @media (max-width: 420px) {
     body { font-size:20px; }
     h1 { font-size:30px; }
     h2 { font-size:24px; }
     .card { padding:18px; border-radius:18px; margin-top:18px; }
     .btn { font-size:24px; min-height:68px; }
-    .name { font-size:22px; }
+    .row .name { font-size:22px; }
     .num { font-size:46px; }
-    .when { font-size:24px; }
+    .when { font-size:26px; }
     .row { padding:16px 0; }
     .lang button { min-width:76px; font-size:19px; }
+    .listbtn { font-size:21px; }
   }
-  .shift.orbit { background:#f0ece4; border:2px solid #8a7a5c; }
-  .sect { margin-top:22px; font-size:18px; font-weight:800; letter-spacing:0.04em; text-transform:uppercase; color:var(--muted); border-bottom:3px solid var(--ink); padding-bottom:6px; }
-  .row.money .num { font-size:28px; font-weight:800; color:var(--ink); white-space:nowrap; }
-  .row.money { padding:14px 0; }
-  .row .name { min-width:0; }
-  /* Long amounts (register readings) go under their label so they never run off a phone screen. */
-  .row.stack { flex-direction:column; align-items:flex-start; gap:4px; }
-  .row.stack .num { text-align:left; }
-  .row.missing .num { color:#999; font-size:22px; }
-  [hidden] { display:none !important; }
 </style>
 </head>
 <body>
 <main>
   <header>
-    <h1><span class="en">Lunch Counter</span><span class="ko">점심 판매 수량</span></h1>
+    <h1><span class="en">Sales Reports</span><span class="ko">매출 보고서</span></h1>
     <div class="lang" role="group" aria-label="Language / 언어">
       <button type="button" data-lang="en" lang="en">English</button>
       <button type="button" data-lang="ko" lang="ko">한국어</button>
     </div>
   </header>
 
-  <!-- Step 1: password -->
-  <form id="gate" class="card">
+  <!-- Sign in -->
+  <form id="gate" class="card" hidden>
     <h2><span class="en">Please sign in</span><span class="ko">비밀번호를 입력하세요</span></h2>
     <label class="field" for="pw"><span class="en">Password</span><span class="ko">비밀번호</span></label>
     <div class="pwrow">
@@ -130,31 +149,66 @@
     <button type="submit" class="btn"><span class="en">Sign in</span><span class="ko">들어가기</span></button>
   </form>
 
-  <!-- Step 2: pick a file -->
+  <!-- Choose files -->
   <section id="pick" hidden>
     <div class="card">
-      <h2><span class="en">Check a sales report</span><span class="ko">판매 보고서 확인</span></h2>
+      <h2><span class="en">Open your reports</span><span class="ko">보고서 열기</span></h2>
       <ol class="steps">
         <li><span class="en">Press the green button below.</span><span class="ko">아래 초록색 버튼을 누르세요.</span></li>
-        <li><span class="en">Choose one or more sales report PDFs.</span><span class="ko">판매 보고서 PDF를 하나 이상 고르세요.</span></li>
-        <li><span class="en">The numbers appear right away.</span><span class="ko">수량이 바로 나옵니다.</span></li>
+        <li>
+          <span class="en">Choose your report PDFs.</span><span class="ko">보고서 PDF를 고르세요.</span>
+          <span class="tip"><span class="en">To choose several, tap “Select” (iPhone) or press and hold a file (Android).</span><span class="ko">여러 개를 고르려면 “선택”(아이폰)을 누르거나 파일을 길게 누르세요(안드로이드).</span></span>
+        </li>
+        <li>
+          <span class="en">The numbers appear right away.</span><span class="ko">숫자가 바로 나옵니다.</span>
+          <span class="tip"><span class="en">You can add more reports afterwards, one at a time.</span><span class="ko">나중에 보고서를 하나씩 더 추가할 수도 있습니다.</span></span>
+        </li>
       </ol>
-      <input id="file" type="file" accept="application/pdf,.pdf" multiple hidden>
-      <button type="button" class="btn" id="chooseBtn"><span class="icon" aria-hidden="true">📄</span> <span class="en">Choose PDF</span><span class="ko">PDF 파일 선택</span></button>
+      <button type="button" class="btn" data-add><span class="icon" aria-hidden="true">📄</span> <span class="en">Choose PDFs</span><span class="ko">PDF 파일 선택</span></button>
+    </div>
+    <button type="button" class="btn secondary" id="resumeBtn" hidden></button>
+  </section>
+
+  <!-- Reading -->
+  <section id="loading" hidden>
+    <div class="card">
+      <div class="loading" id="loadText"></div>
+      <div class="bar" aria-hidden="true"><div id="loadBar"></div></div>
     </div>
   </section>
 
-  <!-- Step 3: results -->
-  <section id="result" hidden aria-live="polite">
-    <nav id="jump" class="card" hidden></nav>
-    <div id="cards"></div>
-    <div class="dock"><button type="button" class="btn secondary" id="againBtn"><span class="en">Check other reports</span><span class="ko">다른 보고서 확인</span></button></div>
+  <!-- All reports -->
+  <section id="list" hidden>
+    <div class="card">
+      <h2 id="listTitle"></h2>
+      <div class="note" style="margin-top:0"><span class="en">Tap a report to open it.</span><span class="ko">보고서를 눌러서 여세요.</span></div>
+      <div class="msg" id="dupNote" style="background:var(--accent-soft)" hidden></div>
+      <div id="listItems"></div>
+    </div>
+    <button type="button" class="linkbtn" data-clear><span class="en">Start over</span><span class="ko">처음부터 다시</span></button>
+    <div class="dock"><button type="button" class="btn" data-add><span class="plus" aria-hidden="true">+</span> <span class="en">Add more reports</span><span class="ko">보고서 더 추가</span></button></div>
   </section>
+
+  <!-- One report -->
+  <section id="detail" hidden>
+    <button type="button" class="backbtn" id="backBtn"></button>
+    <div id="detailCard"></div>
+    <button type="button" class="linkbtn" data-clear id="detailClear"><span class="en">Start over</span><span class="ko">처음부터 다시</span></button>
+    <div class="dock" id="detailDock"></div>
+  </section>
+
+  <div id="status" class="sr-only" role="status" aria-live="polite"></div>
+  <input id="file" type="file" accept="application/pdf,.pdf" multiple hidden>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
 <script>
 const HASH = "977cf8c97f6ffa2518898a8361a44ee1dee2316b391be24b1d5d82769659ee50";
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+/* ---------- Report definitions ---------- */
+
+// Volante "Sales Report Summary" lunch items.
 const ITEMS = [
   ["KoreanLunch", "Korean Lunch", "한식 점심"],
   ["KoreanMainDish", "Korean Main Dish", "한식 메인"],
@@ -173,94 +227,6 @@ const MORNING_ROWS = [
   { keys: ["VegetarianLunch"], en: "Vegetarian", ko: "채식" },
   { keys: ["BoxedLunch"], en: "Boxed", ko: "도시락" },
 ];
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-
-const $ = id => document.getElementById(id);
-// Rounded chevron in a soft circle (used instead of text arrows).
-const chev = dir => `<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="${dir === "up" ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"}"/></svg></span>`;
-const T = (en, ko) => `<span class="en">${en}</span><span class="ko">${ko}</span>`;
-
-// Language: remembered on this device; first visit follows the phone's language.
-function setLang(l) {
-  document.documentElement.dataset.lang = l;
-  document.documentElement.lang = l;
-  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === l));
-  try { localStorage.setItem("jm-lang", l); } catch (e) {}
-}
-let lang = null;
-try { lang = localStorage.getItem("jm-lang"); } catch (e) {}
-setLang(lang || (/^ko/i.test(navigator.language) ? "ko" : "en"));
-document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
-function show(id) { ["gate", "pick", "result"].forEach(s => $(s).hidden = s !== id); window.scrollTo(0, 0); }
-
-async function sha256(s) {
-  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
-  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
-}
-
-// Stay signed in on this device so she isn't asked every time.
-let signedIn = false;
-try { signedIn = localStorage.getItem("jm-ok") === HASH; } catch (e) {}
-show(signedIn ? "pick" : "gate");
-if (!signedIn) $("pw").focus();
-
-$("toggle").addEventListener("click", () => {
-  const p = $("pw"), hidden = p.type === "password";
-  p.type = hidden ? "text" : "password";
-  $("toggle").innerHTML = hidden ? T("Hide", "숨기기") : T("Show", "보기");
-});
-
-$("gate").addEventListener("submit", async e => {
-  e.preventDefault();
-  if (await sha256($("pw").value.trim()) === HASH) {
-    try { localStorage.setItem("jm-ok", HASH); } catch (e) {}
-    $("gateErr").hidden = true;
-    show("pick");
-  } else {
-    $("gateErr").innerHTML = T("That password is not right. Please try again.", "비밀번호가 맞지 않습니다. 다시 입력해 주세요.");
-    $("gateErr").hidden = false;
-  }
-});
-
-// Rebuild table rows from positioned text items.
-async function readRows(buf) {
-  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-  const rows = [];
-  for (let p = 1; p <= pdf.numPages; p++) {
-    const { items } = await (await pdf.getPage(p)).getTextContent();
-    const lines = [];
-    for (const it of items) {
-      if (!it.str.trim()) continue;
-      const y = it.transform[5], x = it.transform[4];
-      let line = lines.find(l => Math.abs(l.y - y) < 3);
-      if (!line) lines.push(line = { y, parts: [] });
-      line.parts.push({ x, s: it.str });
-    }
-    lines.sort((a, b) => b.y - a.y);
-    for (const l of lines) rows.push(l.parts.sort((a, b) => a.x - b.x).map(t => t.s).join(" "));
-  }
-  return rows;
-}
-
-function extract(rows) {
-  const out = {};
-  let range = "";
-  for (const row of rows) {
-    const compact = row.replace(/\s+/g, "");
-    if (!range && /(Mon|Tue|Wed|Thu|Fri|Sat|Sun).*\d{4}/.test(compact)) range = compact.replace(/,/g, ", ").replace(/([A-Za-z]{3})(\d)/g, "$1 $2").replace(/(\d)(AM|PM)/g, "$1 $2").replace(/-{2,}/, " – ");
-    for (const [key] of ITEMS) {
-      if (!new RegExp(key + "(?=[\\d-])", "i").test(compact)) continue;
-      const nums = row.match(/-?\d[\d,]*\.\d{2}/g) || [];
-      if (nums.length >= 2) out[key] = (out[key] || 0) + parseFloat(nums[nums.length - 2].replace(/,/g, ""));
-    }
-  }
-  // Start time decides the shift: 11 PM start (or 1:00 PM end) = overnight report.
-  const times = range.replace(/\s+/g, "").match(/\d{1,2}:\d{2}(AM|PM)/gi) || [];
-  const morning = /^11:\d{2}PM$/i.test(times[0] || "") || /^1:00PM$/i.test(times[1] || "");
-  return { out, range, morning };
-}
-
-const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 // Orbit "Close Day Report": label + amount rows. Each label is read from its first
 // appearance, which is the whole-store summary (later pages repeat it per register).
@@ -290,6 +256,74 @@ const ORBIT = [
   ] },
 ];
 
+/* ---------- Small helpers ---------- */
+
+const $ = id => document.getElementById(id);
+const T = (en, ko) => `<span class="en">${en}</span><span class="ko">${ko}</span>`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const money = n => "$" + n.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const CHEV = { up: "M6 15l6-6 6 6", down: "M6 9l6 6 6-6", left: "M15 6l-6 6 6 6", right: "M9 6l6 6-6 6" };
+// Rounded chevron in a soft circle (used instead of text arrows).
+const chev = dir => `<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="${CHEV[dir]}"/></svg></span>`;
+// Bare chevron for use inside button text.
+const ichev = dir => `<svg class="ichev" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="${CHEV[dir]}"/></svg>`;
+const say = (en, ko) => { $("status").textContent = document.documentElement.dataset.lang === "ko" ? ko : en; };
+
+// Language: remembered on this device; first visit follows the phone's language.
+function setLang(l) {
+  document.documentElement.dataset.lang = l;
+  document.documentElement.lang = l;
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === l));
+  try { localStorage.setItem("jm-lang", l); } catch (e) {}
+}
+setLang(document.documentElement.dataset.lang);
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+
+/* ---------- Reading PDFs ---------- */
+
+// Rebuild table rows from positioned text items.
+async function readRows(buf) {
+  // isEvalSupported:false closes the font-handling hole in this pdf.js version (CVE-2024-4367).
+  const pdf = await pdfjsLib.getDocument({ data: buf, isEvalSupported: false }).promise;
+  try {
+    const rows = [];
+    for (let p = 1; p <= pdf.numPages; p++) {
+      const { items } = await (await pdf.getPage(p)).getTextContent();
+      const lines = [];
+      for (const it of items) {
+        if (!it.str.trim()) continue;
+        const y = it.transform[5], x = it.transform[4];
+        let line = lines.find(l => Math.abs(l.y - y) < 3);
+        if (!line) lines.push(line = { y, parts: [] });
+        line.parts.push({ x, s: it.str });
+      }
+      lines.sort((a, b) => b.y - a.y);
+      for (const l of lines) rows.push(l.parts.sort((a, b) => a.x - b.x).map(t => t.s).join(" "));
+    }
+    return rows;
+  } finally {
+    pdf.destroy();
+  }
+}
+
+function extract(rows) {
+  const out = {};
+  let range = "";
+  for (const row of rows) {
+    const compact = row.replace(/\s+/g, "");
+    if (!range && /(Mon|Tue|Wed|Thu|Fri|Sat|Sun).*\d{4}/.test(compact)) range = compact.replace(/,/g, ", ").replace(/([A-Za-z]{3})(\d)/g, "$1 $2").replace(/(\d)(AM|PM)/g, "$1 $2").replace(/-{2,}/, " – ");
+    for (const [key] of ITEMS) {
+      if (!new RegExp(key + "(?=[\\d-])", "i").test(compact)) continue;
+      const nums = row.match(/-?\d[\d,]*\.\d{2}/g) || [];
+      if (nums.length >= 2) out[key] = (out[key] || 0) + parseFloat(nums[nums.length - 2].replace(/,/g, ""));
+    }
+  }
+  // Start time decides the shift: 11 PM start (or 1:00 PM end) = morning report.
+  const times = range.replace(/\s+/g, "").match(/\d{1,2}:\d{2}(AM|PM)/gi) || [];
+  const morning = /^11:\d{2}PM$/i.test(times[0] || "") || /^1:00PM$/i.test(times[1] || "");
+  return { out, range, morning };
+}
+
 function extractOrbit(rows) {
   const out = {};
   const want = new Map(ORBIT.flatMap(g => g.rows).map(r => [r[3].toLowerCase(), r[0]]));
@@ -305,19 +339,6 @@ function extractOrbit(rows) {
   return out;
 }
 
-const money = n => "$" + n.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-function orbitHTML(r) {
-  return `<div class="shift orbit"><span class="icon" aria-hidden="true">🧾</span><div>${T("Orbit close-day report", "Orbit 마감 보고서")}<span class="parts">11:00 PM – 10:59 PM</span></div></div>` +
-    ORBIT.map(g => `<div class="sect">${T(g.sect[0], g.sect[1])}</div><div class="rows" style="margin-top:0">` +
-      g.rows.map(([k, en, ko, , kind]) => {
-        const v = r.orbit[k];
-        const txt = v == null ? T("Not found", "없음") : kind === "money" ? money(v) : v.toLocaleString("en-CA");
-        const long = txt.length > 11;
-        return `<div class="row money${long ? " stack" : ""}${v == null ? " missing" : ""}"><div class="name">${T(en, ko)}</div><div class="num">${txt}</div></div>`;
-      }).join("") + `</div>`).join("");
-}
-
 const MONTHS = "JanFebMarAprMayJunJulAugSepOctNovDec";
 // "Tue, Sep 29, 2026, 1:01 PM" -> sortable number and a short "Tue, Sep 29" label.
 function when(range) {
@@ -328,84 +349,199 @@ function when(range) {
     labelKo: `${MONTHS.indexOf(m[2]) / 3 + 1}월 ${+m[3]}일 (${"일월화수목금토"["SunMonTueWedThuFriSat".indexOf(m[1]) / 3]})` };
 }
 
-function shiftBadge(morning) {
-  return morning
-    ? `<div class="shift morning"><span class="icon" aria-hidden="true">☀️</span><div>${T("Morning report", "오전 보고서")}<span class="parts">11:00 PM – 1:00 PM</span></div></div>`
-    : `<div class="shift evening"><span class="icon" aria-hidden="true">🌙</span><div>${T("Night report", "야간 보고서")}<span class="parts">1:01 PM – 11:00 PM</span></div></div>`;
-}
-
-function reportHTML(r, i, total) {
-  if (r.error) return `<div class="card">${total > 1 ? `<span class="count">${T(`Report ${i + 1} of ${total}`, `보고서 ${i + 1} / ${total}`)}</span>` : ""}
-    <div class="fname">${esc(r.name)}</div>
-    <div class="msg err" role="alert">${T("Sorry, this file could not be read. Please make sure it is the sales report PDF.", "파일을 읽을 수 없습니다. 판매 보고서 PDF인지 확인해 주세요.")}</div></div>`;
-  return `<div class="card" id="report-${i}">` +
-    (total > 1 ? `<span class="count">${T(`Report ${i + 1} of ${total}`, `보고서 ${i + 1} / ${total}`)}</span>` : "") +
-    `<div class="when">${r.label ? T(esc(r.label), esc(r.labelKo)) : T("Sales report", "판매 보고서")}</div>` +
-    (r.range ? `<div class="report-date">${esc(r.range)}</div>` : "") +
-    `<div class="fname">📄 ${esc(r.name)}</div>` +
-    (r.orbit ? orbitHTML(r) + (total > 1 ? `<button type="button" class="top" data-top>${chev("up")}${T("Back to list", "목록으로")}</button>` : "") + `</div>` : shiftBadge(r.morning) +
-    `<div class="rows">` +
-    (r.morning ? MORNING_ROWS : EVENING_ROWS).map(row => {
-      const n = row.keys.reduce((t, k) => t + (r.out[k] || 0), 0);
-      const parts = row.keys.length > 1 ? `<span class="parts">${row.keys.map(k => `${T(LABEL[k].en, LABEL[k].ko)} ${r.out[k] || 0}`).join(" + ")}</span>` : "";
-      return `<div class="row"><div class="name">${T(row.en, row.ko)}${parts}</div><div class="num${n ? "" : " zero"}">${n}</div></div>`;
-    }).join("") +
-    `</div><div class="note">${T("Numbers are net quantity sold.", "순 판매 수량입니다.")}</div>` +
-    (total > 1 ? `<button type="button" class="top" data-top>${chev("up")}${T("Back to list", "목록으로")}</button>` : "") +
-    `</div>`);
-}
-
-async function handle(files) {
-  files = files.filter(Boolean);
-  if (!files.length) return;
-  $("jump").hidden = true;
-  $("cards").innerHTML = `<div class="card"><div class="loading">${T(`Reading ${files.length > 1 ? files.length + " reports" : "the report"}…`, "보고서를 읽는 중…")}</div></div>`;
-  show("result");
-  const reports = await Promise.all(files.map(async f => {
-    try {
-      const rows = await readRows(await f.arrayBuffer());
-      const r = extract(rows);
-      if (rows.some(x => /CloseDayReport/i.test(x.replace(/\s+/g, "")))) {
-        const orbit = extractOrbit(rows);
-        if (!Object.keys(orbit).length) throw new Error("none");
-        // The business day is the day the report ends (11 PM the night before → 10:59 PM).
-        const end = when(r.range.split(/\s[–-]\s/).pop());
-        return { name: f.name, range: r.range, orbit, sort: when(r.range).sort, label: end.label, labelKo: end.labelKo };
-      }
-      if (!Object.keys(r.out).length) throw new Error("none");
-      return { name: f.name, ...r, ...when(r.range) };
-    } catch (e) { return { name: f.name, error: true, sort: Infinity }; }
-  }));
-  // Oldest first, so the list reads like a calendar.
-  reports.sort((a, b) => a.sort - b.sort);
-  const total = reports.length;
-  $("cards").innerHTML = reports.map((r, i) => reportHTML(r, i, total)).join("");
-  if (total > 1) {
-    $("jump").innerHTML = `<h2>${T(`${total} reports`, `보고서 ${total}개`)}</h2>
-      <div class="note" style="margin-top:0">${T("Tap one to jump to it, or scroll down.", "눌러서 이동하거나 아래로 내리세요.")}</div>` +
-      reports.map((r, i) => `<button type="button" class="jumpbtn" data-go="${i}">
-        <span class="icon" aria-hidden="true">${r.error ? "⚠️" : r.orbit ? "🧾" : r.morning ? "☀️" : "🌙"}</span>
-        <span>${r.error ? esc(r.name) : r.label ? T(esc(r.label), esc(r.labelKo)) : esc(r.name)}<span class="parts">${r.error ? T("Could not read", "읽을 수 없음") : r.orbit ? T("Orbit close-day report", "Orbit 마감 보고서") : r.morning ? T("Morning report", "오전 보고서") : T("Night report", "야간 보고서")}</span></span>
-        ${chev("down")}</button>`).join("");
-    $("jump").hidden = false;
+async function parse(file) {
+  const base = { name: file.name, key: [file.name, file.size, file.lastModified].join("|") };
+  try {
+    const rows = await readRows(await file.arrayBuffer());
+    const r = extract(rows);
+    if (rows.some(x => /CloseDayReport/i.test(x.replace(/\s+/g, "")))) {
+      const orbit = extractOrbit(rows);
+      if (!Object.keys(orbit).length) throw new Error("none");
+      // The business day is the day the report ends (11 PM the night before → 10:59 PM).
+      const end = when(r.range.split(/\s[–-]\s/).pop());
+      return { ...base, type: "orbit", range: r.range, orbit, sort: when(r.range).sort, label: end.label, labelKo: end.labelKo };
+    }
+    if (!Object.keys(r.out).length) throw new Error("none");
+    return { ...base, type: r.morning ? "morning" : "night", ...r, ...when(r.range) };
+  } catch (e) {
+    return { ...base, type: "error", sort: Infinity };
   }
 }
 
+/* ---------- What each report looks like ---------- */
+
+const KIND = {
+  morning: { icon: "☀️", cls: "morning", name: T("Morning report", "오전 보고서"), hours: "11:00 PM – 1:00 PM" },
+  night:   { icon: "🌙", cls: "evening", name: T("Night report", "야간 보고서"), hours: "1:01 PM – 11:00 PM" },
+  orbit:   { icon: "🧾", cls: "orbit",   name: T("Orbit close-day report", "Orbit 마감 보고서"), hours: "11:00 PM – 10:59 PM" },
+  error:   { icon: "⚠️", name: T("Could not read this file", "이 파일을 읽을 수 없음") },
+};
+const dateOf = r => r.label ? T(esc(r.label), esc(r.labelKo)) : esc(r.name);
+
+function lunchRows(r) {
+  return `<div class="rows">` + (r.type === "morning" ? MORNING_ROWS : EVENING_ROWS).map(row => {
+    const n = row.keys.reduce((t, k) => t + (r.out[k] || 0), 0);
+    const parts = row.keys.length > 1 ? `<span class="parts">${row.keys.map(k => `${T(LABEL[k].en, LABEL[k].ko)} ${r.out[k] || 0}`).join(" + ")}</span>` : "";
+    return `<div class="row"><div class="name">${T(row.en, row.ko)}${parts}</div><div class="num${n ? "" : " zero"}">${n}</div></div>`;
+  }).join("") + `</div><div class="note">${T("Numbers are net quantity sold.", "순 판매 수량입니다.")}</div>`;
+}
+
+function orbitRows(r) {
+  return ORBIT.map(g => `<div class="sect">${T(g.sect[0], g.sect[1])}</div><div class="rows" style="margin-top:0">` +
+    g.rows.map(([k, en, ko, , kind]) => {
+      const v = r.orbit[k];
+      const txt = v == null ? T("Not found", "없음") : kind === "money" ? money(v) : v.toLocaleString("en-CA");
+      return `<div class="row money${String(txt).length > 11 ? " stack" : ""}${v == null ? " missing" : ""}"><div class="name">${T(en, ko)}</div><div class="num">${txt}</div></div>`;
+    }).join("") + `</div>`).join("");
+}
+
+function reportHTML(r, i, total) {
+  const k = KIND[r.type];
+  const count = total > 1 ? `<span class="count">${T(`Report ${i + 1} of ${total}`, `보고서 ${i + 1} / ${total}`)}</span>` : "";
+  if (r.type === "error") return `<div class="card">${count}<div class="when" style="font-size:24px">📄 ${esc(r.name)}</div>
+    <div class="msg err" role="alert">${T("Sorry, this file could not be read. Please make sure it is a sales report or Orbit report PDF.", "파일을 읽을 수 없습니다. 매출 보고서 또는 Orbit 보고서 PDF인지 확인해 주세요.")}</div></div>`;
+  return `<div class="card">${count}<div class="when">${dateOf(r)}</div>` +
+    `<div class="shift ${k.cls}"><span class="icon" aria-hidden="true">${k.icon}</span><div>${k.name}<span class="parts">${k.hours}</span></div></div>` +
+    (r.type === "orbit" ? orbitRows(r) : lunchRows(r)) +
+    `<div class="src">📄 ${esc(r.name)}${r.range ? `<br>${esc(r.range)}` : ""}</div></div>`;
+}
+
+/* ---------- Screens and the phone's back button ---------- */
+
+let reports = [];
+let state = {};
+const SCREENS = ["gate", "pick", "loading", "list", "detail"];
+
+function render(st) {
+  if (["list", "detail"].includes(st.v) && !reports.length) st = { v: "pick" };
+  if (st.v === "list" && reports.length === 1) st = { v: "detail", i: 0 };
+  if (st.v === "detail" && !reports[st.i]) st = { v: "list" };
+  // Reports are only thrown away by "Start over", never by pressing back once too often.
+  if (st.v === "pick") {
+    $("resumeBtn").hidden = !reports.length;
+    $("resumeBtn").innerHTML = `${T(`Back to my ${reports.length} reports`, `내 보고서 ${reports.length}개로 돌아가기`)}`;
+  }
+  state = st;
+  SCREENS.forEach(s => $(s).hidden = s !== st.v);
+  if (st.v === "list") renderList();
+  if (st.v === "detail") renderDetail(st);
+  window.scrollTo(0, 0);
+}
+function go(st, push) {
+  push ? history.pushState(st, "") : history.replaceState(st, "");
+  render(st);
+}
+window.addEventListener("popstate", e => render(e.state || { v: signedIn ? "pick" : "gate" }));
+
+function renderList() {
+  const n = reports.length;
+  $("listTitle").innerHTML = T(`${n} report${n === 1 ? "" : "s"}`, `보고서 ${n}개`);
+  $("listItems").innerHTML = reports.map((r, i) => `<button type="button" class="listbtn${r.type === "error" ? " bad" : ""}" data-open="${i}">
+      <span class="icon" aria-hidden="true">${KIND[r.type].icon}</span>
+      <span>${r.type === "error" ? esc(r.name) : dateOf(r)}<span class="sub">${KIND[r.type].name}</span></span>
+      ${chev("right")}</button>`).join("");
+}
+
+function renderDetail(st) {
+  const n = reports.length, i = st.i;
+  $("detailCard").innerHTML = reportHTML(reports[i], i, n);
+  $("backBtn").hidden = n < 2;
+  $("backBtn").innerHTML = `${chev("left")}${T(`All reports (${n})`, `전체 보고서 (${n})`)}`;
+  $("detailClear").hidden = n > 1;
+  const short = r => r ? (r.type === "error" ? esc(r.name) : dateOf(r)) : "&nbsp;";
+  $("detailDock").innerHTML = n > 1
+    ? `<div class="navrow">
+        <button type="button" class="btn secondary" data-step="-1" ${i === 0 ? "disabled" : ""}><span>${ichev("left")}${T("Previous", "이전")}</span><small>${short(reports[i - 1])}</small></button>
+        <button type="button" class="btn secondary" data-step="1" ${i === n - 1 ? "disabled" : ""}><span>${T("Next", "다음")}${ichev("right")}</span><small>${short(reports[i + 1])}</small></button>
+      </div>`
+    : `<button type="button" class="btn" data-add><span class="plus" aria-hidden="true">+</span> ${T("Add more reports", "보고서 더 추가")}</button>`;
+}
+
+/* ---------- Adding files ---------- */
+
+async function addFiles(files) {
+  files = files.filter(f => f && (/pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)));
+  if (!files.length) return;
+  const from = state;
+  const known = new Set(reports.map(r => r.key));
+  const fresh = files.filter(f => !known.has([f.name, f.size, f.lastModified].join("|")));
+  SCREENS.forEach(s => $(s).hidden = s !== "loading");
+  window.scrollTo(0, 0);
+  // The same report downloaded twice ("Monday (1).pdf") is recognised by its contents and skipped.
+  const sig = r => r.type === "error" ? r.key : r.type + "|" + r.range;
+  const have = new Set(reports.map(sig));
+  let dups = files.length - fresh.length;
+  // One file at a time keeps older phones responsive and lets us show progress.
+  for (let i = 0; i < fresh.length; i++) {
+    $("loadText").innerHTML = T(fresh.length > 1 ? `Reading report ${i + 1} of ${fresh.length}…` : "Reading the report…",
+                                fresh.length > 1 ? `보고서 읽는 중… (${i + 1} / ${fresh.length})` : "보고서를 읽는 중…");
+    $("loadBar").style.width = (i / fresh.length * 100) + "%";
+    const r = await parse(fresh[i]);
+    if (have.has(sig(r))) { dups++; continue; }
+    have.add(sig(r));
+    reports.push(r);
+  }
+  $("dupNote").hidden = !dups;
+  $("dupNote").innerHTML = T(`${dups} report${dups === 1 ? " was" : "s were"} already in the list, so ${dups === 1 ? "it was" : "they were"} skipped.`,
+                             `이미 있는 보고서 ${dups}개는 건너뛰었습니다.`);
+  // Oldest first, so the list reads like a calendar; unreadable files go last.
+  reports.sort((a, b) => a.sort - b.sort);
+  say(`${reports.length} reports ready.`, `보고서 ${reports.length}개 준비됨.`);
+
+  if (reports.length === 1) return go({ v: "detail", i: 0 }, true);
+  if (from.v === "pick") return go({ v: "list" }, true);
+  // Coming from a report opened from the list: step back to that list instead of stacking another.
+  if (from.v === "detail" && from.fromList) return history.back();
+  go({ v: "list" }, false);
+}
+
 document.addEventListener("click", e => {
-  const go = e.target.closest("[data-go]");
-  if (go) { const el = document.getElementById("report-" + go.dataset.go) || $("cards").children[go.dataset.go]; el.scrollIntoView({ behavior: "smooth", block: "start" }); }
-  if (e.target.closest("[data-top]")) $("jump").scrollIntoView({ behavior: "smooth", block: "start" });
+  const t = e.target.closest("button");
+  if (!t) return;
+  if (t.hasAttribute("data-add")) { $("file").value = ""; $("file").click(); }
+  if (t.dataset.open) go({ v: "detail", i: +t.dataset.open, fromList: true }, true);
+  if (t.dataset.step) go({ ...state, i: state.i + +t.dataset.step }, false);
+  if (t.hasAttribute("data-clear")) {
+    if (reports.length > 1 && !confirm(document.documentElement.dataset.lang === "ko" ? `보고서 ${reports.length}개를 모두 지우고 처음부터 시작할까요?` : `Remove all ${reports.length} reports and start over?`)) return;
+    reports = []; $("dupNote").hidden = true; go({ v: "pick" }, false); }
+});
+$("resumeBtn").addEventListener("click", () => go({ v: "list" }, true));
+$("backBtn").addEventListener("click", () => state.fromList ? history.back() : go({ v: "list" }, false));
+$("file").addEventListener("change", () => addFiles([...$("file").files]));
+// Dropping files anywhere also works on a computer.
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", e => { e.preventDefault(); if (state.v !== "gate") addFiles([...e.dataTransfer.files]); });
+
+/* ---------- Sign in ---------- */
+
+async function sha256(s) {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+
+// Stay signed in on this device so she isn't asked every time.
+let signedIn = false;
+try { signedIn = localStorage.getItem("jm-ok") === HASH; } catch (e) {}
+go({ v: signedIn ? "pick" : "gate" }, false);
+if (!signedIn) $("pw").focus();
+
+$("toggle").addEventListener("click", () => {
+  const p = $("pw"), hidden = p.type === "password";
+  p.type = hidden ? "text" : "password";
+  $("toggle").innerHTML = hidden ? T("Hide", "숨기기") : T("Show", "보기");
 });
 
-$("chooseBtn").addEventListener("click", () => { $("file").value = ""; $("file").click(); });
-$("againBtn").addEventListener("click", () => { $("file").value = ""; $("file").click(); });
-$("file").addEventListener("change", () => handle([...$("file").files]));
-// Dropping a file anywhere also works on a computer.
-document.addEventListener("dragover", e => e.preventDefault());
-document.addEventListener("drop", e => {
+$("gate").addEventListener("submit", async e => {
   e.preventDefault();
-  if (!$("gate").hidden) return;
-  handle([...e.dataTransfer.files].filter(f => /pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)));
+  if (await sha256($("pw").value.trim()) === HASH) {
+    signedIn = true;
+    try { localStorage.setItem("jm-ok", HASH); } catch (e) {}
+    $("gateErr").hidden = true;
+    go({ v: "pick" }, false);
+  } else {
+    $("gateErr").innerHTML = T("That password is not right. Please try again.", "비밀번호가 맞지 않습니다. 다시 입력해 주세요.");
+    $("gateErr").hidden = false;
+  }
 });
 </script>
 </body>
