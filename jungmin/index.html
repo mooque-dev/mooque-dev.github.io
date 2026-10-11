@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf8f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Lunch Counter">
+<meta name="format-detection" content="telephone=no">
 <meta name="robots" content="noindex, nofollow">
 <title>Lunch Counter</title>
 <script>
@@ -16,9 +22,15 @@
     --accent:#1f5c3d; --accent-ink:#ffffff; --accent-soft:#e3f0e8; --err:#9b1c1c; --err-soft:#fde8e8;
   }
   * { box-sizing:border-box; }
-  html { -webkit-text-size-adjust:100%; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:22px/1.5 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif; }
-  main { max-width:620px; margin:0 auto; padding:32px 16px 64px; }
+  html { -webkit-text-size-adjust:100%; -webkit-tap-highlight-color:transparent; }
+  button, input { font-family:inherit; touch-action:manipulation; }
+  body { margin:0; background:var(--bg); color:var(--ink); word-break:keep-all; overflow-wrap:anywhere; font:22px/1.5 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif; }
+  main { max-width:620px; margin:0 auto; padding:calc(24px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-left)) calc(40px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-right)); }
+  #cards .card { scroll-margin-top:12px; }
+  /* Keep "Check other reports" within thumb reach at the bottom of the screen. */
+  .dock { position:sticky; bottom:0; margin:24px -16px calc(-40px - env(safe-area-inset-bottom)); padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    background:linear-gradient(to bottom, rgba(251,248,241,0), var(--bg) 30%); }
+  .dock .btn { margin-top:0; box-shadow:0 4px 16px rgba(0,0,0,0.12); }
   h1 { font-size:36px; line-height:1.2; margin:0 0 8px; }
   h2 { font-size:28px; margin:0 0 16px; }
   html[data-lang="en"] .ko, html[data-lang="ko"] .en { display:none !important; }
@@ -72,6 +84,18 @@
   .when { font-size:26px; font-weight:800; line-height:1.25; }
   .fname { font-size:18px; color:var(--muted); margin-top:6px; word-break:break-word; }
   .top { display:flex; align-items:center; gap:10px; margin:16px auto 0; font-size:20px; font-weight:700; color:var(--accent); background:none; border:0; padding:12px; cursor:pointer; }
+  @media (max-width: 420px) {
+    body { font-size:20px; }
+    h1 { font-size:30px; }
+    h2 { font-size:24px; }
+    .card { padding:18px; border-radius:18px; margin-top:18px; }
+    .btn { font-size:24px; min-height:68px; }
+    .name { font-size:22px; }
+    .num { font-size:46px; }
+    .when { font-size:24px; }
+    .row { padding:16px 0; }
+    .lang button { min-width:76px; font-size:19px; }
+  }
   [hidden] { display:none !important; }
 </style>
 </head>
@@ -115,7 +139,7 @@
   <section id="result" hidden aria-live="polite">
     <nav id="jump" class="card" hidden></nav>
     <div id="cards"></div>
-    <button type="button" class="btn secondary" id="againBtn"><span class="en">Check other reports</span><span class="ko">다른 보고서 확인</span></button>
+    <div class="dock"><button type="button" class="btn secondary" id="againBtn"><span class="en">Check other reports</span><span class="ko">다른 보고서 확인</span></button></div>
   </section>
 </main>
 
