@@ -235,10 +235,10 @@ function orbitRows(r) {
 
 function reportHTML(r, i, total) {
   const k = KIND[r.type];
-  if (r.type === "error") return `<div class="card"><div class="hero" role="alert" style="border-color:var(--err);background:var(--err-soft);align-items:flex-start">${icon("error")}<div>
-    <div class="when" style="font-size:22px">${esc(r.name)}</div><span class="kind" style="color:var(--err)">${WHY[r.why]}</span></div></div></div>`;
+  if (r.type === "error") return `<div class="card"><div class="hero" style="border-bottom:0;padding-bottom:0">${icon("error")}<div class="when" style="font-size:22px">${esc(r.name)}</div></div>
+    <div class="msg err" role="alert">${WHY[r.why]}</div></div>`;
   return `<div class="card"><div class="hero ${k.cls}">${icon(k.cls)}<div><div class="when">${dateOf(r)}</div>` +
-    `<span class="kind">${k.name}</span><span class="hours">${k.hours}</span></div></div>` +
+    `<span class="badge ${k.cls}">${k.name}</span><span class="hours">${k.hours}</span></div></div>` +
     (r.type === "orbit" ? orbitRows(r) : lunchRows(r)) +
     `<div class="src">📄 ${esc(r.name)}${r.range ? `<br>${esc(r.range)}` : ""}</div></div>`;
 }
@@ -277,7 +277,7 @@ function renderList() {
     const k = KIND[r.type];
     return `<button type="button" class="listbtn ${r.type === "error" ? "bad" : k.cls}" data-open="${i}">
       ${icon(k.cls)}
-      <span>${r.type === "error" ? esc(r.name) : dateOf(r)}<span class="sub">${r.type === "error" ? WHY_SHORT[r.why] : k.short || k.name}</span></span>
+      <span>${r.type === "error" ? esc(r.name) : dateOf(r)}${r.type === "error" ? `<span class="sub err">${WHY_SHORT[r.why]}</span>` : `<br><span class="badge ${k.cls}">${k.short || k.name}</span>`}</span>
       ${chev("right")}</button>`;
   }).join("");
 }
