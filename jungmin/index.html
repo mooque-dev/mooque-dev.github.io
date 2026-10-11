@@ -155,6 +155,15 @@
   .row.missing .num { color:var(--faint); font-size:21px; }
   .src { margin-top:20px; padding-top:14px; border-top:1px solid var(--border); font-size:16px; color:var(--faint); line-height:1.45; }
 
+  /* Demo mode */
+  .demo-card .btn { margin-top:14px; }
+  .dl { margin:16px 0 0; padding:0; list-style:none; font-size:19px; }
+  .dl li { margin-top:8px; }
+  .dl a { color:var(--foreground); font-weight:600; text-underline-offset:4px; }
+  .demo-banner { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:16px; padding:10px 10px 10px 16px;
+    border-radius:var(--radius); background:#fef3c7; color:#78350f; font-size:18px; font-weight:700; }
+  .demo-exit { min-height:44px; padding:6px 14px; font-size:17px; font-weight:600; color:#78350f; background:#fff; border:1px solid #fcd34d; border-radius:9px; cursor:pointer; }
+
   @media (max-width: 420px) {
     body { font-size:20px; }
     header h1 { font-size:23px; }
@@ -192,6 +201,11 @@
     <div class="msg err" id="gateErr" role="alert" hidden></div>
     <button type="submit" class="btn"><span class="en">Sign in</span><span class="ko">들어가기</span></button>
   </form>
+  <div class="card demo-card" id="gateDemo" hidden>
+    <h2 style="font-size:21px"><span class="en">Just looking?</span><span class="ko">둘러보기만 하시나요?</span></h2>
+    <p class="lead"><span class="en">Try it with sample reports. No password needed, and no real data is used.</span><span class="ko">샘플 보고서로 체험해 보세요. 비밀번호가 필요 없고 실제 데이터는 쓰지 않습니다.</span></p>
+    <button type="button" class="btn secondary" data-demo><span class="en">Try the demo</span><span class="ko">데모 체험하기</span></button>
+  </div>
 
   <!-- Choose files -->
   <section id="pick" hidden>
@@ -205,6 +219,16 @@
       </span></div>
     </div>
     <button type="button" class="btn secondary" id="resumeBtn" hidden></button>
+    <div class="card demo-card">
+      <h2 style="font-size:21px"><span class="en">Showing someone?</span><span class="ko">다른 사람에게 보여 주시나요?</span></h2>
+      <p class="lead"><span class="en">Use the demo with sample reports, or download the sample PDFs to try choosing files.</span><span class="ko">샘플 보고서로 데모를 보거나, 샘플 PDF를 내려받아 파일 선택을 해 보세요.</span></p>
+      <button type="button" class="btn secondary" data-demo><span class="en">Try the demo</span><span class="ko">데모 체험하기</span></button>
+      <ul class="dl">
+        <li><a href="demo/Demo - Night report (Mon, Nov 2).pdf" download><span class="en">Sample night report (PDF)</span><span class="ko">샘플 야간 보고서 (PDF)</span></a></li>
+        <li><a href="demo/Demo - Morning report (Tue, Nov 3).pdf" download><span class="en">Sample morning report (PDF)</span><span class="ko">샘플 오전 보고서 (PDF)</span></a></li>
+        <li><a href="demo/Demo - Orbit close-day (Tue, Nov 3).pdf" download><span class="en">Sample Orbit report (PDF)</span><span class="ko">샘플 Orbit 보고서 (PDF)</span></a></li>
+      </ul>
+    </div>
     <button type="button" class="linkbtn quiet" id="signOut"><span class="en">Sign out</span><span class="ko">로그아웃</span></button>
   </section>
 
@@ -218,6 +242,7 @@
 
   <!-- All reports -->
   <section id="list" hidden>
+    <div class="demo-banner" data-demobanner hidden><span class="en">Demo · sample data, not real</span><span class="ko">데모 · 실제가 아닌 샘플 데이터</span><button type="button" class="demo-exit" data-exitdemo><span class="en">Exit demo</span><span class="ko">데모 끝내기</span></button></div>
     <div class="card">
       <h2 id="listTitle"></h2>
       <div class="note" style="margin-top:0"><span class="en">Oldest first. Tap a report to open it.</span><span class="ko">오래된 순서입니다. 보고서를 눌러서 여세요.</span></div>
@@ -230,6 +255,7 @@
 
   <!-- One report -->
   <section id="detail" hidden>
+    <div class="demo-banner" data-demobanner hidden><span class="en">Demo · sample data, not real</span><span class="ko">데모 · 실제가 아닌 샘플 데이터</span><button type="button" class="demo-exit" data-exitdemo><span class="en">Exit demo</span><span class="ko">데모 끝내기</span></button></div>
     <div class="topnav"><button type="button" class="backbtn" id="backBtn"></button><span class="pos" id="pos"></span></div>
     <div id="detailCard"></div>
     <button type="button" class="linkbtn" data-clear id="detailClear"><span class="en">Start over</span><span class="ko">처음부터 다시</span></button>
@@ -241,6 +267,7 @@
 </main>
 
 <script src="vendor/pdf.min.js"></script>
+<script src="demo.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -187,7 +187,9 @@ async function parse(file) {
       return { ...base, type: "orbit", range: r.range, orbit, sort: when(r.range).sort, label: end.label, labelKo: end.labelKo };
     }
     if (!Object.keys(r.out).length) throw new Error("none");
-    return { ...base, type: r.morning ? "morning" : "night", ...r, ...when(r.range) };
+    // A morning report (11 PM → 1 PM) belongs to the day it ends; a night report starts and ends the same day.
+    const day = r.morning ? when(r.range.split(/\s[–-]\s/).pop()) : when(r.range);
+    return { ...base, type: r.morning ? "morning" : "night", ...r, sort: when(r.range).sort, label: day.label, labelKo: day.labelKo };
   } catch (e) {
     return { ...base, type: "error", why: WHY[e.message] ? e.message : "none", sort: Infinity };
   }
@@ -250,7 +252,9 @@ let state = {};
 const SCREENS = ["gate", "pick", "loading", "list", "detail"];
 
 function render(st) {
-  if (["list", "detail"].includes(st.v) && !reports.length) st = { v: "pick" };
+  // Without the password, only the demo's sample reports can be viewed.
+  if (!signedIn && (st.v === "pick" || reports.some(r => !r.demo))) { reports = reports.filter(r => r.demo); if (st.v === "pick" || !reports.length) st = { v: "gate" }; }
+  if (["list", "detail"].includes(st.v) && !reports.length) st = { v: signedIn ? "pick" : "gate" };
   if (st.v === "list" && reports.length === 1 && $("dupNote").hidden) st = { v: "detail", i: 0 };
   if (st.v === "detail" && !reports[st.i]) st = { v: "list" };
   // Reports are only thrown away by "Start over", never by pressing back once too often.
@@ -260,6 +264,12 @@ function render(st) {
   }
   state = st;
   SCREENS.forEach(s => $(s).hidden = s !== st.v);
+  const demo = reports.some(r => r.demo);
+  document.querySelectorAll("[data-demobanner]").forEach(b => b.hidden = !demo);
+  // In the demo, "Exit demo" replaces "Start over"; without the password there is nothing to add.
+  document.querySelector("#list [data-clear]").hidden = demo;
+  document.querySelector("#list .dock").hidden = !signedIn;
+  $("gateDemo").hidden = st.v !== "gate";
   if (st.v === "list") renderList();
   if (st.v === "detail") renderDetail(st);
   window.scrollTo(0, 0);
@@ -288,7 +298,7 @@ function renderDetail(st) {
   $("backBtn").parentNode.hidden = n < 2;
   $("pos").innerHTML = n > 1 ? T(`${i + 1} of ${n}`, `${i + 1} / ${n}`) : "";
   $("backBtn").innerHTML = `${chev("left")}${T(`All reports (${n})`, `전체 보고서 (${n})`)}`;
-  $("detailClear").hidden = n > 1;
+  $("detailClear").hidden = n > 1 || reports.some(r => r.demo);
   const short = r => r ? (r.type === "error" ? esc(r.name) : dateOf(r)) : "&nbsp;";
   $("detailDock").innerHTML = n > 1
     ? `<div class="navrow">
@@ -305,7 +315,7 @@ function showNotes(notes) {
   $("dupNote").innerHTML = notes.join("<br><br>");
 }
 
-async function addFiles(files) {
+async function addFiles(files, demo) {
   files = files.filter(Boolean);
   if (!files.length) return;
   const from = state;
@@ -335,6 +345,7 @@ async function addFiles(files) {
                                 fresh.length > 1 ? `보고서 읽는 중… (${i + 1} / ${fresh.length})` : "보고서를 읽는 중…");
     $("loadBar").style.width = (i / fresh.length * 100) + "%";
     const r = await parse(fresh[i]);
+    if (demo) r.demo = true;
     if (have.has(sig(r))) { dups++; continue; }
     have.add(sig(r));
     reports.push(r);
@@ -347,7 +358,7 @@ async function addFiles(files) {
   say(`${reports.length} reports ready.`, `보고서 ${reports.length}개 준비됨.`);
 
   if (reports.length === 1 && !notes.length) return go({ v: "detail", i: 0 }, true);
-  if (from.v === "pick") return go({ v: "list" }, true);
+  if (from.v === "pick" || from.v === "gate") return go({ v: "list" }, true);
   // Coming from a report opened from the list: step back to that list instead of stacking another.
   if (from.v === "detail" && from.fromList) return history.back();
   go({ v: "list" }, false);
@@ -356,9 +367,15 @@ async function addFiles(files) {
 document.addEventListener("click", e => {
   const t = e.target.closest("button");
   if (!t) return;
-  if (t.hasAttribute("data-add")) { $("file").value = ""; $("file").click(); }
+  if (t.hasAttribute("data-add")) {
+    if (!signedIn) return go({ v: "gate" }, false);   // demo visitors can't open their own files
+    $("file").value = ""; $("file").click();
+  }
+  if (t.hasAttribute("data-demo")) startDemo();
+  if (t.hasAttribute("data-exitdemo")) exitDemo();
   if (t.dataset.open) go({ v: "detail", i: +t.dataset.open, fromList: true }, true);
   if (t.dataset.step) go({ ...state, i: state.i + +t.dataset.step }, false);
+  if (t.hasAttribute("data-clear") && reports.some(r => r.demo)) return exitDemo();
   if (t.hasAttribute("data-clear")) {
     if (reports.length > 1 && !confirm(document.documentElement.dataset.lang === "ko" ? `보고서 ${reports.length}개를 모두 지우고 처음부터 시작할까요?` : `Remove all ${reports.length} reports and start over?`)) return;
     reports = []; showNotes([]); go({ v: "pick" }, false); }
@@ -368,7 +385,24 @@ $("backBtn").addEventListener("click", () => state.fromList ? history.back() : g
 $("file").addEventListener("change", () => addFiles([...$("file").files]));
 // Dropping files anywhere also works on a computer.
 document.addEventListener("dragover", e => e.preventDefault());
-document.addEventListener("drop", e => { e.preventDefault(); if (state.v !== "gate") addFiles([...e.dataTransfer.files]); });
+document.addEventListener("drop", e => { e.preventDefault(); if (signedIn) addFiles([...e.dataTransfer.files]); });
+
+/* ---------- Demo mode ---------- */
+
+// Made-up sample reports (demo.js) run through the same reader as real files.
+function startDemo() {
+  const files = DEMO_PDFS.map(([name, b64]) => new File([Uint8Array.from(atob(b64), c => c.charCodeAt(0))], name, { type: "application/pdf" }));
+  reports = reports.filter(r => !r.demo);
+  if (reports.length && !confirm(document.documentElement.dataset.lang === "ko" ? "데모를 시작하면 지금 열린 보고서가 닫힙니다. 계속할까요?" : "Starting the demo will close the reports you have open. Continue?")) return;
+  reports = [];
+  showNotes([]);
+  addFiles(files, true);
+}
+function exitDemo() {
+  reports = [];
+  showNotes([]);
+  go({ v: signedIn ? "pick" : "gate" }, false);
+}
 
 /* ---------- Sign in ---------- */
 
