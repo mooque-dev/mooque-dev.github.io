@@ -166,7 +166,7 @@ function when(range) {
   const m = range.match(/([A-Za-z]{3}),\s*([A-Za-z]{3})\s*(\d{1,2}),\s*(\d{4}),\s*(\d{1,2}):(\d{2})\s*(AM|PM)/i);
   if (!m) return { sort: Infinity, label: "", labelKo: "" };
   const h = (+m[5] % 12) + (/pm/i.test(m[7]) ? 12 : 0);
-  return { sort: new Date(+m[4], MONTHS.indexOf(m[2]) / 3, +m[3], h, +m[6]).getTime(), label: `${m[1]}, ${m[2]} ${m[3]}`,
+  return { sort: new Date(+m[4], MONTHS.indexOf(m[2]) / 3, +m[3], h, +m[6]).getTime(), day: new Date(+m[4], MONTHS.indexOf(m[2]) / 3, +m[3]).getTime(), label: `${m[1]}, ${m[2]} ${m[3]}`,
     labelKo: `${MONTHS.indexOf(m[2]) / 3 + 1}월 ${+m[3]}일 (${"일월화수목금토"["SunMonTueWedThuFriSat".indexOf(m[1]) / 3]})` };
 }
 
@@ -184,12 +184,12 @@ async function parse(file) {
       if (!Object.keys(orbit).length) throw new Error("none");
       // The business day is the day the report ends (11 PM the night before → 10:59 PM).
       const end = when(r.range.split(/\s[–-]\s/).pop());
-      return { ...base, type: "orbit", range: r.range, orbit, sort: when(r.range).sort, label: end.label, labelKo: end.labelKo };
+      return { ...base, type: "orbit", range: r.range, orbit, sort: when(r.range).sort, label: end.label, labelKo: end.labelKo, day: end.day };
     }
     if (!Object.keys(r.out).length) throw new Error("none");
     // A morning report (11 PM → 1 PM) belongs to the day it ends; a night report starts and ends the same day.
     const day = r.morning ? when(r.range.split(/\s[–-]\s/).pop()) : when(r.range);
-    return { ...base, type: r.morning ? "morning" : "night", ...r, sort: when(r.range).sort, label: day.label, labelKo: day.labelKo };
+    return { ...base, type: r.morning ? "morning" : "night", ...r, sort: when(r.range).sort, label: day.label, labelKo: day.labelKo, day: day.day };
   } catch (e) {
     return { ...base, type: "error", why: WHY[e.message] ? e.message : "none", sort: Infinity };
   }
@@ -216,6 +216,13 @@ const WHY_SHORT = {
   size: T("Too big", "너무 큼"), type: T("Not a PDF", "PDF 아님"), pages: T("Too many pages", "쪽수 너무 많음"),
   slow: T("Took too long", "너무 오래 걸림"), none: T("No report numbers found", "보고서 숫자 없음"),
 };
+// "Today" / "Yesterday" for recent reports, so the newest ones are easy to spot.
+function relDay(r) {
+  if (!r.day) return "";
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const d = Math.round((today - r.day) / 864e5);
+  return d === 0 ? T("Today", "오늘") : d === 1 ? T("Yesterday", "어제") : "";
+}
 const dateOf = r => r.label ? T(esc(r.label), esc(r.labelKo)) : esc(r.name);
 
 function lunchRows(r) {
@@ -240,9 +247,21 @@ function reportHTML(r, i, total) {
   if (r.type === "error") return `<div class="card"><div class="hero" style="border-bottom:0;padding-bottom:0">${icon("error")}<div class="when" style="font-size:22px">${esc(r.name)}</div></div>
     <div class="msg err" role="alert">${WHY[r.why]}</div></div>`;
   return `<div class="card"><div class="hero ${k.cls}">${icon(k.cls)}<div><div class="when">${dateOf(r)}</div>` +
-    `<span class="badge ${k.cls}">${k.name}</span><span class="hours">${k.hours}</span></div></div>` +
+    `<span class="badge ${k.cls}">${k.name}</span>${relDay(r) ? ` <span class="badge rel">${relDay(r)}</span>` : ""}<span class="hours">${k.hours}</span></div></div>` +
     (r.type === "orbit" ? orbitRows(r) : lunchRows(r)) +
     `<div class="src">📄 ${esc(r.name)}${r.range ? `<br>${esc(r.range)}` : ""}</div></div>`;
+}
+
+/* ---------- Greeting ---------- */
+
+const NAME_EN = "Jungmin", NAME_KO = "정민";
+function greet() {
+  const h = new Date().getHours();
+  const [en, ko] = h < 12 ? ["Good morning", "좋은 아침이에요"] : h < 18 ? ["Good afternoon", "좋은 오후예요"] : ["Good evening", "좋은 저녁이에요"];
+  $("hello").innerHTML = T(`${en}, ${NAME_EN}`, `${NAME_KO}님, ${ko}`);
+  const now = new Date();
+  $("today").innerHTML = T(now.toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" }),
+                           now.toLocaleDateString("ko-KR", { month: "long", day: "numeric", weekday: "long" }));
 }
 
 /* ---------- Screens and the phone's back button ---------- */
@@ -270,6 +289,7 @@ function render(st) {
   document.querySelector("#list [data-clear]").hidden = demo;
   document.querySelector("#list .dock").hidden = !signedIn;
   $("gateDemo").hidden = st.v !== "gate";
+  if (st.v === "pick") greet();
   if (st.v === "list") renderList();
   if (st.v === "detail") renderDetail(st);
   window.scrollTo(0, 0);
@@ -282,12 +302,12 @@ window.addEventListener("popstate", e => render(e.state || { v: signedIn ? "pick
 
 function renderList() {
   const n = reports.length;
-  $("listTitle").innerHTML = T(`${n} report${n === 1 ? "" : "s"}`, `보고서 ${n}개`);
+  $("listTitle").innerHTML = T(`Your ${n} report${n === 1 ? "" : "s"}`, `${NAME_KO}님의 보고서 ${n}개`);
   $("listItems").innerHTML = reports.map((r, i) => {
     const k = KIND[r.type];
     return `<button type="button" class="listbtn ${r.type === "error" ? "bad" : k.cls}" data-open="${i}">
       ${icon(k.cls)}
-      <span>${r.type === "error" ? esc(r.name) : dateOf(r)}${r.type === "error" ? `<span class="sub err">${WHY_SHORT[r.why]}</span>` : `<br><span class="badge ${k.cls}">${k.short || k.name}</span>`}</span>
+      <span>${r.type === "error" ? esc(r.name) : dateOf(r)}${r.type === "error" ? `<span class="sub err">${WHY_SHORT[r.why]}</span>` : `<br><span class="badge ${k.cls}">${k.short || k.name}</span>${relDay(r) ? ` <span class="badge rel">${relDay(r)}</span>` : ""}`}</span>
       ${chev("right")}</button>`;
   }).join("");
 }
@@ -300,11 +320,15 @@ function renderDetail(st) {
   $("backBtn").innerHTML = `${chev("left")}${T(`All reports (${n})`, `전체 보고서 (${n})`)}`;
   $("detailClear").hidden = n > 1 || reports.some(r => r.demo);
   const short = r => r ? (r.type === "error" ? esc(r.name) : dateOf(r)) : "&nbsp;";
+  const prev = i === 0
+    ? `<button type="button" class="btn secondary" disabled><span>${ichev("left")}${T("Previous", "이전")}</span><small>${T("This is the first", "첫 보고서입니다")}</small></button>`
+    : `<button type="button" class="btn secondary" data-step="-1"><span>${ichev("left")}${T("Previous", "이전")}</span><small>${short(reports[i - 1])}</small></button>`;
+  // On the last report, the right-hand button leads somewhere useful instead of going dead.
+  const next = i === n - 1
+    ? `<button type="button" class="btn" data-tolist><span>${T("All done", "다 봤어요")}</span><small>${T(`Back to all ${n}`, `전체 ${n}개로`)}</small></button>`
+    : `<button type="button" class="btn secondary" data-step="1"><span>${T("Next", "다음")}${ichev("right")}</span><small>${short(reports[i + 1])}</small></button>`;
   $("detailDock").innerHTML = n > 1
-    ? `<div class="navrow">
-        <button type="button" class="btn secondary" data-step="-1" ${i === 0 ? "disabled" : ""}><span>${ichev("left")}${T("Previous", "이전")}</span><small>${short(reports[i - 1])}</small></button>
-        <button type="button" class="btn secondary" data-step="1" ${i === n - 1 ? "disabled" : ""}><span>${T("Next", "다음")}${ichev("right")}</span><small>${short(reports[i + 1])}</small></button>
-      </div>`
+    ? `<div class="navrow">${prev}${next}</div>`
     : `<button type="button" class="btn" data-add><span class="plus" aria-hidden="true">+</span> ${T("Add more reports", "보고서 더 추가")}</button>`;
 }
 
@@ -341,8 +365,8 @@ async function addFiles(files, demo) {
   let dups = files.length - fresh.length;
   // One file at a time keeps older phones responsive and lets us show progress.
   for (let i = 0; i < fresh.length; i++) {
-    $("loadText").innerHTML = T(fresh.length > 1 ? `Reading report ${i + 1} of ${fresh.length}…` : "Reading the report…",
-                                fresh.length > 1 ? `보고서 읽는 중… (${i + 1} / ${fresh.length})` : "보고서를 읽는 중…");
+    $("loadText").innerHTML = T(fresh.length > 1 ? `Reading your reports… ${i + 1} of ${fresh.length}` : "Reading your report…",
+                                fresh.length > 1 ? `보고서를 읽고 있어요… ${i + 1} / ${fresh.length}` : "보고서를 읽고 있어요…");
     $("loadBar").style.width = (i / fresh.length * 100) + "%";
     const r = await parse(fresh[i]);
     if (demo) r.demo = true;
@@ -374,6 +398,7 @@ document.addEventListener("click", e => {
   if (t.hasAttribute("data-demo")) startDemo();
   if (t.hasAttribute("data-exitdemo")) exitDemo();
   if (t.dataset.open) go({ v: "detail", i: +t.dataset.open, fromList: true }, true);
+  if (t.hasAttribute("data-tolist")) $("backBtn").click();
   if (t.dataset.step) go({ ...state, i: state.i + +t.dataset.step }, false);
   if (t.hasAttribute("data-clear") && reports.some(r => r.demo)) return exitDemo();
   if (t.hasAttribute("data-clear")) {

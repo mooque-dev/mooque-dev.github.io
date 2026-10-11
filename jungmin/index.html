@@ -155,6 +155,16 @@
   .row.missing .num { color:var(--faint); font-size:21px; }
   .src { margin-top:20px; padding-top:14px; border-top:1px solid var(--border); font-size:16px; color:var(--faint); line-height:1.45; }
 
+  /* Personal touches */
+  .greet { display:flex; align-items:center; gap:14px; }
+  .hero-greet { margin-top:22px; }
+  .avatar { flex:none; width:56px; height:56px; border-radius:50%; display:grid; place-items:center; font-size:24px; font-weight:700;
+    background:linear-gradient(135deg, #fed7aa, #fecdd3); color:#7c2d12; box-shadow:var(--shadow-sm); }
+  .hello { font-size:26px; font-weight:700; letter-spacing:-0.01em; line-height:1.2; }
+  .today { font-size:18px; color:var(--muted-foreground); margin-top:2px; }
+  .badge.rel { background:#dcfce7; color:#14532d; }
+  .navrow .btn:not(.secondary) small { color:#d4d4d8; }
+
   /* Demo mode */
   .demo-card .btn { margin-top:14px; }
   .dl { margin:16px 0 0; padding:0; list-style:none; font-size:19px; }
@@ -192,7 +202,9 @@
 
   <!-- Sign in -->
   <form id="gate" class="card" hidden>
-    <h2><span class="en">Please sign in</span><span class="ko">비밀번호를 입력하세요</span></h2>
+    <div class="greet" style="margin-bottom:14px"><span class="avatar" aria-hidden="true"><span class="en">J</span><span class="ko">정</span></span>
+      <div><h2 style="margin:0"><span class="en">Welcome back, Jungmin</span><span class="ko">정민님, 다시 오셨네요</span></h2>
+      <div class="lead" style="font-size:18px"><span class="en">Enter your password to see your reports.</span><span class="ko">비밀번호를 넣으면 보고서를 볼 수 있어요.</span></div></div></div>
     <label class="field" for="pw"><span class="en">Password</span><span class="ko">비밀번호</span></label>
     <div class="pwrow">
       <input id="pw" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
@@ -209,6 +221,8 @@
 
   <!-- Choose files -->
   <section id="pick" hidden>
+    <div class="greet hero-greet"><span class="avatar" aria-hidden="true"><span class="en">J</span><span class="ko">정</span></span>
+      <div><div class="hello" id="hello"></div><div class="today" id="today"></div></div></div>
     <div class="card">
       <h2><span class="en">Open your reports</span><span class="ko">보고서 열기</span></h2>
       <p class="lead"><span class="en">Choose the sales report or Orbit report PDFs. The numbers appear right away.</span><span class="ko">매출 보고서나 Orbit 보고서 PDF를 고르세요. 숫자가 바로 나옵니다.</span></p>
