@@ -49,8 +49,8 @@
   .note { color:var(--muted); font-size:20px; margin-top:12px; }
   .shift { display:flex; align-items:center; gap:12px; margin-top:14px; padding:14px 16px; border-radius:14px; font-weight:700; font-size:22px; line-height:1.3; }
   .shift .icon { font-size:32px; }
-  .shift.day { background:#fff4d6; border:2px solid #d9a400; }
-  .shift.night { background:#e6e9f7; border:2px solid #4a56a6; }
+  .shift.evening { background:#e6e9f7; border:2px solid #4a56a6; }
+  .shift.morning { background:#fff4d6; border:2px solid #d9a400; }
   .parts { display:block; font-size:18px; color:var(--muted); font-weight:500; margin-top:2px; }
   #jump h2 { margin-bottom:8px; }
   .jumpbtn { display:flex; align-items:center; gap:14px; width:100%; min-height:72px; margin-top:12px; padding:12px 16px; text-align:left;
@@ -114,10 +114,10 @@ const ITEMS = [
   ["BoxedLunch", "Boxed Lunch", "도시락"],
 ];
 const LABEL = Object.fromEntries(ITEMS.map(([k, en]) => [k, en]));
-// Afternoon (1:01 PM – 11:00 PM): every item on its own line.
-const DAY_ROWS = ITEMS.map(([k, en, ko]) => ({ keys: [k], en, ko }));
-// Overnight (11:00 PM – 1:00 PM next day): Korean and International combined.
-const NIGHT_ROWS = [
+// Night report (1:01 PM – 11:00 PM): every item on its own line.
+const EVENING_ROWS = ITEMS.map(([k, en, ko]) => ({ keys: [k], en, ko }));
+// Morning report (11:00 PM – 1:00 PM next day): Korean and International combined.
+const MORNING_ROWS = [
   { keys: ["KoreanLunch", "KoreanMainDish"], en: "Korean", ko: "한식" },
   { keys: ["InternationalLunch", "InternationalMainDish"], en: "International", ko: "인터내셔널" },
   { keys: ["VegetarianLunch"], en: "Vegetarian", ko: "채식" },
@@ -191,8 +191,8 @@ function extract(rows) {
   }
   // Start time decides the shift: 11 PM start (or 1:00 PM end) = overnight report.
   const times = range.replace(/\s+/g, "").match(/\d{1,2}:\d{2}(AM|PM)/gi) || [];
-  const night = /^11:\d{2}PM$/i.test(times[0] || "") || /^1:00PM$/i.test(times[1] || "");
-  return { out, range, night };
+  const morning = /^11:\d{2}PM$/i.test(times[0] || "") || /^1:00PM$/i.test(times[1] || "");
+  return { out, range, morning };
 }
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -206,10 +206,10 @@ function when(range) {
   return { sort: new Date(+m[4], MONTHS.indexOf(m[2]) / 3, +m[3], h, +m[6]).getTime(), label: `${m[1]}, ${m[2]} ${m[3]}` };
 }
 
-function shiftBadge(night) {
-  return night
-    ? `<div class="shift night"><span class="icon" aria-hidden="true">🌙</span><div>Overnight report<span class="ko">야간 보고서 · 11:00 PM – 1:00 PM</span></div></div>`
-    : `<div class="shift day"><span class="icon" aria-hidden="true">☀️</span><div>Afternoon report<span class="ko">오후 보고서 · 1:01 PM – 11:00 PM</span></div></div>`;
+function shiftBadge(morning) {
+  return morning
+    ? `<div class="shift morning"><span class="icon" aria-hidden="true">☀️</span><div>Morning report<span class="ko">오전 보고서 · 11:00 PM – 1:00 PM</span></div></div>`
+    : `<div class="shift evening"><span class="icon" aria-hidden="true">🌙</span><div>Night report<span class="ko">야간 보고서 · 1:01 PM – 11:00 PM</span></div></div>`;
 }
 
 function reportHTML(r, i, total) {
@@ -221,9 +221,9 @@ function reportHTML(r, i, total) {
     `<div class="when">${esc(r.label || "Sales report")}</div>` +
     (r.range ? `<div class="report-date">${esc(r.range)}</div>` : "") +
     `<div class="fname">📄 ${esc(r.name)}</div>` +
-    shiftBadge(r.night) +
+    shiftBadge(r.morning) +
     `<div class="rows">` +
-    (r.night ? NIGHT_ROWS : DAY_ROWS).map(row => {
+    (r.morning ? MORNING_ROWS : EVENING_ROWS).map(row => {
       const n = row.keys.reduce((t, k) => t + (r.out[k] || 0), 0);
       const parts = row.keys.length > 1 ? `<span class="parts">${row.keys.map(k => `${LABEL[k]} ${r.out[k] || 0}`).join(" + ")}</span>` : "";
       return `<div class="row"><div class="name">${row.en}<span class="ko">${row.ko}</span>${parts}</div><div class="num${n ? "" : " zero"}">${n}</div></div>`;
@@ -254,8 +254,8 @@ async function handle(files) {
     $("jump").innerHTML = `<h2>${total} reports <span class="ko">보고서 ${total}개</span></h2>
       <div class="note" style="margin-top:0">Tap one to jump to it, or scroll down. <span class="ko">눌러서 이동하거나 아래로 내리세요.</span></div>` +
       reports.map((r, i) => `<button type="button" class="jumpbtn" data-go="${i}">
-        <span class="icon" aria-hidden="true">${r.error ? "⚠️" : r.night ? "🌙" : "☀️"}</span>
-        <span>${esc(r.error ? r.name : r.label || r.name)}<span class="ko">${r.error ? "읽을 수 없음" : r.night ? "Overnight · 야간" : "Afternoon · 오후"}</span></span>
+        <span class="icon" aria-hidden="true">${r.error ? "⚠️" : r.morning ? "☀️" : "🌙"}</span>
+        <span>${esc(r.error ? r.name : r.label || r.name)}<span class="ko">${r.error ? "읽을 수 없음" : r.morning ? "Morning · 오전" : "Night · 야간"}</span></span>
         <span class="arrow" aria-hidden="true">↓</span></button>`).join("");
     $("jump").hidden = false;
   }
