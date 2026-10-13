@@ -1,23 +1,18 @@
-# Fee Opt-In case study, image slots
+# Fee Opt-In case study figures
 
-These are labeled **placeholders**. The case study at
-`content/work/fee-opt-in-experimentation.mdx` already references them, so the
-layout looks complete right now. To use your real Raisely screenshots:
+These images are rendered, not drawn. Each one is a 1600x900 frame built from
+the same white-labelled checkout the case study's live demo uses
+(`components/fee/Checkout.tsx`), composed in `components/fee/Figures.tsx`.
 
-1. Export each screenshot and name it to match the slot (keep the number prefix).
-2. Drop it in this folder, **overwriting the `.svg` placeholder**.
-3. If you save as `.png` (recommended for screenshots), update that slot's
-   extension in the MDX, find `fee-opt-in/<name>.svg` and change `.svg` → `.png`.
-   (Saving your export as `.svg` with the same name needs no MDX edit.)
+To change a figure:
 
-| Slot file                     | What goes here                                              |
-| ----------------------------- | ---------------------------------------------------------- |
-| `01-before-fallback`          | Legacy/before fallback UI (the fragmented, lowest-nudging one) |
-| `02-variants`                 | The 3 tested variants: Slider · Toggle · Segmented Dropdown |
-| `03-magicpatterns-prototype`  | MagicPatterns / Cursor interactive control-panel prototype |
-| `04-future-state`             | Future-state unified contribution concept                  |
-| `05-results`                  | Results visual (75% → 92% chart, or winning Slider final)   |
-| `06-mobile-next`              | Mobile optimization / what's-next exploration              |
+1. Run the dev server and open `/figures/fee` (it 404s in production, and the
+   GitHub Pages mirror build drops it).
+2. Edit `components/fee/Figures.tsx` or the checkout.
+3. Capture each `#fig-0N` section at 2x, save it here as a 2400x1350 JPG with
+   the same name, and rebuild the cover with
+   `python3 scripts/make-cover.py public/case-studies/fee-opt-in/02-variants.jpg "#e8e0cf" public/case-studies/fee-opt-in/cover.jpg`.
 
-**Recommended export size:** ~1600px wide, 16:9. PNG or WebP. Optimize before
-committing (large PNGs bloat the repo and slow the Vercel build).
+Only reported numbers appear: 75%, 82%, 92%, the 90% benchmark, and 12 to 20%
+of donors clicking Edit. The buttons and dropdown variants have no published
+rate, so none is shown.
