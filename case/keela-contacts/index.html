@@ -341,6 +341,19 @@ body{font-size:18px}
 .glance b{display:block;font-size:40px;line-height:1.05;font-weight:700;letter-spacing:-.02em}
 .glance span{font-size:15px;color:var(--muted);line-height:1.45;display:block;margin-top:6px}
 .chapter{padding-top:88px;scroll-margin-top:64px}
+.topstack{position:sticky;top:env(safe-area-inset-top,0px);z-index:30}
+.topstack .cnav{position:static}
+.tryband{background:var(--banner-bg);color:var(--banner-fg);font-size:14px;line-height:1.4}
+.tryband .wrap{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;padding-block:8px}
+.tryband .dot{width:8px;height:8px;border-radius:50%;background:var(--seal);flex:none}
+.tryband .tt{opacity:.85}
+.tryband a{font-weight:600;text-underline-offset:4px}
+.tryband a:hover{opacity:.7}
+@media(max-width:620px){.tryband .tt{display:none}}
+.banner{background:var(--stage);color:var(--muted);font-size:13.5px}
+.chapter{scroll-margin-top:104px}
+#try{scroll-margin-top:120px}
+
 .chead{display:flex;flex-direction:column;align-items:flex-start;gap:10px;max-width:980px}
 .chead .num{font-size:56px;line-height:1;color:var(--seal);font-weight:700;margin-bottom:4px}
 .chead .ck{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted)}
@@ -362,7 +375,7 @@ body{font-size:18px}
 .slot{border:2px dashed var(--border);border-radius:10px;padding:36px 24px;text-align:center;color:var(--muted);font-size:15px;background:var(--card)}
 .slot b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
 .try{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:15.5px;color:var(--muted);margin:0 0 14px;max-width:1120px}
-.try b{color:var(--ink);font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;background:var(--need);color:var(--needink);padding:2px 8px;border-radius:4px}
+.try b{font-weight:600;color:var(--ink)}
 .changes{border-collapse:collapse;width:100%;max-width:1120px;margin-top:28px;font-size:16.5px}
 .changes th{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 18px 8px 0;border-bottom:1px solid var(--border)}
 .changes td{padding:14px 18px 14px 0;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55}
@@ -379,8 +392,10 @@ details.notes-draft{margin-top:64px;border:1px dashed var(--result-br);border-ra
 details.notes-draft summary{cursor:pointer;font-weight:600}
 @media(max-width:860px){#shipped .shots{grid-template-columns:1fr!important}.shots.n2,.shots.n3,.glance{grid-template-columns:1fr}.chead h2{font-size:30px}.chead .num{font-size:42px}.changes td:nth-child(2){width:auto}}
 </style>
+<div class="topstack"><div class="tryband"><div class="wrap"><span class="dot" aria-hidden="true"></span><span class="tt">I rebuilt these screens as a working version you can click through.</span><a href="#try">Try the interactive version <svg aria-hidden="true" width="0.95em" height="0.95em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.13em"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a></div></div>
+<nav class="cnav" aria-label="Chapters"><div class="wrap"><a href="#overview" aria-current="false">Overview</a><a href="#profile" aria-current="false">01 Contact record</a><a href="#list" aria-current="false">02 Contact list</a><a href="#shipped" aria-current="false">03 What shipped</a><a href="#refine" aria-current="false">04 Next iteration</a><a href="#proof" aria-current="false">05 Proof</a></div></nav></div>
 <div class="banner"><div class="wrap"><span>Demo data is illustrative. Every screen below is a working version of the design.</span></div></div>
-<nav class="cnav" aria-label="Chapters"><div class="wrap"><a href="#overview" aria-current="false">Overview</a><a href="#profile" aria-current="false">01 Contact record</a><a href="#list" aria-current="false">02 Contact list</a><a href="#shipped" aria-current="false">03 What shipped</a><a href="#refine" aria-current="false">04 Next iteration</a><a href="#proof" aria-current="false">05 Proof</a></div></nav>
+
 <div class="wrap">
 <header class="hero" id="overview" data-spy>
   <div class="eyebrow">Case study &middot; Nonprofit CRM &middot; Product design</div>
@@ -409,7 +424,7 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
   <div class="chead"><span class="num">01</span><span class="ck">Contact record</span><h2>Change before totals</h2></div>
   <p class="csum">The page a fundraiser opens before every call.</p>
   
-  <p class="try"><b>Try it</b>Switch tabs, hover the sparklines, add a to-do, or edit the contact and save.</p>
+  <p class="try" id="try"><b>Try it</b>Switch tabs, hover the sparklines, add a to-do, or edit the contact and save.</p>
   <div class="stage"><div class="kapp" id="kapp">
   <nav class="knav" aria-label="Demo navigation"><div class="brand"><i></i>Keela</div>
     <span>Home</span><span class="on">Contacts</span><span>Fundraising</span><span>Impact areas</span><span>Campaigns</span><span>Forms</span><span>Communications</span><span>Automation</span><span>Pipelines</span><span>Memberships</span><span>Reports</span><span>Events</span></nav>
