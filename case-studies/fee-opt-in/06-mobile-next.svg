@@ -7,7 +7,7 @@
   </defs>
   <rect width="1600" height="900" fill="#F2EFE9"/>
 
-  <text x="80" y="68" font-size="10" letter-spacing="3" fill="#A8A29E" font-weight="500">WHAT'S NEXT · MOBILE-FIRST OPTIMIZATION · 60%+ OF DONATIONS</text>
+  <text x="80" y="40" font-size="10" letter-spacing="3" fill="#A8A29E" font-weight="500">WHAT'S NEXT · MOBILE-FIRST OPTIMIZATION · 60%+ OF DONATIONS</text>
 
   <!-- ===== LEFT PHONE: CURRENT MOBILE (problems) ===== -->
   <!-- Phone shell -->
@@ -16,21 +16,21 @@
   <!-- Notch -->
   <rect x="296" y="80" width="96" height="28" rx="14" fill="#2C2A28"/>
 
-  <!-- Screen content — donation form with mobile problems -->
+  <!-- Screen content - donation form with mobile problems -->
   <g clip-path="url(#phone1)">
     <!-- Header -->
     <rect x="174" y="80" width="340" height="96" fill="#2B4D38"/>
     <text x="344" y="128" font-size="10" letter-spacing="1.5" fill="rgba(255,255,255,0.5)" text-anchor="middle">HOPE FOUNDATION</text>
     <text x="344" y="152" font-size="12" fill="rgba(255,255,255,0.85)" text-anchor="middle">Complete your donation</text>
 
-    <!-- Content area — cramped, double scroll indicated -->
+    <!-- Content area - cramped, double scroll indicated -->
     <rect x="186" y="186" width="316" height="430" rx="0" fill="#FAFAF8"/>
 
     <!-- Amount -->
     <text x="202" y="210" font-size="9" letter-spacing="2" fill="#A8A29E">DONATION</text>
     <text x="202" y="240" font-size="28" font-weight="700" fill="#1C1917" letter-spacing="-1">$100.00</text>
 
-    <!-- Nested scroll zone — highlighted as problem -->
+    <!-- Nested scroll zone - highlighted as problem -->
     <rect x="186" y="254" width="316" height="240" rx="0" fill="#FBF6F0" stroke="#F0D8BC" stroke-width="1.5" stroke-dasharray="4 3"/>
 
     <!-- Inner scroll content -->
@@ -53,13 +53,13 @@
     <rect x="484" y="320" width="4" height="140" rx="2" fill="#EDE9E3"/>
     <rect x="484" y="360" width="4" height="48" rx="2" fill="#C0BAB2"/>
 
-    <!-- Platform fee — buried below scroll -->
+    <!-- Platform fee - buried below scroll -->
     <rect x="186" y="502" width="316" height="56" rx="0" fill="#FAF8F5"/>
     <text x="202" y="524" font-size="9" letter-spacing="2" fill="#A8A29E">PLATFORM FEE</text>
     <text x="202" y="546" font-size="11" fill="#78716C">Cover our fees ($2.00)</text>
     <text x="486" y="546" font-size="12" fill="#2B4D38" text-anchor="end">✓  On</text>
 
-    <!-- Total — pushed down by scroll -->
+    <!-- Total - pushed down by scroll -->
     <line x1="186" y1="564" x2="502" y2="564" stroke="#EDE9E3" stroke-width="1"/>
     <text x="202" y="588" font-size="12" fill="#78716C">Total</text>
     <text x="486" y="588" font-size="16" font-weight="700" fill="#1C1917" text-anchor="end">$102.00</text>
@@ -85,8 +85,8 @@
   <path d="M 522 528 L 504 528" fill="none" stroke="#DED9D2" stroke-width="1.5" stroke-dasharray="4 3"/>
 
   <!-- Label below left phone -->
-  <text x="344" y="838" font-size="14" font-weight="600" fill="#1C1917" text-anchor="middle">Current</text>
-  <text x="344" y="858" font-size="11" fill="#A8A29E" text-anchor="middle">Problems identified</text>
+  <text x="344" y="856" font-size="14" font-weight="600" fill="#1C1917" text-anchor="middle">Current</text>
+  <text x="344" y="874" font-size="11" fill="#A8A29E" text-anchor="middle">Problems identified</text>
 
   <!-- ===== CENTER: ARROW + STATS ===== -->
   <text x="800" y="380" font-size="48" fill="#DED9D2" text-anchor="middle">→</text>
@@ -111,7 +111,7 @@
     <rect x="1008" y="188" width="88" height="20" rx="10" fill="#EDE9E3"/>
     <text x="1052" y="202" font-size="10" fill="#78716C" text-anchor="middle">Step 3 of 3 · Review</text>
 
-    <!-- Single scroll — no nesting -->
+    <!-- Single scroll - no nesting -->
     <!-- Donation row -->
     <text x="902" y="236" font-size="9" letter-spacing="2" fill="#A8A29E">YOUR CONTRIBUTION</text>
     <line x1="902" y1="248" x2="1202" y2="248" stroke="#EDE9E3" stroke-width="1"/>
@@ -119,7 +119,7 @@
     <text x="902" y="274" font-size="13" fill="#78716C">Donation</text>
     <text x="1200" y="274" font-size="13" font-weight="600" fill="#1C1917" text-anchor="end">$100.00</text>
 
-    <!-- Inline fee + slider — prominent, not buried -->
+    <!-- Inline fee + slider - prominent, not buried -->
     <rect x="902" y="286" width="298" height="68" rx="10" fill="#F2EFE9"/>
     <text x="918" y="310" font-size="12" fill="#1C1917" font-weight="500">Platform support</text>
     <text x="1184" y="310" font-size="12" fill="#2B4D38" font-weight="600" text-anchor="end">$2.00</text>
@@ -130,7 +130,7 @@
     <text x="918" y="348" font-size="9" fill="#A8A29E">$0</text>
     <text x="1182" y="348" font-size="9" fill="#A8A29E" text-anchor="end">$2.00</text>
 
-    <!-- Total — immediately visible -->
+    <!-- Total - immediately visible -->
     <line x1="902" y1="372" x2="1202" y2="372" stroke="#EDE9E3" stroke-width="1"/>
     <text x="902" y="400" font-size="13" fill="#78716C">Total today</text>
     <text x="1200" y="404" font-size="28" font-weight="800" fill="#1C1917" text-anchor="end" letter-spacing="-1">$102</text>
@@ -138,10 +138,10 @@
     <!-- Summary card -->
     <rect x="902" y="424" width="298" height="72" rx="10" fill="white" stroke="#EDE9E3" stroke-width="1"/>
     <text x="918" y="448" font-size="11" fill="#78716C">Visa ···· 4242</text>
-    <text x="918" y="466" font-size="11" fill="#78716C">allenella0711@gmail.com</text>
+    <text x="918" y="466" font-size="11" fill="#78716C">jordan.lee@email.com</text>
     <text x="918" y="484" font-size="11" fill="#78716C">Instant receipt · Processed by Raisely</text>
 
-    <!-- CTA — large tap target, always visible -->
+    <!-- CTA - large tap target, always visible -->
     <rect x="902" y="514" width="298" height="60" rx="12" fill="#2B4D38"/>
     <text x="1052" y="550" font-size="16" font-weight="700" fill="white" text-anchor="middle">Donate $102.00</text>
 
@@ -161,7 +161,7 @@
   <rect x="1505" y="380" width="3" height="52" rx="1.5" fill="#2B4D38"/>
   <text x="1256" y="400" font-size="11" font-weight="600" fill="#1C1917">Fee visible before checkout</text>
   <text x="1256" y="416" font-size="11" fill="#78716C">Slider integrated inline with the</text>
-  <text x="1256" y="432" font-size="11" fill="#78716C">review step — not an afterthought.</text>
+  <text x="1256" y="432" font-size="11" fill="#78716C">review step, not an afterthought.</text>
   <path d="M 1238 406 L 1204 350" fill="none" stroke="#DED9D2" stroke-width="1.5" stroke-dasharray="4 3"/>
 
   <rect x="1240" y="494" width="268" height="52" rx="8" fill="white" filter="url(#s6b)"/>
@@ -171,8 +171,8 @@
   <text x="1256" y="546" font-size="11" fill="#78716C">scrolling past a payment form.</text>
   <path d="M 1238 520 L 1204 544" fill="none" stroke="#DED9D2" stroke-width="1.5" stroke-dasharray="4 3"/>
 
-  <text x="1052" y="838" font-size="14" font-weight="600" fill="#1C1917" text-anchor="middle">Proposed</text>
-  <text x="1052" y="858" font-size="11" fill="#A8A29E" text-anchor="middle">Same thesis · new surface</text>
+  <text x="1052" y="856" font-size="14" font-weight="600" fill="#1C1917" text-anchor="middle">Proposed</text>
+  <text x="1052" y="874" font-size="11" fill="#A8A29E" text-anchor="middle">Same thesis · new surface</text>
 
-  <text x="80" y="870" font-size="10" letter-spacing="2" fill="#C0BAB2">raisely · fee opt-in experimentation · mobile next</text>
+  
 </svg>

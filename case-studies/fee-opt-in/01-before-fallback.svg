@@ -70,7 +70,7 @@
   <rect x="936" y="158" width="3" height="60" rx="1.5" fill="#C94040"/>
   <text x="950" y="178" font-size="14" font-weight="600" fill="#1C1917">Blank-slate defaults to $0</text>
   <text x="950" y="198" font-size="12" fill="#78716C">The text input has no anchor value. The path of least</text>
-  <text x="950" y="214" font-size="12" fill="#78716C">resistance — typing nothing — is a $0 opt-out.</text>
+  <text x="950" y="214" font-size="12" fill="#78716C">resistance, typing nothing, is a $0 opt-out.</text>
 
   <!-- Problem 2 -->
   <rect x="936" y="238" width="3" height="60" rx="1.5" fill="#C94040"/>
@@ -90,9 +90,9 @@
   <!-- Outcome stat card -->
   <rect x="936" y="422" width="540" height="104" rx="12" fill="#FBF0F0" stroke="#EECACA" stroke-width="1"/>
   <text x="960" y="450" font-size="10" letter-spacing="3" fill="#C94040" font-weight="500">OBSERVED BEHAVIOR</text>
-  <text x="960" y="492" font-size="44" font-weight="800" fill="#C94040" letter-spacing="-2">12–20%</text>
-  <text x="1122" y="480" font-size="13" fill="#78716C">of donors who tapped Edit</text>
-  <text x="1122" y="500" font-size="13" fill="#78716C">dragged to $0 or opted out.</text>
+  <text x="960" y="492" font-size="38" font-weight="800" fill="#C94040" letter-spacing="-1.5">12–20%</text>
+  <text x="1172" y="474" font-size="13" fill="#78716C">of donors click Edit. Most of them</text>
+  <text x="1172" y="492" font-size="13" fill="#78716C">lowered the fee or removed it.</text>
   <text x="960" y="516" font-size="12" fill="#C9A0A0">Fee opt-in baseline: 75%  ·  Benchmark: 90%  ·  Opportunity: clear.</text>
 
   <!-- Dashed connector to the input box -->

@@ -10,7 +10,7 @@
   <!-- === Main future-state donation card === -->
   <rect x="440" y="88" width="720" height="724" rx="20" fill="#FFFFFF" filter="url(#s4)"/>
 
-  <!-- Card header — cleaner, more generous -->
+  <!-- Card header - cleaner, more generous -->
   <rect x="440" y="88" width="720" height="96" rx="20" fill="#2B4D38"/>
   <rect x="440" y="152" width="720" height="32" fill="#2B4D38"/>
   <!-- Campaign brand mark circle -->
@@ -29,7 +29,7 @@
   <text x="480" y="296" font-size="15" fill="#1C1917">Donation to Hope Foundation</text>
   <text x="1140" y="296" font-size="15" font-weight="600" fill="#1C1917" text-anchor="end">$100.00</text>
 
-  <!-- Platform support row — unified, inline slider -->
+  <!-- Platform support row - unified, inline slider -->
   <rect x="480" y="314" width="620" height="72" rx="12" fill="#F5F3EF"/>
   <text x="502" y="340" font-size="14" fill="#1C1917" font-weight="500">Platform support</text>
   <text x="1084" y="340" font-size="14" fill="#2B4D38" font-weight="600" text-anchor="end">$2.00</text>
@@ -52,7 +52,7 @@
   <!-- Divider with "total" -->
   <line x1="480" y1="476" x2="1140" y2="476" stroke="#EDE9E3" stroke-width="1"/>
 
-  <!-- Total row — prominent -->
+  <!-- Total row - prominent -->
   <text x="480" y="518" font-size="14" fill="#78716C">Total charge today</text>
   <text x="1140" y="522" font-size="44" font-weight="800" fill="#1C1917" text-anchor="end" letter-spacing="-2">$102.00</text>
   <text x="1140" y="542" font-size="12" fill="#A8A29E" text-anchor="end">Processed securely · Instant receipt</text>
@@ -67,7 +67,7 @@
   <text x="784" y="597" font-size="13" fill="#1C1917">Visa ···· 4242</text>
   <text x="1140" y="597" font-size="12" fill="#2B4D38" text-anchor="end">Change</text>
 
-  <!-- CTA — primary button -->
+  <!-- CTA - primary button -->
   <rect x="480" y="622" width="620" height="62" rx="12" fill="#2B4D38"/>
   <text x="790" y="659" font-size="16" font-weight="700" fill="white" text-anchor="middle">Donate $102.00 →</text>
 

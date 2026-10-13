@@ -292,6 +292,19 @@ body{font-size:18px}
 .glance b{display:block;font-size:40px;line-height:1.05;font-weight:700;letter-spacing:-.02em}
 .glance span{font-size:15px;color:var(--muted);line-height:1.45;display:block;margin-top:6px}
 .chapter{padding-top:88px;scroll-margin-top:64px}
+.topstack{position:sticky;top:env(safe-area-inset-top,0px);z-index:30}
+.topstack .cnav{position:static}
+.tryband{background:var(--banner-bg);color:var(--banner-fg);font-size:14px;line-height:1.4}
+.tryband .wrap{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;padding-block:8px}
+.tryband .dot{width:8px;height:8px;border-radius:50%;background:var(--seal);flex:none}
+.tryband .tt{opacity:.85}
+.tryband a{font-weight:600;text-underline-offset:4px}
+.tryband a:hover{opacity:.7}
+@media(max-width:620px){.tryband .tt{display:none}}
+.banner{background:var(--stage);color:var(--muted);font-size:13.5px}
+.chapter{scroll-margin-top:104px}
+#try{scroll-margin-top:120px}
+
 .chead{display:flex;flex-direction:column;align-items:flex-start;gap:10px;max-width:980px}
 .chead .num{font-size:56px;line-height:1;color:var(--seal);font-weight:700;margin-bottom:4px}
 .chead .ck{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted)}
@@ -313,7 +326,7 @@ body{font-size:18px}
 .slot{border:2px dashed var(--border);border-radius:10px;padding:36px 24px;text-align:center;color:var(--muted);font-size:15px;background:var(--card)}
 .slot b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
 .try{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:15.5px;color:var(--muted);margin:0 0 14px;max-width:1120px}
-.try b{font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:2px 8px;border-radius:4px}
+.try b{font-weight:600;color:var(--ink)}
 .partdiv{margin:8px 0 56px;padding:28px 0 0;border-top:1px solid var(--border);max-width:760px}
 .partdiv .ck{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--seal)}
 .partdiv h2{font-size:30px;margin:8px 0 14px}
@@ -340,8 +353,9 @@ details.notes-draft{margin-top:64px;border:1px dashed var(--result-br);border-ra
 details.notes-draft summary{cursor:pointer;font-weight:600}
 @media(max-width:860px){.shots.n2,.shots.n3,.glance{grid-template-columns:1fr}.chead h2{font-size:30px}.chead .num{font-size:42px}.changes td:nth-child(2){width:auto}}
 </style>
+<div class="topstack"><div class="tryband"><div class="wrap"><span class="dot" aria-hidden="true"></span><span class="tt">I rebuilt these dashboards as working redesigns you can click through.</span><a href="#try">Try the interactive version <svg aria-hidden="true" width="0.95em" height="0.95em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.13em"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a></div></div>
+<nav class="cnav" aria-label="Chapters"><div class="wrap"><a href="#overview" aria-current="false">Overview</a><a href="#patient" aria-current="false">01 Patient view</a><a href="#pathway" aria-current="false">02 Care pathway</a><a href="#conferences" aria-current="false">03 Conferences</a><a href="#regions" aria-current="false">04 Regions</a><a href="#patterns" aria-current="false">05 Patterns</a><a href="#proof" aria-current="false">06 Proof</a></div></nav></div>
 <div class="banner"><div class="wrap"><span>Names, IDs, hospitals and logos in the original screens are blurred. Click any original screen to enlarge it.</span></div></div>
-<nav class="cnav" aria-label="Chapters"><div class="wrap"><a href="#overview" aria-current="false">Overview</a><a href="#patient" aria-current="false">01 Patient view</a><a href="#pathway" aria-current="false">02 Care pathway</a><a href="#conferences" aria-current="false">03 Conferences</a><a href="#regions" aria-current="false">04 Regions</a><a href="#patterns" aria-current="false">05 Patterns</a><a href="#proof" aria-current="false">06 Proof</a></div></nav>
 <div class="wrap">
 <header class="hero" id="overview" data-spy>
   <div class="eyebrow">Case study &middot; Healthcare &middot; Data visualization</div>
@@ -371,7 +385,7 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
   <p class="csum">PT-0938&rsquo;s plan gives surgery 28 days. Today is day 36 of it. Before a whole clinic, the question for one person: where are they in treatment, and are they on schedule?</p>
   <div class="phase">Before</div>
   <div class="shots" style="grid-template-columns:minmax(0,1fr) 190px"><figure class="shot"><button class="zoom" type="button" data-cap="Original journey stepper" aria-label="Enlarge: Original journey stepper"><img src="assets/then-stepper.png" alt="Original stepper: diagnosis and chemotherapy done, surgery current" loading="lazy"><span class="pin" style="left:54%;top:36%">1</span></button><figcaption>Original journey stepper</figcaption></figure><figure class="shot"><button class="zoom" type="button" data-cap="Original progress ring" aria-label="Enlarge: Original progress ring"><img src="assets/then-ring.png" alt="Ring reading 15 days of 28" loading="lazy"><span class="pin" style="left:80%;top:20%">2</span></button><figcaption>Original progress ring</figcaption></figure></div>
-  <div class="phase after">After</div>
+  <div class="phase after" id="try">After</div>
   <p class="try"><b>Try it</b>Switch between patients, or pick anyone from the clinic view in the next section.</p>
   <div class="stage" id="timeline"><div class="gcard">
   <div class="fbar" id="ptbar" style="margin-bottom:16px"><span class="fl">Patient</span></div>
