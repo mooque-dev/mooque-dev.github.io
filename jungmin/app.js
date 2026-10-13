@@ -73,7 +73,7 @@ const T = (en, ko) => `<span class="en">${en}</span><span class="ko">${ko}</span
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const money = n => "$" + n.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const CHEV = { up: "M6 15l6-6 6 6", down: "M6 9l6 6 6-6", left: "M15 6l-6 6 6 6", right: "M9 6l6 6-6 6" };
-// Rounded chevron in a soft circle (used instead of text arrows).
+// Chevron icon (used instead of text arrows).
 const chev = dir => `<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="${CHEV[dir]}"/></svg></span>`;
 // Report-type icons (drawn, so they look the same on every phone).
 const ICON_PATHS = {
@@ -81,7 +81,6 @@ const ICON_PATHS = {
   evening: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
   orbit:   '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
   error:   '<path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.5v.01"/>',
-  file:    '<path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M14 3v5h5"/>',
 };
 const icon = kind => `<span class="ic ${kind}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICON_PATHS[kind]}</svg></span>`;
 
@@ -104,7 +103,11 @@ document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click
 // Rebuild table rows from positioned text items.
 async function readRows(buf) {
   // isEvalSupported:false closes the font-handling hole in this pdf.js version (CVE-2024-4367).
-  const pdf = await pdfjsLib.getDocument({ data: buf, isEvalSupported: false }).promise;
+  const task = pdfjsLib.getDocument({ data: buf, isEvalSupported: false });
+  // A file that takes too long is cancelled, not left running in the background.
+  const timer = setTimeout(() => task.destroy(), READ_TIMEOUT_MS);
+  let pdf;
+  try { pdf = await task.promise; } catch (e) { clearTimeout(timer); throw task.destroyed ? new Error("slow") : e; }
   try {
     if (pdf.numPages > MAX_PAGES) throw new Error("pages");
     const rows = [];
@@ -122,19 +125,23 @@ async function readRows(buf) {
       for (const l of lines) rows.push(l.parts.sort((a, b) => a.x - b.x).map(t => t.s).join(" "));
     }
     return rows;
+  } catch (e) {
+    throw task.destroyed && e.message !== "pages" ? new Error("slow") : e;
   } finally {
+    clearTimeout(timer);
     pdf.destroy();
   }
 }
 
+const ITEM_RE = ITEMS.map(([key]) => [key, new RegExp(key + "(?=[\\d-])", "i")]);
 function extract(rows) {
   const out = {};
   let range = "";
   for (const row of rows) {
     const compact = row.replace(/\s+/g, "");
     if (!range && /(Mon|Tue|Wed|Thu|Fri|Sat|Sun).*\d{4}/.test(compact)) range = compact.replace(/,/g, ", ").replace(/([A-Za-z]{3})(\d)/g, "$1 $2").replace(/(\d)(AM|PM)/g, "$1 $2").replace(/-{2,}/, " – ");
-    for (const [key] of ITEMS) {
-      if (!new RegExp(key + "(?=[\\d-])", "i").test(compact)) continue;
+    for (const [key, re] of ITEM_RE) {
+      if (!re.test(compact)) continue;
       const nums = row.match(/-?\d[\d,]*\.\d{2}/g) || [];
       if (nums.length >= 2) out[key] = (out[key] || 0) + parseFloat(nums[nums.length - 2].replace(/,/g, ""));
     }
@@ -177,7 +184,7 @@ async function parse(file) {
     const buf = await file.arrayBuffer();
     // A real PDF starts with "%PDF-" — renamed photos or documents are turned away before reading.
     if (new TextDecoder().decode(new Uint8Array(buf, 0, Math.min(1024, buf.byteLength))).indexOf("%PDF-") === -1) throw new Error("type");
-    const rows = await Promise.race([readRows(buf), new Promise((_, no) => setTimeout(() => no(new Error("slow")), READ_TIMEOUT_MS))]);
+    const rows = await readRows(buf);
     const r = extract(rows);
     if (rows.some(x => /CloseDayReport/i.test(x.replace(/\s+/g, "")))) {
       const orbit = extractOrbit(rows);
@@ -397,7 +404,7 @@ document.addEventListener("click", e => {
   }
   if (t.hasAttribute("data-demo")) startDemo();
   if (t.hasAttribute("data-exitdemo")) exitDemo();
-  if (t.dataset.open) go({ v: "detail", i: +t.dataset.open, fromList: true }, true);
+  if (t.dataset.open) { showNotes([]); go({ v: "detail", i: +t.dataset.open, fromList: true }, true); }
   if (t.hasAttribute("data-tolist")) $("backBtn").click();
   if (t.dataset.step) go({ ...state, i: state.i + +t.dataset.step }, false);
   if (t.hasAttribute("data-clear") && reports.some(r => r.demo)) return exitDemo();
