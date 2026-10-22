@@ -1,0 +1,9 @@
+:HL["/_next/static/chunks/1k3kfvey1-5a9.css","style"]
+:HL["/_next/static/chunks/39kfvlto7f716.css","style"]
+:HL["/_next/static/media/113fa3cd4dc959e6-s.p.41entnodl3flq.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/75affa71d1e2f6a7-s.p.17-aodiw50953.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/chunks/2c5mol2hrupib.css","style"]
+:HL["/_next/static/chunks/1kg3q_o8cglf0.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"(portfolio)","param":null,"prefetchHints":0,"slots":{"children":{"name":"autodesk","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"NF4jhZ8fqr7kTC1xvEQAI"}
