@@ -1,0 +1,829 @@
+<!doctype html><html data-theme="light"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><style>.head h1{display:none}.page{padding-block:12px 24px!important}</style></head><body>
+<title>Split Payments, Before and After</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a presentation bar (task, view switch, counters) sits outside the product; product frames stay light like the real app. */
+:root {
+  --bg: #f3f4f7; --fg: #17181d; --muted: #5c606c; --line: #d9dce3; --panel: #ffffff; --chip: #e7e9ee; --accent: #5a3fd8;
+  --ok: #1d7a49; --ok-bg: #e5f4ec; --warn: #8a5a00; --warn-bg: #fdf3dc; --bad: #b42318; --bad-bg: #fdecea;
+  --f-ui: "Albert Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  /* product palette: fixed light, like the real app */
+  --p-bg: #ffffff; --p-sunk: #f6f7f9; --p-line: #e2e4ea; --p-fg: #1c1d22; --p-muted: #6b6f7a; --p-accent: #5a3fd8; --p-accent-soft: #eeeafd; --p-dim: #9a9ea8;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #121318; --fg: #ecedf2; --muted: #a6aab6; --line: #33363f; --panel: #1b1d24; --chip: #2a2d36; --accent: #a796ff; --ok: #6fd39b; --ok-bg: #173226; --warn: #f0c46b; --warn-bg: #3a2f14; --bad: #f2867d; --bad-bg: #3d1f1f; color-scheme: dark; } }
+:root[data-theme="dark"] { --bg: #121318; --fg: #ecedf2; --muted: #a6aab6; --line: #33363f; --panel: #1b1d24; --chip: #2a2d36; --accent: #a796ff; --ok: #6fd39b; --ok-bg: #173226; --warn: #f0c46b; --warn-bg: #3a2f14; --bad: #f2867d; --bad-bg: #3d1f1f; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--fg); font: 400 15px/1.5 var(--f-ui); }
+.page { max-width: 1440px; margin: 0 auto; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 16px; }
+.head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; }
+.head h1 { font: 700 26px/1.15 var(--f-ui); margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+.head p { margin: 4px 0 0; color: var(--muted); font-size: 14px; max-width: 70ch; }
+.views { display: inline-flex; background: var(--chip); border-radius: 999px; padding: 3px; gap: 2px; }
+.views a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: 14px; padding: 7px 14px; border-radius: 999px; }
+.views a[aria-current="page"] { background: var(--panel); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.task { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; }
+.task b { font-weight: 700; }
+.task .split { display: flex; flex-wrap: wrap; gap: 6px; }
+.task .split span { background: var(--chip); border-radius: 999px; padding: 2px 10px; font-size: 13px; }
+.stage { display: grid; gap: 16px; }
+.stage.compare { grid-template-columns: 1fr 1fr; align-items: start; }
+@media (max-width: 900px) { .stage.compare { grid-template-columns: 1fr; } }
+.col { display: grid; gap: 8px; min-width: 0; }
+.colhead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.colhead h2 { margin: 0; font: 700 15px/1.2 var(--f-ui); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.stats { display: flex; gap: 6px; flex-wrap: wrap; }
+.stat { font-size: 13px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; font-variant-numeric: tabular-nums; }
+.stat b { font-weight: 700; }
+.stat.good { background: var(--ok-bg); color: var(--ok); border-color: transparent; }
+.stat.bad { background: var(--bad-bg); color: var(--bad); border-color: transparent; }
+.reset { appearance: none; border: 0; background: none; color: var(--accent); font: 600 13px var(--f-ui); cursor: pointer; padding: 4px 0; }
+.note { font-size: 13px; color: var(--muted); margin: 0; }
+
+/* ---------- product frame ---------- */
+.frame { color-scheme: light; container-type: inline-size; background: var(--p-bg); color: var(--p-fg); border-radius: 12px; box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 8px 24px rgba(20,20,40,.08); overflow: hidden; position: relative; min-height: 660px; font-size: 14px; }
+.bar { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--p-line); font-size: 13px; color: var(--p-muted); }
+.bar .crumb { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar .crumb b { color: var(--p-fg); font-weight: 600; }
+.bar .org { margin-left: auto; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.bar .org i { width: 18px; height: 18px; border-radius: 5px; background: #d8cdfb; display: inline-block; }
+.body { padding: 18px 20px 22px; display: grid; gap: 14px; }
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.grow { flex: 1; min-width: 0; }
+.h { font: 700 20px/1.2 var(--f-ui); margin: 0; }
+.sub { color: var(--p-muted); font-size: 13px; margin: 0; }
+.btn { appearance: none; font: 600 13px/1 var(--f-ui); border-radius: 8px; padding: 9px 12px; cursor: pointer; border: 1px solid var(--p-line); background: var(--p-bg); color: var(--p-fg); white-space: nowrap; }
+.btn.primary { background: var(--p-accent); border-color: var(--p-accent); color: #fff; }
+.btn.dark { background: #4a4b52; border-color: #4a4b52; color: #fff; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:focus-visible, .field:focus-visible, select:focus-visible, input:focus-visible, .tab:focus-visible, .item-head:focus-visible { outline: 2px solid var(--p-accent); outline-offset: 2px; }
+.link { appearance: none; background: none; border: 0; color: var(--p-accent); font: 600 13px var(--f-ui); cursor: pointer; padding: 0; }
+.chip { display: inline-flex; align-items: center; gap: 4px; font: 600 11px/1 var(--f-ui); letter-spacing: .04em; text-transform: uppercase; padding: 4px 7px; border-radius: 5px; background: var(--p-sunk); color: var(--p-muted); }
+.chip.green { background: #e3f4ea; color: #1d7a49; } .chip.purple { background: var(--p-accent-soft); color: var(--p-accent); } .chip.amber { background: #fdf1d6; color: #8a5a00; } .chip.red { background: #fde8e6; color: #b42318; }
+table.list { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.list th { text-align: left; color: var(--p-muted); font-weight: 600; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--p-line); }
+table.list td { padding: 10px; border-bottom: 1px solid var(--p-line); vertical-align: middle; }
+table.list td.num, table.list th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.new td { background: #faf8ff; }
+.tablewrap { overflow-x: auto; }
+.menu { position: absolute; z-index: 5; background: var(--p-bg); border: 1px solid var(--p-line); border-radius: 10px; box-shadow: 0 10px 24px rgba(20,20,40,.14); padding: 6px; min-width: 190px; display: grid; }
+.menu button { appearance: none; text-align: left; background: none; border: 0; padding: 10px 12px; border-radius: 7px; font: 500 14px var(--f-ui); color: var(--p-fg); cursor: pointer; }
+.menu button:hover, .menu button:focus-visible { background: var(--p-accent-soft); outline: none; }
+.anchor { position: relative; }
+.scrim { position: absolute; inset: 0; overflow: auto; background: rgba(22,22,30,.45); display: flex; align-items: flex-start; justify-content: center; padding: 28px 14px; z-index: 6; }
+.modal { background: var(--p-bg); border-radius: 12px; width: min(460px, 100%); box-shadow: 0 20px 50px rgba(0,0,0,.25); display: grid; }
+.modal-h { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--p-line); font-weight: 600; }
+.x { appearance: none; border: 1px solid var(--p-line); background: var(--p-bg); border-radius: 6px; width: 26px; height: 26px; cursor: pointer; color: var(--p-muted); font-size: 15px; line-height: 1; }
+.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--p-line); padding: 0 12px; overflow-x: auto; }
+.tab { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 8px; font: 600 12.5px var(--f-ui); color: var(--p-muted); cursor: pointer; white-space: nowrap; }
+.tab[aria-selected="true"] { color: var(--p-accent); border-bottom-color: var(--p-accent); }
+.modal-b { padding: 14px 16px; display: grid; gap: 12px; }
+.modal-f { display: flex; justify-content: space-between; padding: 12px 16px; border-top: 1px solid var(--p-line); }
+label.f { display: grid; gap: 5px; font-size: 12px; font-weight: 600; color: var(--p-muted); letter-spacing: .02em; }
+label.f .req { color: #b42318; }
+.field, select.field { width: 100%; font: 400 14px var(--f-ui); color: var(--p-fg); background: var(--p-bg); border: 1px solid var(--p-line); border-radius: 8px; padding: 9px 10px; }
+select.field, .field.combo { -webkit-appearance: none; appearance: none; padding-right: 36px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%236b6f7a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 12px 8px; }
+.field.combo::-webkit-calendar-picker-indicator { opacity: 0; cursor: pointer; }
+textarea.field { min-height: 76px; resize: vertical; font: 400 14px/1.4 var(--f-ui); }
+.f-k { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--p-muted); }
+.whole { border: 1px solid var(--p-line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 12px; }
+.whole h4 { margin: 0; font-size: 13px; }
+.field[readonly], .field:disabled, select.field:disabled { background: var(--p-sunk); color: var(--p-muted); }
+.check { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--p-fg); font-weight: 500; }
+.check input { margin-top: 2px; accent-color: var(--p-accent); }
+.hint { background: var(--p-sunk); border-radius: 8px; padding: 10px 12px; font-size: 13px; color: var(--p-muted); }
+.panel { border: 1px solid var(--p-line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 8px; }
+.panel h4 { margin: 0; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--p-muted); }
+.kv { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.kv b { font-weight: 700; }
+.flag { border-radius: 8px; padding: 10px 12px; font-size: 13px; line-height: 1.45; }
+.flag.bad { background: #fdecea; color: #7a1c14; } .flag.ok { background: #e5f4ec; color: #154f31; } .flag.warn { background: #fdf3dc; color: #5c3d00; }
+.flag b { font-weight: 700; }
+
+/* After: full-screen flow */
+.flow-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--p-line); font-weight: 600; }
+.stepper { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; color: var(--p-dim); }
+.step { display: flex; align-items: center; gap: 7px; font-weight: 500; }
+.step i { font-style: normal; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--p-line); display: grid; place-items: center; font-size: 12px; font-weight: 600; }
+.step.on { color: var(--p-fg); } .step.on i { background: #4a4b52; border-color: #4a4b52; color: #fff; }
+.step.done { color: var(--p-fg); } .step.done i { background: var(--p-accent-soft); border-color: var(--p-accent-soft); color: var(--p-accent); }
+.step-line { flex: 0 1 36px; height: 1px; background: var(--p-line); min-width: 12px; }
+.alloc { display: grid; gap: 6px; }
+.allocbar { display: flex; height: 26px; border-radius: 6px; overflow: hidden; background: repeating-linear-gradient(135deg, #eceef2 0 6px, #f6f7f9 6px 12px); }
+.allocbar span { display: flex; align-items: center; justify-content: center; font: 600 11.5px var(--f-ui); color: #fff; border-right: 2px solid #fff; min-width: 0; overflow: hidden; white-space: nowrap; transition: width .25s ease; }
+.allocbar span:last-child { border-right: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--p-muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+.cards { display: grid; gap: 10px; grid-template-columns: 1fr; }
+@container (min-width: 560px) { .cards { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); } }
+.card { border: 1px solid var(--p-line); border-radius: 10px; padding: 12px; display: grid; gap: 10px; align-content: start; background: var(--p-bg); }
+.card-h { display: flex; align-items: center; gap: 8px; }
+.card-h .swatch { width: 10px; height: 10px; border-radius: 3px; }
+.card-h b { font-size: 13px; }
+.card-h .x { margin-left: auto; width: 24px; height: 24px; font-size: 13px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.money { position: relative; } .money span { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--p-muted); font-size: 14px; }
+.money input { padding-left: 22px; font-variant-numeric: tabular-nums; }
+.assoc { display: grid; gap: 8px; }
+.assoc-row { display: grid; grid-template-columns: 1fr; gap: 6px; border: 1px solid var(--p-line); border-radius: 10px; padding: 10px 12px; }
+@container (min-width: 520px) { .assoc-row { grid-template-columns: 1.1fr 1fr; align-items: center; } }
+.assoc-row .who { display: flex; align-items: center; gap: 8px; font-size: 13.5px; }
+.radios { display: grid; gap: 6px; }
+.receipt { display: grid; gap: 6px; }
+.receipt .rule { font-size: 12.5px; color: var(--p-muted); }
+.items { display: grid; gap: 8px; }
+.item { border: 1px solid var(--p-line); border-radius: 10px; }
+.item-head { appearance: none; width: 100%; background: none; border: 0; text-align: left; display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; font: 600 14px var(--f-ui); color: var(--p-fg); flex-wrap: wrap; }
+.item-head .amt { margin-left: auto; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.item-head .amt small { font-size: 11px; color: var(--p-muted); font-weight: 600; }
+.item-body { border-top: 1px solid var(--p-line); padding: 10px 14px 14px; display: grid; gap: 8px; }
+.dl { display: grid; grid-template-columns: minmax(120px, 1fr) 1.4fr; gap: 6px 12px; font-size: 13px; }
+.dl dt { color: var(--p-muted); font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; font-weight: 600; }
+.dl dd { margin: 0; }
+.mono { font-family: var(--f-mono); font-size: 12px; color: var(--p-muted); }
+.big { font: 700 28px/1 var(--f-ui); font-variant-numeric: tabular-nums; } .big small { font-size: 13px; color: var(--p-muted); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .allocbar span { transition: none; } }
+
+/* One-table flow (final) */
+.tx-layout { display: grid; gap: 16px; }
+@container (min-width: 1000px) { .tx-layout { grid-template-columns: minmax(0, 1.75fr) minmax(260px, 1fr); align-items: start; } }
+.tx-main { display: grid; gap: 14px; min-width: 0; container-type: inline-size; }
+.tx-top { display: grid; gap: 10px; grid-template-columns: 1fr; }
+@container (min-width: 520px) { .tx-top { grid-template-columns: 1.3fr 1fr 1fr; } }
+.tx-q { font: 700 17px/1.25 var(--f-ui); margin: 4px 0 2px; }
+.tx-why { color: #8a5a00; font-weight: 600; }
+.sp { display: grid; gap: 8px; }
+.sp-h, .sp-r { display: grid; grid-template-columns: 104px minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.3fr) 28px; gap: 8px; align-items: center; }
+.sp-h span { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--p-muted); padding-left: 6px; }
+.sp-r { border-left: 3px solid var(--p-line); padding-left: 8px; }
+.sp-c { min-width: 0; display: grid; gap: 4px; }
+.sp-l { display: none; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--p-muted); }
+.sp-x { justify-items: end; }
+.field.need { border-color: #e0b44a; background-color: #fffbf0; }
+@container (max-width: 620px) {
+  .sp-h { display: none; }
+  .sp-r { grid-template-columns: 1fr 1fr; border: 1px solid var(--p-line); border-left-width: 4px; border-radius: 10px; padding: 10px 12px; gap: 10px; }
+  .sp-l { display: block; }
+  .sp-x { grid-column: 2; grid-row: 1; position: relative; }
+  .sp-r .sp-c:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .sp-r .sp-c:nth-child(2), .sp-r .sp-c:nth-child(3), .sp-r .sp-c:nth-child(4) { grid-column: 1 / -1; }
+}
+.more { border: 1px solid var(--p-line); border-radius: 10px; }
+.more summary { cursor: pointer; padding: 10px 12px; font-size: 13px; font-weight: 600; color: var(--p-fg); }
+.more-b { padding: 4px 12px 14px; display: grid; gap: 12px; }
+.rc-side { border: 1px solid var(--p-line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 10px; background: var(--p-sunk); }
+.rc-side h4 { margin: 0; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--p-muted); }
+.rc-side .rule { font-size: 12.5px; color: var(--p-muted); margin: 0; }
+
+.seg-wrap { display: grid; gap: 6px; }
+.seg { display: inline-flex; justify-self: start; background: var(--p-sunk); border: 1px solid var(--p-line); border-radius: 9px; padding: 3px; gap: 2px; }
+.seg button { appearance: none; border: 0; background: none; border-radius: 7px; padding: 7px 12px; font: 600 13px var(--f-ui); color: var(--p-muted); cursor: pointer; }
+.seg button[aria-selected="true"] { background: var(--p-bg); color: var(--p-fg); box-shadow: 0 1px 2px rgba(0,0,0,.1); }
+.seg button:disabled { opacity: .45; cursor: not-allowed; }
+.qk { display: grid; gap: 10px; grid-template-columns: 1fr; }
+@container (min-width: 560px) { .qk { grid-template-columns: 1.4fr 1fr 1.2fr; } }
+.dh { margin: -6px 0 0; font-size: 12px; }
+input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px; }
+.cf { display: grid; gap: 6px; border-top: 1px solid var(--p-line); border-bottom: 1px solid var(--p-line); padding: 10px 0; }
+.cf-r { display: grid; grid-template-columns: 10px 1fr auto; gap: 8px; align-items: center; font-size: 13.5px; }
+.cf-r .swatch { width: 10px; height: 10px; border-radius: 3px; }
+.iter-btn { appearance: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); border-radius: 999px; padding: 4px 10px 4px 8px; font: 600 12.5px var(--f-ui); cursor: pointer; }
+.iter-btn svg { width: 15px; height: 15px; }
+.iter-btn[aria-expanded="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+/* Guided variation */
+.g { display: grid; gap: 14px; }
+.g-q { font: 700 18px/1.3 var(--f-ui); margin: 0; }
+.g-opts { display: grid; gap: 8px; }
+.g-opt { appearance: none; text-align: left; border: 1px solid var(--p-line); border-radius: 10px; background: var(--p-bg); padding: 12px 14px; font: 600 14px var(--f-ui); color: var(--p-fg); cursor: pointer; }
+.g-opt small { display: block; font-weight: 400; color: var(--p-muted); margin-top: 2px; }
+.g-opt:hover { border-color: var(--p-accent); }
+.g-sum { display: grid; gap: 6px; }
+
+/* Iterations view */
+.iter { display: grid; gap: 16px; }
+.iter-intro { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 6px; }
+.iter-intro p { margin: 0; color: var(--muted); font-size: 14px; max-width: 90ch; }
+.rounds { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.round { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 4px; align-content: start; }
+.round .rn { font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.round b { font-size: 15px; }
+.round .sc { font-size: 13px; font-variant-numeric: tabular-nums; }
+.round .tag { justify-self: start; font-size: 11.5px; font-weight: 700; border-radius: 999px; padding: 2px 8px; background: var(--chip); color: var(--muted); margin-top: 4px; }
+.round .tag.ship { background: var(--ok-bg); color: var(--ok); }
+.round .tag.next { background: var(--accent); color: #fff; }
+.var-tabs { display: inline-flex; flex-wrap: wrap; background: var(--chip); border-radius: 999px; padding: 3px; gap: 2px; justify-self: start; }
+.var-tabs button { appearance: none; border: 0; background: none; color: var(--muted); font: 600 14px var(--f-ui); padding: 7px 14px; border-radius: 999px; cursor: pointer; }
+.var-tabs button[aria-selected="true"] { background: var(--panel); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.var { display: grid; gap: 16px; align-items: start; }
+@media (min-width: 1180px) { .var { grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr); } }
+.notes { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 12px; }
+.notes h3 { margin: 0; font: 700 17px/1.25 var(--f-ui); }
+.notes h4 { margin: 0 0 4px; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.notes ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; }
+.notes p { margin: 0; font-size: 14px; }
+.verdict { border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.verdict.keep { background: var(--ok-bg); color: var(--ok); } .verdict.drop { background: var(--warn-bg); color: var(--warn); }
+.final { background: var(--panel); border: 2px solid var(--accent); border-radius: 12px; padding: 16px 18px; display: grid; gap: 10px; }
+.final h3 { margin: 0; font: 700 19px/1.25 var(--f-ui); }
+.final ol, .final ul { margin: 0; padding-left: 20px; display: grid; gap: 5px; font-size: 14.5px; }
+.final .two-col { display: grid; gap: 16px; }
+@media (min-width: 900px) { .final .two-col { grid-template-columns: 1fr 1fr; } }
+.final h4 { margin: 0 0 6px; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+/* Transaction details (matches the production details screen) */
+.td-crumb { display: flex; align-items: center; gap: 8px; padding: 12px 18px; font-size: 13px; color: var(--p-fg); border-bottom: 1px solid var(--p-line); white-space: nowrap; overflow-x: auto; }
+.td-crumb button { appearance: none; background: none; border: 0; padding: 0; font: 500 13px var(--f-ui); color: var(--p-accent); cursor: pointer; }
+.td-crumb .sep { color: var(--p-dim); }
+.td-crumb b { font-weight: 600; }
+.td-tabs { display: flex; gap: 22px; padding: 0 18px; border-bottom: 1px solid var(--p-line); overflow-x: auto; }
+.td-tabs span { padding: 11px 0 9px; font-size: 13.5px; font-weight: 500; color: var(--p-fg); white-space: nowrap; border-bottom: 2px solid transparent; }
+.td-tabs span.on { font-weight: 700; border-bottom-color: var(--p-accent); }
+.td { padding: 20px 18px 24px; display: grid; gap: 18px; }
+.td-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid var(--p-line); }
+.td-amt { font: 700 32px/1 var(--f-ui); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.td-amt small { font-size: 22px; font-weight: 500; color: var(--p-muted); margin-left: 4px; }
+.td-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.tchip { display: inline-flex; align-items: center; gap: 5px; font: 600 11px/1 var(--f-ui); letter-spacing: .04em; text-transform: uppercase; padding: 6px 8px; border-radius: 6px; background: var(--p-sunk); color: var(--p-muted); white-space: nowrap; }
+.tchip svg { width: 13px; height: 13px; flex: none; }
+.tchip.green { background: #e3f4ea; color: #1d7a49; }
+.tchip.amber { background: #fdf1d6; color: #8a5a00; }
+.td-act { display: grid; justify-items: end; gap: 10px; }
+.td-act .row { gap: 8px; }
+.idchip { display: inline-flex; align-items: center; gap: 6px; font: 500 12px/1 var(--f-mono); color: var(--p-fg); background: var(--p-bg); border: 1px solid var(--p-line); border-radius: 6px; padding: 6px 8px; cursor: pointer; white-space: nowrap; }
+.idchip svg { width: 13px; height: 13px; color: var(--p-muted); }
+.idchip.copied { border-color: #1d7a49; color: #1d7a49; }
+.td-grid { display: grid; grid-template-columns: 1fr; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--p-line); }
+@container (min-width: 600px) { .td-grid { grid-template-columns: 1fr auto; } }
+.td-dl { display: grid; grid-template-columns: 130px 1fr; gap: 14px 16px; align-items: center; font-size: 13.5px; }
+.td-k { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--p-muted); }
+.person { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--p-line); border-radius: 999px; padding: 4px 12px 4px 4px; font-weight: 500; width: max-content; }
+.person i { width: 24px; height: 24px; border-radius: 50%; background: #d8cdfb; color: #3b2a96; font: 700 10px/24px var(--f-ui); text-align: center; font-style: normal; }
+.td-rc { display: grid; gap: 8px; align-content: start; justify-items: start; }
+@container (min-width: 600px) { .td-rc { justify-items: end; } }
+.td-rc .row { gap: 6px; }
+.btn.sm { padding: 6px 10px; font-size: 12.5px; border-radius: 6px; }
+.btn.icon { padding: 7px 9px; }
+.td-h2 { font: 700 18px/1.2 var(--f-ui); margin: 4px 0 0; }
+.ti { border: 1px solid var(--p-line); border-radius: 10px; overflow: hidden; }
+.ti-head { display: flex; align-items: center; gap: 10px 12px; padding: 14px 16px; flex-wrap: wrap; }
+.ti-head .nm { font-weight: 600; font-size: 15px; }
+.ti-head .rt { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.ti-head .am { font: 700 18px/1 var(--f-ui); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ti-head .am small { font-size: 13px; font-weight: 500; color: var(--p-muted); margin-left: 3px; }
+.tgl { appearance: none; width: 32px; height: 32px; border: 1px solid var(--p-line); border-radius: 7px; background: var(--p-bg); color: var(--p-fg); display: grid; place-items: center; cursor: pointer; }
+.tgl svg { width: 14px; height: 14px; transition: transform .2s ease; }
+.tgl[aria-expanded="true"] svg { transform: rotate(180deg); }
+.ti-tabs { display: flex; gap: 4px; padding: 0 16px; border-top: 1px solid var(--p-line); }
+.ti-tabs button { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; padding: 12px 8px 10px; font: 500 13.5px var(--f-ui); color: var(--p-fg); cursor: pointer; }
+.ti-tabs button[aria-selected="true"] { color: var(--p-accent); border-bottom-color: var(--p-accent); font-weight: 600; }
+.ti-body { border-top: 1px solid var(--p-line); padding: 14px 16px 16px; display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 12px 16px; font-size: 13.5px; }
+.ti-body .td-k { font-size: 11px; }
+.rcpt-doc { display: grid; gap: 10px; }
+.rcpt-doc .org { font-weight: 700; font-size: 15px; }
+.rcpt-doc .meta { font-size: 12.5px; color: var(--p-muted); display: grid; gap: 2px; }
+@media (prefers-reduced-motion: reduce) { .tgl svg { transition: none; } }
+
+</style>
+
+<div class="page">
+  <div class="head">
+    <div>
+      <h1>Split payments, before and after</h1>
+      <p>Rebuilt from my Transaction Workflows designs at Aplos (now Velora), white-labelled with illustrative data. After shows the refined version I’d ship next. The cog beside it opens how we got there.</p>
+    </div>
+    <nav class="views" aria-label="Choose a view">
+      <a href="#before" data-view="before">Before</a>
+      <a href="#after" data-view="after">After</a>
+      <a href="#compare" data-view="compare">Side by side</a>
+    </nav>
+  </div>
+  <div class="task" role="note">
+    <b>The task:</b> <span>Sarah Padilla paid $200 at the Annual Gala. Record it correctly.</span>
+    <span class="split"><span>$100 gala ticket</span><span>$50 General Donations</span><span>$50 Capital Campaign</span></span>
+  </div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var money = function (n) { return "$" + (Math.round(n * 100) / 100).toLocaleString("en-CA", { minimumFractionDigits: 0, maximumFractionDigits: 2 }); };
+  var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var FUNDS = ["Annual Gala", "General Donations", "Capital Campaign"];
+  var GIFT = ["Money", "In kind", "Securities", "Other"];
+  var CATS = ["Other", "Grants", "Sponsorship", "Membership", "Purchase"];
+  var COLORS = { Donation: "#5a3fd8", Revenue: "#1f2a44" };
+  var HISTORY = [
+    { date: "Mar 14, 2026", type: "Donation", desc: "Monthly gift", fund: "General Donations", amt: 25 },
+    { date: "Feb 14, 2026", type: "Donation", desc: "Monthly gift", fund: "General Donations", amt: 25 },
+    { date: "Nov 22, 2025", type: "Other Revenue", desc: "Gala ticket", fund: "Annual Gala", amt: 100 }
+  ];
+  var TODAY = "Apr 23, 2026";
+  var IMPACT = ["Arts education", "Community programs", "Building fund"];
+  var SOURCES = ["Event", "Website", "Mail appeal", "Peer-to-peer"];
+  var KEYWORDS = ["Gala 2026", "Major donor", "Monthly donor"];
+  var SOFT = ["Daniel Padilla", "Maya Chen", "Priya Raman"];
+  var RCPT_OPTS = [["email", "Generate receipt and send now via email"], ["print", "Generate just receipt for print and mail"], ["letter", "Generate receipt & letter for print and mail"], ["skip", "Skip receipting for now"], ["ignore", "Ignore from receipting"]];
+  function blankMeta() { return { soft: "", source: "", kw: "", ded: "", notes: "" }; }
+  function combo(id, label, value, list, attrs, req) {
+    return '<label class="f"><span class="f-k">' + label + (req ? ' <span class="req">*</span>' : '') + '</span><input class="field combo" id="' + id + '" list="dl-' + list + '" placeholder="Start typing to search..." autocomplete="off" value="' + esc(value || "") + '"' + (attrs || "") + '></label>';
+  }
+  function metaFields(prefix, m) {
+    return combo(prefix + "-soft", "Soft credit", m.soft, "soft", ' data-m="soft"') + combo(prefix + "-source", "Source", m.source, "source", ' data-m="source"') + combo(prefix + "-kw", "Keywords", m.kw, "kw", ' data-m="kw"') +
+      '<label class="f"><span class="f-k">Dedication</span><input class="field" id="' + prefix + '-ded" data-m="ded" value="' + esc(m.ded) + '"></label>' +
+      '<label class="f"><span class="f-k">Notes</span><textarea class="field" id="' + prefix + '-notes" data-m="notes">' + esc(m.notes) + '</textarea></label>';
+  }
+  function rcptRadios(name, cur) {
+    return '<div class="radios" role="radiogroup" aria-label="Receipt options"><span class="f-k">Receipt options</span>' + RCPT_OPTS.map(function (o) { return '<label class="check"><input type="radio" name="' + name + '" id="' + name + '-' + o[0] + '" value="' + o[0] + '"' + (cur === o[0] ? ' checked' : '') + '> ' + o[1] + '</label>'; }).join("") + '</div>';
+  }
+
+  function bar(crumbTail) {
+    return '<div class="bar"><span class="crumb">Contacts / Sarah Padilla / <b>' + crumbTail + '</b></span><span class="org"><i></i>ABC Organization</span></div>';
+  }
+  function historyRows(extra, newClass) {
+    return extra.map(function (r) { return '<tr class="' + newClass + '"><td>' + r.date + '</td><td>' + esc(r.type) + '</td><td>' + (r.link ? '<button type="button" class="link" data-a="' + r.link + '">' + esc(r.desc) + '</button>' : esc(r.desc)) + '</td><td>' + esc(r.fund) + '</td><td class="num">' + money(r.amt) + '</td></tr>'; }).join("") +
+      HISTORY.map(function (r) { return '<tr><td>' + r.date + '</td><td>' + r.type + '</td><td>' + r.desc + '</td><td>' + r.fund + '</td><td class="num">' + money(r.amt) + '</td></tr>'; }).join("");
+  }
+
+  /* ======================= BEFORE ======================= */
+  function Before(root, onStats) {
+    var s;
+    function reset() { s = { menu: false, modal: null, tab: "info", amount: 200, fund: "Annual Gala", gift: "Money", records: [], clicks: 0, rcpt: "email", meta: blankMeta(), impact: "" }; render(); }
+    function stats() {
+      var don = s.records.filter(function (r) { return r.type === "Donation"; });
+      var eligible = don.reduce(function (n, r) { return n + r.amt; }, 0);
+      var total = s.records.reduce(function (n, r) { return n + r.amt; }, 0);
+      var right = s.records.length === 3 && eligible === 100 && total === 200;
+      onStats({ clicks: s.clicks, records: s.records.length, receipt: s.records.length ? (eligible === 100 && total === 200 ? "right, as " + don.length + " receipts" : "wrong") : "not yet", ok: s.records.length ? (eligible === 100 && total === 200) : null });
+      return { eligible: eligible, total: total, right: right, receipts: don.length };
+    }
+    function render() {
+      var st = stats();
+      var newRows = s.records.slice().reverse().map(function (r) { return { date: TODAY, type: r.type === "Donation" ? "Donation" : "Other Revenue", desc: r.type === "Donation" ? "Gala night" : "Gala ticket", fund: r.fund, amt: r.amt }; });
+      var feedback = "";
+      if (s.records.length) {
+        if (st.total > 200) feedback = '<div class="flag bad"><b>Over the payment.</b> These records add up to ' + money(st.total) + ', but Sarah paid $200. Nothing in the product warns you.</div>';
+        else if (st.eligible === 100 && st.total === 200) feedback = '<div class="flag warn"><b>Correct, but split across ' + s.records.length + ' records.</b> One $200 bank deposit now matches ' + s.records.length + ' transactions, and Sarah gets ' + st.receipts + ' separate receipts. The accountant reconciles this by hand, usually in a side spreadsheet.</div>';
+        else if (st.total < 200) feedback = '<div class="flag warn"><b>' + money(200 - st.total) + ' not recorded yet.</b> The rest of the payment needs another transaction, each with its own type.</div>';
+        else feedback = '<div class="flag bad"><b>The receipt is wrong.</b> It says ' + money(st.eligible) + ' is tax-deductible, but the $100 ticket is not a donation. To fix it, staff log separate transactions: one per type.</div>';
+      }
+      root.innerHTML = bar("Transactions") +
+        '<div class="body">' +
+          '<div class="row"><div class="grow"><p class="h">Transactions</p><p class="sub">Sarah Padilla · 4 years as a supporter</p></div>' +
+          '<div class="anchor"><button type="button" class="btn primary" data-a="menu" aria-haspopup="true" aria-expanded="' + s.menu + '">Create New ▾</button>' +
+          (s.menu ? '<div class="menu" role="menu" style="right:0;top:42px"><button type="button" role="menuitem" data-a="pick" data-t="Donation">Donation</button><button type="button" role="menuitem" data-a="pick" data-t="Revenue">Other Revenue</button></div>' : '') +
+          '</div></div>' +
+          (s.records.length === 0 ? '<div class="hint">First choice: is this payment a <b>Donation</b> or <b>Other Revenue</b>? The product makes you pick one type per payment.</div>' : '') +
+          feedback +
+          '<div class="tablewrap"><table class="list"><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Campaign</th><th class="num">Amount</th></tr></thead><tbody>' + historyRows(newRows, "new") + '</tbody></table></div>' +
+          (s.records.length ? '<div class="panel"><h4>What the receipt says</h4><div class="kv"><span>Tax-deductible (on ' + st.receipts + ' receipt' + (st.receipts === 1 ? '' : 's') + ')</span><b>' + money(st.eligible) + '</b></div><div class="kv"><span>Should be</span><b>$100</b></div></div>' : '') +
+        '</div>' + (s.modal ? modal() : '');
+    }
+    function modal() {
+      var isDon = s.modal === "Donation";
+      var title = isDon ? "Create a Transaction - Donation" : "Create a Transaction - Other Revenue";
+      var tabs = [["info", isDon ? "Donation Info" : "Revenue Info"], ["assoc", "Associations"], ["receipt", "Receipting"], ["pay", "Payment"]];
+      var b = "";
+      if (s.tab === "info") {
+        b = '<label class="f"><span>Transaction type <span class="req">*</span></span><input class="field" id="b-type" value="' + (isDon ? "Donation" : "Other Revenue") + '" readonly></label>' +
+          '<label class="f"><span>Contact <span class="req">*</span></span><input class="field" id="b-contact" value="Sarah Padilla" readonly></label>' +
+          '<label class="f"><span>Date received <span class="req">*</span></span><input class="field" id="b-date" value="' + TODAY + ', 9:14 PM" readonly></label>' +
+          '<label class="f"><span>Total amount <span class="req">*</span></span><span class="money"><span>$</span><input class="field" id="b-amt" type="number" inputmode="decimal" min="0" value="' + s.amount + '"></span></label>' +
+          '<label class="check"><input type="checkbox" id="b-fx"> Was the transaction converted from a different currency?</label>' +
+          (isDon ? '<label class="f"><span>Gift type <span class="req">*</span></span><select class="field" id="b-gift">' + GIFT.map(function (g) { return '<option' + (g === s.gift ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select></label>'
+                 : '<label class="f"><span>Category <span class="req">*</span></span><select class="field" id="b-cat">' + CATS.map(function (g) { return '<option' + (g === "Purchase" ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select></label>');
+      } else if (s.tab === "assoc") {
+        b = combo("b-fund", "Campaign", s.fund, "fund", "", true) + '<p class="sub" style="margin-top:-6px">One campaign for the whole payment.</p>' + combo("b-impact", "Impact area", s.impact, "impact", "") + metaFields("b", s.meta);
+      } else if (s.tab === "receipt") {
+        b = isDon ? rcptRadios("b-rc", s.rcpt) + '<div class="hint">The receipt covers the full amount. There is no way to say part of this payment bought something.</div>' : '<p class="sub">Other Revenue is never receipted.</p>';
+      } else {
+        b = '<label class="f">Payment method<select class="field" id="b-pm"><option>Credit card</option><option>Cash</option><option>Cheque</option></select></label>';
+      }
+      return '<div class="scrim"><div class="modal" role="dialog" aria-modal="true" aria-label="' + title + '"><div class="modal-h">' + title + '<button type="button" class="x" data-a="close" aria-label="Close">×</button></div>' +
+        '<div class="tabs" role="tablist">' + tabs.map(function (t) { return '<button type="button" class="tab" role="tab" data-a="tab" data-t="' + t[0] + '" aria-selected="' + (s.tab === t[0]) + '">' + t[1] + '</button>'; }).join("") + '</div>' +
+        '<div class="modal-b">' + b + '</div><div class="modal-f"><button type="button" class="btn" data-a="close">Cancel</button><button type="button" class="btn primary" data-a="save">Save</button></div></div></div>';
+    }
+    root.addEventListener("click", function (e) {
+      var t = e.target.closest("button, input, select"); if (!t || !root.contains(t)) return;
+      if (t.matches("button")) s.clicks++;
+      var a = t.dataset.a;
+      if (a === "menu") { s.menu = !s.menu; render(); }
+      else if (a === "pick") { s.menu = false; s.modal = t.dataset.t; s.tab = "info"; s.amount = s.records.length ? Math.max(0, 200 - s.records.reduce(function (n, r) { return n + r.amt; }, 0)) : 200; s.fund = t.dataset.t === "Revenue" ? "Annual Gala" : "General Donations"; if (!s.records.length) s.fund = "Annual Gala"; s.meta = blankMeta(); s.impact = ""; s.rcpt = "email"; render(); }
+      else if (a === "tab") { s.tab = t.dataset.t; render(); }
+      else if (a === "close") { s.modal = null; render(); }
+      else if (a === "save") { s.records.push({ type: s.modal, amt: Number(s.amount) || 0, fund: s.fund }); s.modal = null; render(); }
+      else if (t.matches("button")) render();
+      else stats();
+    });
+    root.addEventListener("input", function (e) {
+      if (e.target.id === "b-amt") s.amount = e.target.value === "" ? 0 : Number(e.target.value);
+      if (e.target.id === "b-fund") s.fund = e.target.value;
+      if (e.target.id === "b-impact") s.impact = e.target.value;
+      if (e.target.dataset && e.target.dataset.m && e.target.id.indexOf("b-") === 0) s.meta[e.target.dataset.m] = e.target.value;
+      if (e.target.name === "b-rc") s.rcpt = e.target.value;
+      if (e.target.id === "b-gift") s.gift = e.target.value;
+    });
+    root.addEventListener("keydown", function (e) { if (e.key === "Escape" && (s.modal || s.menu)) { s.modal = null; s.menu = false; render(); } });
+    this.reset = reset; reset();
+  }
+
+  /* ======================= AFTER ======================= */
+  function After(root, onStats, opts) {
+    opts = opts || {}; var MODE = opts.mode || "table", P = opts.prefix || "a";
+    var s, uid = 1;
+    var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], MONL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    function parts(iso) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ""); return m ? [+m[1], +m[2] - 1, +m[3]] : [2026, 3, 23]; }
+    function fmtDate(iso) { var p = parts(iso); return MON[p[1]] + " " + p[2] + ", " + p[0]; }
+    function fmtLong(iso) { var p = parts(iso); return MONL[p[1]] + " " + p[2] + ", " + p[0]; }
+    function blankLine(amt) { return { id: uid++, amt: amt, type: MODE === "table" ? "" : "Donation", cat: "Other", gift: "Money", adv: false, fund: "General Donations", impact: "" }; }
+    function reset() { s = { screen: "list", step: 1, total: 200, lines: [], date: "2026-04-23", entry: "quick", confirm: false, region: "CA", rcpt: "email", meta: blankMeta(), open: {}, itab: {}, clicks: 0, saved: false, editing: false, snap: null, receiptOpen: false }; render(); }
+    function sum() { return s.lines.reduce(function (n, l) { return n + (Number(l.amt) || 0); }, 0); }
+    function left() { return Math.round((s.total - sum()) * 100) / 100; }
+    function eligible() { return s.lines.filter(function (l) { return l.type === "Donation"; }).reduce(function (n, l) { return n + (Number(l.amt) || 0); }, 0); }
+    function benefit() { return s.lines.filter(function (l) { return l.type === "Revenue"; }).reduce(function (n, l) { return n + (Number(l.amt) || 0); }, 0); }
+    function untyped() { return s.lines.filter(function (l) { return !l.type; }).length; }
+    function canSave() { return s.total > 0 && s.lines.length > 0 && left() === 0 && untyped() === 0; }
+    function blocker() { var l = left(); if (untyped()) return s.entry === "quick" && MODE === "table" ? "Choose what this payment was." : "Choose what each line was."; if (l > 0) return money(l) + " still to place."; if (l < 0) return money(-l) + " more than the payment."; return ""; }
+    function stats() {
+      var ok = s.saved ? (eligible() === 100 && left() === 0) : null;
+      onStats({ clicks: s.clicks, records: s.saved ? 1 : 0, receipt: s.saved ? (ok ? "right, one receipt" : "check the split") : "not yet", ok: ok });
+    }
+    function stepper() {
+      var names = ["Transaction Info", "Associations", "Receipting"], out = [];
+      names.forEach(function (n, i) { var k = i + 1; out.push('<span class="step ' + (k === s.step ? "on" : k < s.step ? "done" : "") + '"><i>' + (k < s.step ? "✓" : k) + '</i>' + n + '</span>'); if (k < 3) out.push('<span class="step-line"></span>'); });
+      return '<div class="stepper" aria-label="Steps">' + out.join("") + '</div>';
+    }
+    function allocation() {
+      var l = left(), tot = s.total || 1;
+      var segs = s.lines.map(function (x) { if (!x.type) { var wu = Math.max(0, Math.min(Number(x.amt) || 0, tot)) / tot; return wu > 0 ? '<span style="width:' + (wu * 100) + '%;background:#b9bcc6">' + (wu > .16 ? money(x.amt) : "") + '</span>' : ""; } var w = Math.max(0, Math.min(Number(x.amt) || 0, tot)) / tot; return w > 0 ? '<span style="width:' + (w * 100) + '%;background:' + COLORS[x.type] + '">' + (w > .16 ? money(x.amt) : "") + '</span>' : ""; }).join("");
+      var status = l === 0 && MODE === "table" && untyped() ? '<span class="chip amber">Adds up</span> Now choose what each line was.' : l === 0 ? '<span class="chip green">Balanced</span> Every dollar is accounted for.' : l > 0 ? '<span class="chip amber">' + money(l) + ' left</span> Allocate the rest before saving.' : '<span class="chip red">' + money(-l) + ' over</span> Lower a split before saving.';
+      return '<div class="alloc"><div class="allocbar" role="img" aria-label="' + money(sum()) + ' of ' + money(s.total) + ' allocated">' + segs + '</div><div class="row" style="justify-content:space-between"><span class="legend"><span><i style="background:' + COLORS.Donation + '"></i>' + (MODE === "table" ? 'Gift, goes on the receipt' : 'Donation (receiptable)') + '</span><span><i style="background:' + COLORS.Revenue + '"></i>' + (MODE === "table" ? 'Got something back, not receipted' : 'Revenue (not receiptable)') + '</span></span><span style="font-size:13px" aria-live="polite">' + status + '</span></div></div>';
+    }
+    function card(x, i) {
+      var isDon = x.type === "Donation";
+      return '<div class="card" data-id="' + x.id + '"><div class="card-h"><span class="swatch" style="background:' + COLORS[x.type] + '"></span><b>Split ' + (i + 1) + '</b>' + '' + (s.lines.length > 1 ? '<button type="button" class="x" data-a="rm" data-id="' + x.id + '" aria-label="Remove split ' + (i + 1) + '">×</button>' : '') + '</div>' +
+        '<label class="f"><span>Split amount <span class="req">*</span></span><span class="money"><span>$</span><input class="field" id="' + P + '-amt-' + x.id + '" data-k="amt" data-id="' + x.id + '" type="number" inputmode="decimal" min="0" value="' + x.amt + '"></span></label>' +
+        '<label class="f"><span>Transaction type <span class="req">*</span></span><select class="field" id="' + P + '-type-' + x.id + '" data-k="type" data-id="' + x.id + '"><option' + (isDon ? ' selected' : '') + '>Donation</option><option' + (!isDon ? ' selected' : '') + '>Revenue</option></select></label>' +
+        (isDon ? '<label class="f"><span>Gift type <span class="req">*</span></span><select class="field" id="' + P + '-gift-' + x.id + '" data-k="gift" data-id="' + x.id + '">' + GIFT.map(function (g) { return '<option' + (g === x.gift ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select></label>'
+               : '<label class="f"><span>Category <span class="req">*</span></span><select class="field" id="' + P + '-cat-' + x.id + '" data-k="cat" data-id="' + x.id + '">' + CATS.map(function (g) { return '<option' + (g === x.cat ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select></label>') +
+        '</div>';
+    }
+    function receiptLines() {
+      var e = eligible(), b = benefit(), r = s.region;
+      if (r === "CA") return '<div class="kv"><span>Total amount received</span><b>' + money(s.total) + '</b></div><div class="kv"><span>Value of advantage (gala ticket)</span><b>' + money(b) + '</b></div><div class="kv"><span>Eligible amount of gift</span><b>' + money(e) + '</b></div><p class="rule">Canada: the receipt shows the total, the advantage, and what is left as eligible.</p>';
+      if (r === "US") return '<div class="kv"><span>Payment received</span><b>' + money(s.total) + '</b></div><div class="kv"><span>Good-faith estimate of goods received</span><b>' + money(b) + '</b></div><div class="kv"><span>Deductible contribution</span><b>' + money(e) + '</b></div><p class="rule">US: a payment over $75 that is partly a gift needs a written disclosure with a good-faith estimate.</p>';
+      var minor = Math.min(0.2 * s.total, 150);
+      return '<div class="kv"><span>Donations (deductible)</span><b>' + money(e) + '</b></div><div class="kv"><span>Gala ticket (benefit received)</span><b>' + money(b) + '</b></div><p class="rule">Australia: an event payment is deductible only if the benefit is minor, at most 20% of the payment or $150, whichever is less (here ' + money(minor) + '). The ticket is over that, so only the separate donations are receipted.</p>';
+    }
+
+    var IC = {
+      card: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="3.5" width="13" height="9" rx="1.5"/><path d="M1.5 6.5h13"/></svg>',
+      cal: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="3" width="12" height="11" rx="1.5"/><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3"/></svg>',
+      copy: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 5.5v-2a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2"/></svg>',
+      gift: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="12" height="3" rx=".8"/><path d="M3 9v5h10V9M8 6v8M8 6S6.5 2.5 4.8 3.4C3.5 4.1 5 6 8 6zm0 0s1.5-3.5 3.2-2.6C12.5 4.1 11 6 8 6z"/></svg>',
+      tri: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M8 2.5l6 10.5H2z"/></svg>',
+      chev: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg>',
+      lock: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>',
+      dots: '<svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><circle cx="8" cy="3" r="1.4"/><circle cx="8" cy="8" r="1.4"/><circle cx="8" cy="13" r="1.4"/></svg>'
+    };
+    var TXN_ID = "y4rHeXBLxduBiQLuT";
+    function itemId(x) { return "itm" + (4180 + x.id) + "QpZ" + "abcdefghjk".charAt(x.id % 10) + "Lw"; }
+    function splitLabel() { var r = s.lines.filter(function (l) { return l.type === "Revenue"; }).length, d = s.lines.length - r; var p = []; if (r) p.push("Revenue" + (r > 1 ? " ×" + r : "")); if (d) p.push("Donation" + (d > 1 ? " ×" + d : "")); return "Split: " + p.join(" + "); }
+    function campaignsLabel() { var u = []; s.lines.forEach(function (l) { if (u.indexOf(l.fund) < 0) u.push(l.fund); }); return u.length === 1 ? u[0] : u.length + " campaigns"; }
+    function idChip(id) { return '<button type="button" class="idchip" data-a="copy" data-copy="' + id + '" aria-label="Copy ID ' + id + '">' + id + IC.copy + '</button>'; }
+    function receiptChips() {
+      if (s.rcpt === "email") return '<span class="tchip green">Receipted</span><span class="tchip green">Delivered via email</span>';
+      if (s.rcpt === "print") return '<span class="tchip green">Receipted</span><span class="tchip">Ready to print</span>';
+      if (s.rcpt === "letter") return '<span class="tchip green">Receipted</span><span class="tchip">Receipt & letter to print</span>';
+      if (s.rcpt === "ignore") return '<span class="tchip">Ignored from receipting</span>';
+      return '<span class="tchip amber">Not receipted yet</span>';
+    }
+    function itemBody(x) {
+      var tab = s.itab[x.id] || "details", isDon = x.type === "Donation";
+      var tabs = '<div class="ti-tabs" role="tablist"><button type="button" role="tab" data-a="itab" data-t="details" data-id="' + x.id + '" aria-selected="' + (tab === "details") + '">' + (isDon ? "Gift Details" : "Revenue Details") + '</button><button type="button" role="tab" data-a="itab" data-t="assoc" data-id="' + x.id + '" aria-selected="' + (tab === "assoc") + '">Associations</button></div>';
+      var rows;
+      var ns = function (v) { return v ? esc(v) : '<span style="color:var(--p-dim)">Not set</span>'; };
+      if (tab === "assoc") rows = [["Campaign", esc(x.fund)], ["Impact area", ns(x.impact)], ["Soft credit", ns(s.meta.soft)], ["Source", ns(s.meta.source)], ["Keywords", ns(s.meta.kw)], ["Dedication", ns(s.meta.ded)], ["Notes", ns(s.meta.notes)]];
+      else if (isDon) rows = [["Amount of gift", money(x.amt) + " CAD"], ["Gift type", esc(x.gift)], ["Tax receipt", s.rcpt === "skip" ? "Not issued yet" : s.rcpt === "ignore" ? "Ignored from receipting" : "Included, eligible " + money(x.amt)]];
+      else rows = [["Amount", money(x.amt) + " CAD"], ["Category", esc(x.cat)], ["Value received", "Gala ticket, " + money(x.amt) + " fair market value"], ["Tax receipt", "Not receiptable. Shown as the advantage on the gift receipt."]];
+      return tabs + '<div class="ti-body" role="tabpanel">' + rows.map(function (r) { return '<span class="td-k">' + r[0] + '</span><span>' + r[1] + '</span>'; }).join("") + '</div>';
+    }
+    function detailsView() {
+      var items = s.lines.map(function (x) {
+        var open = !!s.open[x.id], isDon = x.type === "Donation";
+        var tag = isDon ? '<span class="tchip">' + IC.gift + esc(x.gift) + ' (Donation: gift type)</span>' : '<span class="tchip">' + IC.tri + esc(x.cat) + ' (Revenue: category)</span>';
+        return '<div class="ti"><div class="ti-head"><span class="nm">' + x.type + '</span>' + tag + '<span class="rt">' + idChip(itemId(x)) + '<span class="am">' + money(x.amt) + '<small>CAD</small></span><button type="button" class="tgl" data-a="toggle" data-id="' + x.id + '" aria-expanded="' + open + '" aria-label="' + (open ? "Hide" : "Show") + ' details for ' + x.type + ' ' + money(x.amt) + '">' + IC.chev + '</button></span></div>' + (open ? itemBody(x) : '') + '</div>';
+      }).join("");
+      return '<nav class="td-crumb" aria-label="Breadcrumb"><button type="button" data-a="list">All Contacts</button><span class="sep">›</span><button type="button" data-a="list">Sarah Padilla - Transactions</button><span class="sep">›</span><b>Transaction Details</b><span class="org" style="margin-left:auto;display:flex;align-items:center;gap:6px;color:var(--p-muted)"><i style="width:18px;height:18px;border-radius:5px;background:#d8cdfb;display:inline-block"></i>ABC Organization</span></nav>' +
+        '<div class="td-tabs" aria-hidden="true"><span>Profile</span><span>Interactions</span><span>To-Do’s</span><span class="on">Fundraising</span><span>Memberships</span><span>Volunteering</span></div>' +
+        '<div class="td"><div class="td-head"><div><div class="td-amt">' + money(s.total) + '<small>CAD</small></div><div class="td-chips"><span class="tchip">' + IC.card + 'Card</span><span class="tchip green">Paid</span></div></div>' +
+        '<div class="td-act"><span class="tchip" title="Saved transactions can’t be edited, to keep the books and receipts matching.">' + IC.lock + 'Locked</span>' + idChip(TXN_ID) + '</div></div>' +
+        '<div class="td-grid"><div class="td-dl"><span class="td-k">Contact</span><span class="person"><i>SP</i>Sarah Padilla</span><span class="td-k">Date received</span><span class="tchip" style="width:max-content">' + IC.cal + fmtLong(s.date) + '</span><span class="td-k">Frequency</span><span>One-time</span><span class="td-k">Tax-deductible</span><span><b>' + money(eligible()) + '</b> on one receipt</span></div>' +
+        '<div class="td-rc"><span class="td-k">Receipt info</span><div class="row">' + receiptChips() + '</div>' + (s.rcpt === "skip" || s.rcpt === "ignore" ? '' : '<button type="button" class="btn sm" data-a="viewreceipt">View Receipt</button>') + '</div></div>' +
+        '<p class="sub" style="margin:-6px 0 0">Saved transactions are locked so the books and receipts always match.</p><p class="td-h2">Transaction Items</p><div class="items">' + items + '</div><button type="button" class="link" data-a="list" style="justify-self:start">Back to transactions</button></div>';
+    }
+    function receiptModal() {
+      var name = { CA: "Canada", US: "United States", AU: "Australia" }[s.region];
+      return '<div class="scrim" data-a="closereceipt-bg"><div class="modal" role="dialog" aria-modal="true" aria-label="Receipt"><div class="modal-h">Receipt<button type="button" class="x" data-a="closereceipt" aria-label="Close">×</button></div>' +
+        '<div class="modal-b rcpt-doc"><div><div class="org">ABC Organization</div><div class="meta"><span>Official receipt for income tax purposes · ' + name + ' rules</span><span>Receipt no. R-2026-0418 · Issued ' + fmtDate(s.date) + '</span><span>Received from Sarah Padilla</span></div></div>' +
+        '<div class="panel receipt">' + receiptLines() + '</div></div><div class="modal-f"><span></span><button type="button" class="btn" data-a="closereceipt">Close</button></div></div></div>';
+    }
+
+    var TYPE_LABEL = { Donation: "Donation, a gift", Revenue: "Revenue, they got something back" };
+    function regionSelect() { return '<label class="f" style="grid-auto-flow:column;align-items:center;gap:6px;margin:0">Rules<select class="field" id="' + P + '-region" style="width:auto;padding:5px 32px 5px 8px;background-position:right 10px center"><option value="CA"' + (s.region === "CA" ? ' selected' : '') + '>Canada</option><option value="US"' + (s.region === "US" ? ' selected' : '') + '>United States</option><option value="AU"' + (s.region === "AU" ? ' selected' : '') + '>Australia</option></select></label>'; }
+    function spRow(x, i) {
+      var c = x.type ? COLORS[x.type] : "var(--p-line)", det;
+      if (x.type === "Donation") det = '<select class="field" data-k="gift" data-id="' + x.id + '" aria-label="Gift type, line ' + (i + 1) + '">' + GIFT.map(function (g) { return '<option' + (g === x.gift ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select>';
+      else if (x.type === "Revenue") det = '<select class="field" data-k="cat" data-id="' + x.id + '" aria-label="Category, line ' + (i + 1) + '">' + CATS.map(function (g) { return '<option' + (g === x.cat ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select>';
+      else det = '<select class="field" disabled aria-label="Detail, line ' + (i + 1) + '"><option>Pick a type first</option></select>';
+      return '<div class="sp-r" style="border-left-color:' + c + '">' +
+        '<div class="sp-c"><span class="sp-l">Amount</span><span class="money"><span>$</span><input class="field" data-k="amt" data-id="' + x.id + '" type="number" inputmode="decimal" min="0" value="' + x.amt + '" aria-label="Amount, line ' + (i + 1) + '"></span></div>' +
+        '<div class="sp-c"><span class="sp-l">What it was</span><select class="field' + (x.type ? '' : ' need') + '" data-k="type" data-id="' + x.id + '" aria-label="What line ' + (i + 1) + ' was"><option value=""' + (x.type ? '' : ' selected') + ' disabled>Choose…</option><option value="Donation"' + (x.type === "Donation" ? ' selected' : '') + '>' + TYPE_LABEL.Donation + '</option><option value="Revenue"' + (x.type === "Revenue" ? ' selected' : '') + '>' + TYPE_LABEL.Revenue + '</option></select></div>' +
+        '<div class="sp-c"><span class="sp-l">' + (x.type === "Revenue" ? "Category" : "Gift type") + '</span>' + det + '</div>' +
+        '<div class="sp-c"><span class="sp-l">Campaign</span><input class="field combo" list="dl-fund" placeholder="Start typing to search..." autocomplete="off" data-k="fund" data-id="' + x.id + '" value="' + esc(x.fund) + '" aria-label="Campaign, line ' + (i + 1) + '"></div>' +
+        '<div class="sp-c sp-x">' + (s.lines.length > 1 ? '<button type="button" class="x" data-a="rm" data-id="' + x.id + '" aria-label="Remove line ' + (i + 1) + '">×</button>' : '') + '</div></div>';
+    }
+    function quickRow(x) {
+      var det;
+      if (x.type === "Donation") det = '<select class="field" data-k="gift" data-id="' + x.id + '">' + GIFT.map(function (g) { return '<option' + (g === x.gift ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select>';
+      else if (x.type === "Revenue") det = '<select class="field" data-k="cat" data-id="' + x.id + '">' + CATS.map(function (g) { return '<option' + (g === x.cat ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select>';
+      else det = '<select class="field" disabled><option>Pick a type first</option></select>';
+      return '<div class="qk"><label class="f"><span>What it was <span class="req">*</span></span><select class="field' + (x.type ? '' : ' need') + '" data-k="type" data-id="' + x.id + '"><option value=""' + (x.type ? '' : ' selected') + ' disabled>Choose…</option><option value="Donation"' + (x.type === "Donation" ? ' selected' : '') + '>' + TYPE_LABEL.Donation + '</option><option value="Revenue"' + (x.type === "Revenue" ? ' selected' : '') + '>' + TYPE_LABEL.Revenue + '</option></select></label>' +
+        '<label class="f"><span>' + (x.type === "Revenue" ? "Category" : "Gift type") + ' <span class="req">*</span></span>' + det + '</label>' +
+        '<label class="f"><span>Campaign <span class="req">*</span></span><input class="field combo" list="dl-fund" placeholder="Start typing to search..." autocomplete="off" data-k="fund" data-id="' + x.id + '" value="' + esc(x.fund) + '"></label></div>';
+    }
+    function entrySeg() {
+      var multi = s.lines.length > 1;
+      return '<div class="seg-wrap"><div class="seg" role="tablist" aria-label="How to log it"><button type="button" role="tab" data-a="entry" data-e="quick" aria-selected="' + (s.entry === "quick") + '"' + (multi && s.entry !== "quick" ? ' disabled title="Remove extra lines to use quick entry"' : '') + '>Quick entry</button><button type="button" role="tab" data-a="entry" data-e="split" aria-selected="' + (s.entry === "split") + '">Split into parts</button></div>' +
+        '<span class="sub">' + (s.entry === "quick" ? 'One type and one campaign. Most payments are like this.' : 'For a payment that was part gift and part something else, or spread across campaigns.') + '</span></div>';
+    }
+    function tableFlow() {
+      var l = left();
+      var addBtn = '<button type="button" class="btn" data-a="add">' + (l > 0 ? '+ Add a line for the remaining ' + money(l) : '+ Add a line') + '</button>';
+      var main = '<div class="tx-top"><label class="f"><span>Contact <span class="req">*</span></span><input class="field" value="Sarah Padilla" readonly></label><label class="f"><span>Date received <span class="req">*</span></span><input class="field" type="date" id="' + P + '-date" value="' + s.date + '" max="2026-12-31" aria-describedby="' + P + '-datehint"></label><label class="f"><span>Total amount <span class="req">*</span></span><span class="money"><span>$</span><input class="field" id="' + P + '-total" type="number" inputmode="decimal" min="0" value="' + s.total + '"></span></label></div>' +
+        '<p class="sub dh" id="' + P + '-datehint">Use the date the money arrived. Pick it from the calendar.</p>' + entrySeg() +
+        (s.entry === "quick" ? quickRow(s.lines[0]) :
+        '<div><p class="tx-q">What was this ' + money(s.total) + ' for?</p><p class="sub">Add a line for each part. The receipt updates as you go.</p></div>' +
+        allocation() +
+        '<div class="sp"><div class="sp-h" aria-hidden="true"><span>Amount</span><span>What it was</span><span>Gift type or category</span><span>Campaign</span><span></span></div>' + s.lines.map(spRow).join("") + '</div>' +
+        '<div class="row">' + addBtn + '</div>') +
+        '<details class="more"' + (s.moreOpen ? ' open' : '') + '><summary>More details: impact area, soft credit, source, keywords, dedication, notes</summary><div class="more-b">' +
+          s.lines.map(function (x, i) { return combo(P + "-impact-" + x.id, s.lines.length > 1 ? "Impact area, line " + (i + 1) + " (" + money(x.amt) + ")" : "Impact area", x.impact, "impact", ' data-k="impact" data-id="' + x.id + '"'); }).join("") + metaFields(P, s.meta) + '</div></details>';
+      var side = '<aside class="rc-side"><div class="row" style="justify-content:space-between"><h4>Receipt preview</h4>' + regionSelect() + '</div>' +
+        (untyped() ? '<p class="sub">' + (s.entry === "quick" ? 'Choose what this payment was' : 'Choose what each line was') + ' to see the receipt.</p>' : receiptLines()) +
+        '<label class="f"><span class="f-k">Receipt options</span><select class="field" id="' + P + '-rcsel">' + RCPT_OPTS.map(function (o) { return '<option value="' + o[0] + '"' + (s.rcpt === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join("") + '</select></label></aside>';
+      var b = blocker();
+      return '<div class="flow-h"><span>' + (s.editing ? 'Edit Transaction' : 'New Transaction') + '</span><span class="row" style="gap:8px"><span class="sub tx-why" aria-live="polite">' + (b ? b : '') + '</span><button type="button" class="btn" data-a="cancel">Cancel</button><button type="button" class="btn primary" data-a="save"' + (canSave() ? '' : ' disabled') + '>Save</button></span></div>' +
+        '<div class="body"><div class="tx-layout"><div class="tx-main">' + main + '</div>' + side + '</div></div>';
+    }
+
+    function confirmModal() {
+      var rl = (RCPT_OPTS.filter(function (o) { return o[0] === s.rcpt; })[0] || ["", ""])[1];
+      return '<div class="scrim"><div class="modal" role="dialog" aria-modal="true" aria-label="Check before saving" style="width:min(520px,100%)"><div class="modal-h">Check before saving<button type="button" class="x" data-a="confirmback" aria-label="Close">×</button></div>' +
+        '<div class="modal-b"><div class="flag warn"><b>Saved transactions are locked.</b> To keep the books and receipts matching, a transaction can’t be edited after it’s saved.</div>' +
+        '<div class="kv"><span>Sarah Padilla · ' + fmtDate(s.date) + '</span><b>' + money(s.total) + '</b></div>' +
+        '<div class="cf">' + s.lines.map(function (x) { return '<div class="cf-r"><span class="swatch" style="background:' + COLORS[x.type] + '"></span><span>' + x.type + ' · ' + esc(x.type === "Donation" ? x.gift : x.cat) + ' · ' + esc(x.fund) + '</span><b>' + money(x.amt) + '</b></div>'; }).join("") + '</div>' +
+        '<div class="kv"><span>On the receipt</span><b>' + money(eligible()) + '</b></div><div class="kv"><span>Receipt</span><span>' + rl + '</span></div></div>' +
+        '<div class="modal-f"><button type="button" class="btn" data-a="confirmback">Go back and fix</button><button type="button" class="btn dark" data-a="confirmsave">Save transaction</button></div></div></div>';
+    }
+    function render() {
+      stats();
+      var html = "";
+      if (s.screen === "list") {
+        var rows = s.saved ? [{ date: fmtDate(s.date), type: splitLabel(), desc: "Gala night", fund: campaignsLabel(), amt: s.total, link: "details" }] : [];
+        html = bar("Transactions") + '<div class="body"><div class="row"><div class="grow"><p class="h">Transactions</p><p class="sub">Sarah Padilla · 4 years as a supporter</p></div><button type="button" class="btn primary" data-a="new">New Transaction</button></div>' +
+          (s.saved ? '' : '<div class="hint">' + (MODE === "table" ? 'One button. Each part of the payment gets its own line, with the receipt beside it.' : 'One button. You set the type for each split, inside the flow.') + '</div>') +
+          '<div class="tablewrap"><table class="list"><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Campaign</th><th class="num">Amount</th></tr></thead><tbody>' + historyRows(rows, "new") + '</tbody></table></div>' +
+          (s.saved ? '<p class="sub">Select <b>Gala night</b> to open the transaction you just saved.</p>' : '') + '</div>';
+      } else if (s.screen === "flow" && MODE === "table") {
+        html = tableFlow();
+      } else if (s.screen === "flow") {
+        var body = "";
+        if (s.step === 1) {
+          body = '<label class="f"><span>Contact <span class="req">*</span></span><input class="field" id="' + P + '-contact" value="Sarah Padilla" readonly></label>' +
+            '<div class="two"><label class="f"><span>Date received <span class="req">*</span></span><input class="field" id="' + P + '-date" value="' + fmtDate(s.date) + '" readonly></label><label class="f"><span>Total amount <span class="req">*</span></span><span class="money"><span>$</span><input class="field" id="' + P + '-total" type="number" inputmode="decimal" min="0" value="' + s.total + '"></span></label></div>' +
+            
+            (s.lines.length ? allocation() + '<div class="cards">' + s.lines.map(card).join("") + '</div><div class="row"><button type="button" class="btn" data-a="add">+ Add a split</button>' + '</div>' : '');
+        } else if (s.step === 2) {
+          body = '<p class="sub">Each split carries its own campaign and impact area, so reports and receipts stay right.</p><div class="assoc">' + s.lines.map(function (x) {
+            return '<div class="assoc-row" style="grid-template-columns:1fr"><span class="who"><span class="swatch" style="width:10px;height:10px;border-radius:3px;background:' + COLORS[x.type] + '"></span><b>' + money(x.amt) + '</b> ' + x.type + (x.type === "Revenue" ? ' · ' + x.cat : ' · ' + x.gift) + '</span><div class="two">' + combo(P + "-fund-" + x.id, "Campaign", x.fund, "fund", ' data-k="fund" data-id="' + x.id + '"', true) + combo(P + "-impact-" + x.id, "Impact area", x.impact, "impact", ' data-k="impact" data-id="' + x.id + '"') + '</div></div>';
+          }).join("") + '</div><div class="whole"><h4>For the whole payment</h4>' + metaFields(P, s.meta) + '</div>';
+        } else {
+          body = rcptRadios(P + "-rc", s.rcpt) + (s.rcpt === "skip" ? '<div class="hint">No receipt yet. You can generate it later from the transaction.</div>' : s.rcpt === "ignore" ? '<div class="hint">This payment will be left out of receipting.</div>' : '') +
+            '<div class="panel receipt"><div class="row" style="justify-content:space-between"><h4>Receipt preview</h4><label class="f" style="grid-auto-flow:column;align-items:center;gap:6px;margin:0">Rules<select class="field" id="' + P + '-region" style="width:auto;padding:5px 32px 5px 8px;background-position:right 10px center"><option value="CA"' + (s.region === "CA" ? ' selected' : '') + '>Canada</option><option value="US"' + (s.region === "US" ? ' selected' : '') + '>United States</option><option value="AU"' + (s.region === "AU" ? ' selected' : '') + '>Australia</option></select></label></div>' + receiptLines() + '</div>';
+        }
+        var canNext = s.step === 1 ? (s.lines.length > 0 && left() === 0) : true;
+        html = '<div class="flow-h"><span>' + (s.editing ? 'Edit Transaction' : 'New Transaction') + '</span><span class="row" style="gap:8px"><button type="button" class="btn" data-a="cancel">Cancel</button>' + (s.step === 3 ? '<button type="button" class="btn dark" data-a="save">Save</button>' : '') + '</span></div>' +
+          '<div class="body">' + stepper() + body +
+          '<div class="row" style="justify-content:space-between;margin-top:4px">' + (s.step > 1 ? '<button type="button" class="btn" data-a="back">Back</button>' : '<span></span>') + (s.step < 3 ? '<button type="button" class="btn primary" data-a="next"' + (canNext ? '' : ' disabled') + '>Next</button>' : '') + '</div>' +
+          (s.step === 1 && s.lines.length && !canNext ? '<p class="sub" style="text-align:right">Next unlocks when the splits add up to the total.</p>' : '') + '</div>';
+      } else {
+        html = detailsView() + (s.receiptOpen ? receiptModal() : '');
+      }
+      if (s.confirm && s.screen === "flow") html += confirmModal();
+      root.innerHTML = html;
+    }
+    function line(id) { return s.lines.find(function (l) { return String(l.id) === String(id); }); }
+    root.addEventListener("click", function (e) {
+      var t = e.target.closest("button"); if (!t || !root.contains(t)) return;
+      s.clicks++;
+      var a = t.dataset.a;
+      if (a === "new") { s.screen = "flow"; s.step = 1; s.entry = "quick"; s.confirm = false; s.lines = [blankLine(s.total)]; }
+      else if (a === "add") { s.lines.push(blankLine(Math.max(0, left()))); }
+      else if (a === "rm") { s.lines = s.lines.filter(function (l) { return String(l.id) !== t.dataset.id; }); }
+      else if (a === "next") { if (s.step < 3) s.step++; }
+      else if (a === "back") { if (s.step > 1) s.step--; }
+      else if (a === "cancel") { if (s.editing) { s.lines = s.snap; s.editing = false; s.screen = "details"; } else { s.screen = "list"; s.lines = s.saved ? s.lines : []; } }
+      else if (a === "save") { s.confirm = true; }
+      else if (a === "confirmback") { s.confirm = false; }
+      else if (a === "confirmsave") { s.confirm = false; s.saved = true; s.editing = false; s.screen = "details"; s.open = {}; }
+      else if (a === "entry") { var e2 = t.dataset.e; if (e2 === "quick" && s.lines.length > 1) return; s.entry = e2; if (e2 === "quick" && s.lines[0]) s.lines[0].amt = s.total; }
+      else if (a === "edit") { s.snap = JSON.parse(JSON.stringify(s.lines)); s.editing = true; s.screen = "flow"; s.step = 1; }
+      else if (a === "itab") { s.itab[t.dataset.id] = t.dataset.t; }
+      else if (a === "viewreceipt") { s.receiptOpen = true; }
+      else if (a === "closereceipt") { s.receiptOpen = false; }
+      else if (a === "copy") { var v = t.dataset.copy; try { navigator.clipboard.writeText(v).then(function () { var b = root.querySelector('[data-copy="' + v + '"]'); if (b) { b.classList.add("copied"); b.firstChild.textContent = "Copied"; setTimeout(function () { render(); }, 1200); } }, function () {}); } catch (err) {} return; }
+      else if (a === "details") { s.screen = "details"; }
+      else if (a === "list") { s.screen = "list"; }
+      else if (a === "toggle") { s.open[t.dataset.id] = !s.open[t.dataset.id]; }
+      render();
+      
+    });
+    root.addEventListener("change", function (e) {
+      var el = e.target;
+      if (el.name === P + "-rc") { s.rcpt = el.value; render(); return; }
+      if (el.id === P + "-region") { s.region = el.value; render(); return; }
+      if (el.id === P + "-rcsel") { s.rcpt = el.value; return; }
+      if (el.id === P + "-date") { if (el.value) s.date = el.value; else el.value = s.date; return; }
+      if (el.dataset.k && el.tagName === "SELECT") { var x = line(el.dataset.id); if (!x) return; x[el.dataset.k] = el.value; render(); return; }
+      if (el.dataset.k && el.classList.contains("combo")) { var y = line(el.dataset.id); if (!y) return; if (el.dataset.k === "fund" && FUNDS.indexOf(el.value) < 0) { el.value = y.fund; return; } y[el.dataset.k] = el.value; }
+    });
+    root.addEventListener("toggle", function (e) { if (e.target.classList && e.target.classList.contains("more")) s.moreOpen = e.target.open; }, true);
+    root.addEventListener("change", function () {
+    });
+    root.addEventListener("input", function (e) {
+      var el = e.target;
+      if (el.id === P + "-total") { s.total = el.value === "" ? 0 : Number(el.value); if (MODE === "table" && s.entry === "quick" && s.lines[0]) s.lines[0].amt = s.total; refreshAlloc(); return; }
+      if (el.dataset.k === "amt") { var x = line(el.dataset.id); if (!x) return; x.amt = el.value === "" ? 0 : Number(el.value); refreshAlloc(); return; }
+      if (el.dataset.m) { s.meta[el.dataset.m] = el.value; return; }
+      if (el.dataset.k === "impact") { var z = line(el.dataset.id); if (z) z.impact = el.value; }
+    });
+    function refreshAlloc() {
+      if (MODE === "table" && s.screen === "flow") {
+        var act = document.activeElement, key = act && act.dataset ? (act.dataset.k || "") + ":" + (act.dataset.id || act.id) : null, pos = act && act.selectionStart != null ? null : null;
+        var side = root.querySelector(".rc-side"); if (side) { var t2 = document.createElement("div"); t2.innerHTML = tableFlow(); side.replaceWith(t2.querySelector(".rc-side")); var fh = root.querySelector(".flow-h"); fh.replaceWith(t2.querySelector(".flow-h")); var ab = root.querySelector('[data-a="add"]'); if (ab) ab.replaceWith(t2.querySelector('[data-a="add"]')); var q = root.querySelector(".tx-q"); if (q) q.replaceWith(t2.querySelector(".tx-q")); }
+      }
+      var a = root.querySelector(".alloc"); if (a) { var tmp = document.createElement("div"); tmp.innerHTML = allocation(); a.replaceWith(tmp.firstChild); }
+      var n = root.querySelector("[data-a='next']"); if (n) n.disabled = !(s.lines.length > 0 && left() === 0);
+      root.querySelectorAll(".sp-r").forEach(function (r, i) { var x = s.lines[i]; if (x) r.style.borderLeftColor = x.type ? COLORS[x.type] : "var(--p-line)"; });
+      stats();
+    }
+    root.addEventListener("keydown", function (e) { if (e.key === "Escape" && (s.confirm || s.receiptOpen)) { s.confirm = false; s.receiptOpen = false; render(); } });
+    this.reset = reset; reset();
+  }
+
+
+  /* ======================= GUIDED (exploration B) ======================= */
+  function Guided(root, onStats) {
+    var s;
+    function reset() { s = { step: "q1", total: 200, benefit: 0, cat: "Purchase", gifts: [], clicks: 0, rcpt: "email", saved: false }; render(); }
+    function giftLeft() { return Math.round((s.total - s.benefit - s.gifts.reduce(function (n, g) { return n + (Number(g.amt) || 0); }, 0)) * 100) / 100; }
+    function stats() { var ok = s.saved ? (s.benefit === 100 && giftLeft() === 0) : null; onStats({ clicks: s.clicks, records: s.saved ? 1 : 0, receipt: s.saved ? (ok ? "right, one receipt" : "check the split") : "not yet", ok: ok }); }
+    function head(n) { return '<div class="flow-h"><span>New Transaction</span><span class="sub">Question ' + n + ' of 3</span></div>'; }
+    function render() {
+      stats(); var h = "";
+      if (s.step === "q1") {
+        h = head(1) + '<div class="body g"><p class="sub">Sarah Padilla · ' + TODAY + ' · <b>' + money(s.total) + '</b></p><p class="g-q">Did Sarah get anything back for this payment?</p><div class="g-opts">' +
+          '<button type="button" class="g-opt" data-a="yes">Yes, something with value<small>A ticket, a meal, goods. That part is not a gift.</small></button>' +
+          '<button type="button" class="g-opt" data-a="no">No, it was all a gift<small>The whole amount can go on the receipt.</small></button></div></div>';
+      } else if (s.step === "q2") {
+        h = head(2) + '<div class="body g"><p class="g-q">What did she get, and what was it worth?</p><div class="two"><label class="f"><span>What it was</span><select class="field" id="g-cat">' + CATS.map(function (c) { return '<option' + (c === s.cat ? ' selected' : '') + '>' + c + '</option>'; }).join("") + '</select></label><label class="f"><span>Fair market value</span><span class="money"><span>$</span><input class="field" id="g-ben" type="number" inputmode="decimal" min="0" value="' + (s.benefit || "") + '" placeholder="0"></span></label></div>' +
+          '<p class="sub">The rest, ' + money(Math.max(0, s.total - s.benefit)) + ', will be the gift.</p><div class="row" style="justify-content:space-between"><button type="button" class="btn" data-a="back1">Back</button><button type="button" class="btn primary" data-a="to3"' + (s.benefit > 0 && s.benefit < s.total ? '' : ' disabled') + '>Continue</button></div></div>';
+      } else if (s.step === "q3") {
+        var gl = giftLeft();
+        h = head(3) + '<div class="body g"><p class="g-q">Where should the ' + money(s.total - s.benefit) + ' gift go?</p>' + s.gifts.map(function (g, i) {
+          return '<div class="two"><label class="f"><span>Campaign</span><select class="field" data-g="fund" data-i="' + i + '">' + FUNDS.map(function (f) { return '<option' + (f === g.fund ? ' selected' : '') + '>' + f + '</option>'; }).join("") + '</select></label><label class="f"><span>Amount</span><span class="money"><span>$</span><input class="field" data-g="amt" data-i="' + i + '" type="number" min="0" value="' + g.amt + '"></span></label></div>';
+        }).join("") + '<div class="row"><button type="button" class="btn" data-a="gadd">+ Split across another campaign</button><span class="sub" aria-live="polite">' + (gl === 0 ? "All placed." : gl > 0 ? money(gl) + " left to place." : money(-gl) + " too much.") + '</span></div>' +
+          '<div class="row" style="justify-content:space-between"><button type="button" class="btn" data-a="back2">Back</button><button type="button" class="btn primary" data-a="review"' + (gl === 0 ? '' : ' disabled') + '>Review</button></div></div>';
+      } else if (s.step === "review") {
+        h = '<div class="flow-h"><span>Review</span><button type="button" class="btn dark" data-a="gsave">Save</button></div><div class="body g"><div class="g-sum">' +
+          (s.benefit ? '<div class="kv"><span>' + esc(s.cat) + ' (got something back)</span><b>' + money(s.benefit) + '</b></div>' : '') +
+          s.gifts.map(function (g) { return '<div class="kv"><span>Gift to ' + esc(g.fund) + '</span><b>' + money(g.amt) + '</b></div>'; }).join("") +
+          '</div><div class="panel"><h4>Receipt</h4><div class="kv"><span>Total received</span><b>' + money(s.total) + '</b></div><div class="kv"><span>Advantage</span><b>' + money(s.benefit) + '</b></div><div class="kv"><span>Eligible amount</span><b>' + money(s.total - s.benefit) + '</b></div></div>' +
+          rcptRadios("g-rc", s.rcpt) + '<button type="button" class="btn" data-a="back3" style="justify-self:start">Back</button></div>';
+      } else {
+        h = bar("Transactions") + '<div class="body g"><div class="flag ok"><b>Saved as one transaction.</b> ' + money(s.total - s.benefit) + ' on one receipt, ' + money(s.benefit) + ' recorded as ' + esc(s.cat) + '.</div><p class="sub">The guided path ends here. Like every version, a saved transaction is locked.</p></div>';
+      }
+      root.innerHTML = h;
+    }
+    root.addEventListener("click", function (e) {
+      var t = e.target.closest("button"); if (!t || !root.contains(t)) return; s.clicks++; var a = t.dataset.a;
+      if (a === "yes") s.step = "q2";
+      else if (a === "no") { s.benefit = 0; s.gifts = [{ fund: "General Donations", amt: s.total }]; s.step = "q3"; }
+      else if (a === "to3") { s.gifts = [{ fund: "General Donations", amt: s.total - s.benefit }]; s.step = "q3"; }
+      else if (a === "gadd") s.gifts.push({ fund: "Capital Campaign", amt: Math.max(0, giftLeft()) });
+      else if (a === "review") s.step = "review";
+      else if (a === "gsave") { s.saved = true; s.step = "done"; }
+      else if (a === "back1") s.step = "q1"; else if (a === "back2") s.step = s.benefit ? "q2" : "q1"; else if (a === "back3") s.step = "q3";
+      render();
+    });
+    root.addEventListener("input", function (e) {
+      var el = e.target;
+      if (el.id === "g-ben") { s.benefit = el.value === "" ? 0 : Number(el.value); var b = root.querySelector('[data-a="to3"]'); if (b) b.disabled = !(s.benefit > 0 && s.benefit < s.total); var p2 = root.querySelector(".g .sub"); if (p2) p2.textContent = "The rest, " + money(Math.max(0, s.total - s.benefit)) + ", will be the gift."; }
+      if (el.dataset.g === "amt") { s.gifts[+el.dataset.i].amt = el.value === "" ? 0 : Number(el.value); var gl = giftLeft(); var r = root.querySelector('[data-a="review"]'); if (r) r.disabled = gl !== 0; var st = root.querySelector('[aria-live]'); if (st) st.textContent = gl === 0 ? "All placed." : gl > 0 ? money(gl) + " left to place." : money(-gl) + " too much."; }
+    });
+    root.addEventListener("change", function (e) {
+      var el = e.target;
+      if (el.id === "g-cat") s.cat = el.value;
+      if (el.dataset.g === "fund") s.gifts[+el.dataset.i].fund = el.value;
+      if (el.name === "g-rc") s.rcpt = el.value;
+    });
+    this.reset = reset; reset();
+  }
+  /* ======================= page ======================= */
+
+  var VARS = {
+    A: { title: "A. Cards in three steps", tag: "What shipped",
+      idea: "One card per split. Campaigns come on step 2, receipting on step 3. A bar and a locked Next check the math.",
+      good: ["Clear for a first-timer: one decision per screen.", "The balance bar and locked Next stop the math from going wrong.", "Moving from the pop-up to a full screen took workflow satisfaction from 5.5 to 8.8 in testing with 8 orgs."],
+      bad: ["The campaign is picked a step later, away from the split it belongs to. People scroll back to check which $50 was which.", "The receipt only shows on step 3, so a wrong type is found late.", "The first split starts as a $200 donation and reads Balanced, so it can be saved wrong in three clicks.", "Cards grow tall past three splits."],
+      verdict: ["drop", "Kept the bar and the locked save. Moved everything about a split into one place."] },
+    B: { title: "B. Guided questions", tag: "Exploration, not tested",
+      idea: "Ask in plain words: did she get anything back, what was it worth, where should the gift go. The product does the accounting.",
+      good: ["Nobody needs to know the words advantage or revenue. Many of the 8 people we watched weren't accountants.", "Hard to miss the ticket: the first question is about it."],
+      bad: ["Slow for someone recording dozens of payments a day.", "Assumes one thing received per payment. A ticket plus a raffle breaks it.", "Hard to check before saving: the answers are spread over three screens.", "Hides the structure, so people can't check it against their spreadsheet."],
+      verdict: ["drop", "Kept its plain words. They became the labels in C: a gift, or they got something back."] },
+    C: { title: "C. One table, live receipt", tag: "Final choice",
+      idea: "One line per part of the payment: amount, what it was, detail, campaign. The receipt preview sits beside it and updates as you type.",
+      good: ["It looks like the side spreadsheet all 8 people kept, so it matches how they already think.", "Everything about a part sits in one row: no stepping back to match a campaign.", "Mistakes show before saving: the receipt changes the moment a type changes.", "Nothing starts as a donation. Save stays locked until every line has a type and the total adds up.", "Quick entry for the common one-type payment, and a split only when it’s needed.", "One screen, then a final check, because saved transactions can’t be edited."],
+      bad: ["Denser on first use, so it needs plain labels and a clear empty state.", "On a narrow screen each line becomes a small card."],
+      verdict: ["keep", "Ship this. It keeps A's checks and B's plain words, and removes the step-switching."] }
+  };
+  function iterSection() {
+    return '<section class="iter" id="iter" hidden aria-label="Design iterations">' +
+      '<div class="iter-intro"><div class="row" style="justify-content:space-between"><b>How the split step evolved</b><button type="button" class="reset" id="iter-close">Close</button></div><p>Three directions for the same task: record Sarah’s $200 correctly. A is what shipped. B and C are explorations rebuilt here to compare. Scores appear only where we really tested; the click counts above each version are live from this page.</p></div>' +
+      '<div class="rounds">' +
+        '<div class="round"><span class="rn">Round 1</span><b>The pop-up</b><span class="sc">One type per payment. Workflow satisfaction 5.5 / 10.</span><span class="tag">Before</span></div>' +
+        '<div class="round"><span class="rn">Round 2</span><b>Full screen, cards in three steps</b><span class="sc">Split by type. Workflow satisfaction 8.8 / 10.</span><span class="tag ship">What shipped (A)</span></div>' +
+        '<div class="round"><span class="rn">Round 3</span><b>One table, live receipt</b><span class="sc">Not tested yet. Plan below.</span><span class="tag next">What I’d ship next (C)</span></div>' +
+      '</div>' +
+      '<div class="var-tabs" role="tablist" aria-label="Choose a version">' + ["A", "B", "C"].map(function (k) { return '<button type="button" role="tab" data-var="' + k + '" aria-selected="false">' + VARS[k].title + '</button>'; }).join("") + '</div>' +
+      ["A", "B", "C"].map(function (k) {
+        var v = VARS[k];
+        return '<div class="var" data-varpane="' + k + '" hidden><section class="col"><div class="colhead"><h2>' + v.title + '</h2><div class="stats" id="stats-i' + k + '"></div></div><div class="frame" id="frame-i' + k + '"></div><div class="row" style="justify-content:space-between"><p class="note">' + v.tag + '</p><button type="button" class="reset" id="reset-i' + k + '">Start over</button></div></section>' +
+          '<div class="notes"><h3>' + v.title + '</h3><p>' + v.idea + '</p><div><h4>Works well</h4><ul>' + v.good.map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul></div><div><h4>Breaks down</h4><ul>' + v.bad.map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul></div><div class="verdict ' + v.verdict[0] + '"><b>' + (v.verdict[0] === "keep" ? "Choice: " : "Not chosen: ") + '</b>' + v.verdict[1] + '</div></div></div>';
+      }).join("") +
+      '<div class="final"><h3>Final choice: C, one table with a live receipt</h3><div class="two-col"><div><h4>Why</h4><ol><li>It matches the spreadsheet people already kept, so there is less to learn.</li><li>Each part of the payment lives in one row, so the campaign is never matched up later.</li><li>The receipt is visible while you work, so a wrong type is caught before it becomes a wrong receipt.</li><li>No default type, so the fastest path is no longer a wrong one.</li><li>Quick entry stays quick: most payments are one type, so the split only appears when someone asks for it.</li><li>Saved transactions are locked for the books, so the check happens before saving, with everything on one screen.</li></ol></div>' +
+      '<div><h4>How I’d test it against A</h4><ul><li>Same task, 6 to 8 people who do the books, a mix of accountants and not.</li><li>Measure: wrong receipts, time to finish, steps back, and one ease question after the task.</li><li>Pass: no wrong receipts, and faster than A for anyone recording more than one split.</li><li>Then roll out behind the feature flag, group by group, and watch categorization tickets.</li></ul></div></div></div>' +
+    '</section>';
+  }
+  var stage = document.getElementById("stage");
+  var COG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.5v1.8M8 12.7v1.8M14.5 8h-1.8M3.3 8H1.5M12.6 3.4l-1.3 1.3M4.7 11.3l-1.3 1.3M12.6 12.6l-1.3-1.3M4.7 4.7L3.4 3.4"/></svg>';
+  function column(id, title, note) {
+    return '<section class="col" id="col-' + id + '" aria-label="' + title + '"><div class="colhead"><h2>' + title + '</h2><div class="stats" id="stats-' + id + '"></div>' + (id === "after" ? '<button type="button" class="iter-btn" id="iter-btn" aria-expanded="false" aria-controls="iter" title="How we got here: the options we compared and why">' + COG + 'How we tested</button>' : '') + '</div><div class="frame" id="frame-' + id + '"></div><div class="row" style="justify-content:space-between"><p class="note">' + note + '</p><button type="button" class="reset" id="reset-' + id + '">Start over</button></div></section>';
+  }
+  stage.innerHTML = column("before", "Before the redesign", "One type per payment, chosen before you start.") + column("after", "After the redesign", "Quick entry for most payments, a split when it’s needed, and a check before saving.") + iterSection();
+  function statsFor(id) {
+    return function (st) {
+      var el = document.getElementById("stats-" + id); if (!el) return;
+      var cls = st.ok === null ? "" : st.ok ? " good" : " bad";
+      el.innerHTML = '<span class="stat">Clicks <b>' + st.clicks + '</b></span><span class="stat">Records <b>' + st.records + '</b></span><span class="stat' + cls + '">Receipt <b>' + st.receipt + '</b></span>';
+    };
+  }
+  var dls = { fund: FUNDS, impact: IMPACT, soft: SOFT, source: SOURCES, kw: KEYWORDS };
+  document.body.insertAdjacentHTML("beforeend", Object.keys(dls).map(function (k) { return '<datalist id="dl-' + k + '">' + dls[k].map(function (v) { return '<option value="' + esc(v) + '">'; }).join("") + '</datalist>'; }).join(""));
+  var before = new Before(document.getElementById("frame-before"), statsFor("before"));
+  var after = new After(document.getElementById("frame-after"), statsFor("after"), { mode: "table", prefix: "a" });
+  var iA = new After(document.getElementById("frame-iA"), statsFor("iA"), { mode: "cards", prefix: "ia" });
+  var iB = new Guided(document.getElementById("frame-iB"), statsFor("iB"));
+  var iC = new After(document.getElementById("frame-iC"), statsFor("iC"), { mode: "table", prefix: "ic" });
+  [["iA", iA], ["iB", iB], ["iC", iC]].forEach(function (p) { document.getElementById("reset-" + p[0]).addEventListener("click", function () { p[1].reset(); }); });
+  var curVar = "C";
+  function showVar() { document.querySelectorAll("[data-var]").forEach(function (b) { b.setAttribute("aria-selected", b.dataset.var === curVar ? "true" : "false"); }); document.querySelectorAll("[data-varpane]").forEach(function (p) { p.hidden = p.dataset.varpane !== curVar; }); }
+  document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest("[data-var]"); if (b) { curVar = b.dataset.var; showVar(); } });
+  showVar();
+  document.getElementById("reset-before").addEventListener("click", function () { before.reset(); });
+  document.getElementById("reset-after").addEventListener("click", function () { after.reset(); });
+
+  var VIEWS = ["before", "after", "compare"]; var iterOpen = false;
+  function show() {
+    var v = (location.hash || "").slice(1); if (v === "iterations") { iterOpen = true; v = "after"; } if (VIEWS.indexOf(v) < 0) v = "compare";
+    if (v === "before") iterOpen = false;
+    document.getElementById("col-before").hidden = v === "after" || iterOpen;
+    document.getElementById("col-after").hidden = v === "before";
+    document.getElementById("iter").hidden = !iterOpen;
+    document.getElementById("iter-btn").setAttribute("aria-expanded", iterOpen ? "true" : "false");
+    stage.className = "stage" + (v === "compare" && !iterOpen ? " compare" : "");
+    document.querySelectorAll(".views a").forEach(function (a) { if (a.dataset.view === v) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  }
+  window.addEventListener("hashchange", show);
+  document.getElementById("iter-close").addEventListener("click", function () { iterOpen = false; show(); document.getElementById("col-after").scrollIntoView({ block: "start" }); });
+  document.getElementById("iter-btn").addEventListener("click", function () { iterOpen = !iterOpen; show(); if (iterOpen) document.getElementById("iter").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); });
+  show();
+})();
+</script>
+
+</body></html>
