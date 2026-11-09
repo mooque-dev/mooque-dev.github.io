@@ -10,7 +10,7 @@ h1{font-size:28px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}.sub{colo
 .tile{all:unset;cursor:pointer;display:block;background:var(--card);border-radius:12px;overflow:hidden;transition:transform .15s ease}
 .tile:hover{transform:translateY(-2px)}.tile:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 .th{aspect-ratio:16/9;background:#fff center/contain no-repeat;border-bottom:1px solid var(--line)}
-.meta{padding:10px 12px 12px}.kind{font-size:12px;color:var(--blue);font-weight:600}.title{font-size:15px;font-weight:500;line-height:1.3;margin-top:2px}
+.meta{padding:10px 12px 12px}.kind{font-size:12px;color:var(--blue);font-weight:600}.title{font-size:15px;font-weight:500;line-height:1.3}
 .view{position:fixed;inset:0;z-index:99;background:#fff;display:none}.view.on{display:block}
 .stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 .stage img{max-width:100%;max-height:100%;display:block;background:#fff;box-shadow:0 0 0 1px var(--line)}
@@ -35,8 +35,8 @@ h1{font-size:28px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}.sub{colo
     var g=document.querySelector('[data-f="'+f+'"] .grid');
     D.items[f].forEach(function(it,n){
       var b=document.createElement("button");b.type="button";b.className="tile";
-      b.innerHTML='<div class="th" style="background-image:url(\''+(it.thumb||it.img)+'\')"></div><div class="meta"><div class="kind"></div><div class="title"></div></div>';
-      b.querySelector(".kind").textContent=it.kind;b.querySelector(".title").textContent=it.title;
+      b.innerHTML='<div class="th" style="background-image:url(\''+(it.thumb||it.img)+'\')"></div><div class="meta"><div class="title"></div></div>';
+      b.querySelector(".title").textContent=it.title;
       b.addEventListener("click",function(){openItem(it,f,n);});g.appendChild(b);
     });
   });
