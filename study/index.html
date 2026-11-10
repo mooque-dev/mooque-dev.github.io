@@ -20,11 +20,36 @@ h1{font-size:28px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}.sub{colo
 .bar button{font:600 13px/1 inherit;font-family:inherit;color:#fff;background:none;border:0;border-radius:999px;padding:9px 12px;cursor:pointer}
 .bar button:hover{background:rgba(255,255,255,.14)}.bar span{color:#ddd;font-size:13px;padding:0 8px;min-width:70px;text-align:center;white-space:nowrap}.bar button:disabled{opacity:.35;cursor:default}
 .bar [hidden]{display:none}
+.top{margin:0 0 18px}.top .sub{margin:0}
+.tools{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px 28px;padding:12px 16px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.tools input[type=search]{font:inherit;font-size:14px;color:var(--fg);background:var(--card);border:1px solid transparent;border-radius:8px;padding:8px 12px;width:210px;max-width:100%}
+.tools input[type=search]:focus-visible,.tools select:focus-visible,.chips button:focus-visible,.clear:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.chips .lab,.sort{font-size:13px;color:var(--muted)}.chips .lab{margin-right:2px}
+.chips button{font:500 13px/1 inherit;font-family:inherit;color:var(--fg);background:none;border:1px solid var(--line);border-radius:999px;padding:7px 11px;cursor:pointer;white-space:nowrap}
+.chips button:hover{background:var(--card)}.chips button[aria-pressed=true]{background:var(--fg);border-color:var(--fg);color:#fff}
+.chips button i{font-style:normal;opacity:.6;margin-left:5px;font-variant-numeric:tabular-nums}
+.sort{margin-left:auto;display:flex;align-items:center;gap:8px}
+.sort select{font:inherit;font-size:13px;color:var(--fg);-webkit-appearance:none;appearance:none;background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%236b6e76' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center/12px 8px;border:1px solid var(--line);border-radius:8px;padding:7px 34px 7px 11px;cursor:pointer}
+.fh{justify-content:space-between}
+.tile.lead .title{font-weight:600}
+@media (min-width:620px){.tile.lead{grid-column:span 2}}
+.meta{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.meta .k{font-size:13px;color:var(--muted);white-space:nowrap}
+.none{color:var(--muted);margin:40px 0}.clear{font:inherit;color:var(--blue);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+[hidden]{display:none!important}
+@media (max-width:700px){.sort{margin-left:0}.tools input[type=search]{width:100%}}
 @media (prefers-reduced-motion:reduce){.tile,.bar{transition:none}}
 </style></head><body><div class="wrap">
-<section class="folder" data-f="tw"><div class="fh"><h2>Transaction Logging Redesign</h2></div><div class="grid"></div></section>
-<section class="folder" data-f="or"><div class="fh"><h2>Orchid design system</h2></div><div class="grid"></div></section>
-<section class="folder" data-f="tw7"><div class="fh"><h2>Transaction Logging Redesign, 7-slide version</h2></div><div class="grid"></div></section>
+<header class="top"><h1>Case studies</h1><p class="sub" id="sum"></p></header>
+<div class="tools">
+<input type="search" id="q" placeholder="Search by title" aria-label="Search by title">
+<div class="chips" id="proj" role="group" aria-label="Project"><span class="lab">Project</span></div>
+<div class="chips" id="kind" role="group" aria-label="Type"><span class="lab">Type</span></div>
+<label class="sort">Sort<select id="sort"><option value="deck">Presenting order</option><option value="az">A to Z</option><option value="kind">By type</option></select></label>
+</div>
+<section class="folder" data-f="tw"><div class="fh"><h2>Transaction Logging Redesign</h2><span></span></div><div class="grid"></div></section>
+<section class="folder" data-f="or"><div class="fh"><h2>Orchid design system</h2><span></span></div><div class="grid"></div></section>
+<section class="folder" data-f="tw7"><div class="fh"><h2>Transaction Logging Redesign, 7-slide version</h2><span></span></div><div class="grid"></div></section>
+<p class="none" id="none" hidden>Nothing matches. <button type="button" class="clear" id="clear">Clear the filters</button></p>
 </div>
 <div class="view" role="dialog" aria-label="Viewer"><div class="stage"></div><div class="bar"><button type="button" data-p="prev">Prev</button><span aria-live="polite"></span><button type="button" data-p="next">Next</button><button type="button" data-p="exit">Close</button></div></div>
 <script>
@@ -32,15 +57,42 @@ h1{font-size:28px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}.sub{colo
   var D={"items": {"tw": [{"kind": "Slides", "title": "Slides", "thumb": "img/cr/01.jpg", "deck": "cr"}, {"kind": "Prototype", "title": "Prototype", "thumb": "img/tw/04.jpg", "proto": true}, {"kind": "Slide", "title": "Problem", "img": "img/cr/03.jpg", "thumb": "img/cr/03.jpg"}, {"kind": "Slide", "title": "Research to design", "img": "img/cr/04.jpg", "thumb": "img/cr/04.jpg"}, {"kind": "Slide", "title": "New flow, start to finish", "img": "img/cr/06.webp", "thumb": "img/cr/06.jpg"}, {"kind": "Slide", "title": "Pop-up to full page", "img": "img/cr/07.jpg", "thumb": "img/cr/07.jpg"}, {"kind": "Slide", "title": "Details page", "img": "img/cr/08.jpg", "thumb": "img/cr/08.jpg"}, {"kind": "Slide", "title": "States", "img": "img/cr/09.jpg", "thumb": "img/cr/09.jpg"}, {"kind": "Slide", "title": "Design system", "img": "img/cr/10.jpg", "thumb": "img/cr/10.jpg"}, {"kind": "Slide", "title": "Impact", "img": "img/cr/11.jpg", "thumb": "img/cr/11.jpg"}, {"kind": "Slide", "title": "Cost", "img": "img/cr/13.jpg", "thumb": "img/cr/13.jpg"}, {"kind": "Slide", "title": "System map", "img": "img/cr/14.jpg", "thumb": "img/cr/14.jpg"}], "or": [{"kind": "Slides", "title": "Slides", "thumb": "img/or/01.jpg", "deck": "or"}, {"kind": "Image", "title": "Variation audit", "img": "img/orsrc/untitled-11.png"}, {"kind": "Image", "title": "Survey", "img": "img/orsrc/untitled-1.jpg"}, {"kind": "Image", "title": "Usage rules", "img": "img/orsrc/untitled-10.jpg"}, {"kind": "Image", "title": "Storybook", "img": "img/orsrc/untitled-9.png"}, {"kind": "Image", "title": "Chromatic", "img": "img/orsrc/untitled-8.png"}, {"kind": "Slide", "title": "Snowflake reviews", "img": "img/or/06.jpg"}, {"kind": "Slide", "title": "Results", "img": "img/or/07.jpg"}], "tw7": [{"kind": "Slides", "title": "Slides", "thumb": "img/tw/01.jpg", "deck": "tw"}, {"kind": "Slide", "title": "Problem", "img": "img/tw/02.jpg"}, {"kind": "Slide", "title": "Cost", "img": "img/tw/03.jpg"}, {"kind": "Slide", "title": "Details page", "img": "img/tw/05.jpg"}, {"kind": "Slide", "title": "Impact", "img": "img/tw/06.jpg"}, {"kind": "Slide", "title": "Research to design", "img": "img/tw/08.jpg"}, {"kind": "Slide", "title": "System map", "img": "img/tw/09.jpg"}]}, "decks": {"tw": [{"src": "img/tw/01.jpg", "cap": "1 / 7", "live": false}, {"src": "img/tw/02.jpg", "cap": "2 / 7", "live": false}, {"src": "img/tw/03.jpg", "cap": "3 / 7", "live": false}, {"src": "img/tw/04.jpg", "cap": "4 / 7", "live": true}, {"src": "img/tw/05.jpg", "cap": "5 / 7", "live": false}, {"src": "img/tw/06.jpg", "cap": "6 / 7", "live": false}, {"src": "img/tw/07.jpg", "cap": "7 / 7", "live": false}, {"src": "img/tw/08.jpg", "cap": "Appendix A1", "live": false}, {"src": "img/tw/09.jpg", "cap": "Appendix A2", "live": false}, {"src": "img/tw/10.jpg", "cap": "Appendix A3", "live": false}, {"src": "img/tw/11.jpg", "cap": "Appendix A4", "live": false}, {"src": "img/tw/12.jpg", "cap": "Appendix A5", "live": false}, {"src": "img/tw/13.jpg", "cap": "Appendix A6", "live": false}, {"src": "img/tw/14.jpg", "cap": "Appendix A7", "live": false}, {"src": "img/tw/15.jpg", "cap": "Appendix A8", "live": false}, {"src": "img/tw/16.jpg", "cap": "Appendix A9", "live": false}, {"src": "img/tw/17.jpg", "cap": "Appendix A10", "live": false}, {"src": "img/tw/18.jpg", "cap": "Appendix A11", "live": false}], "or": [{"src": "img/or/01.jpg", "cap": "1 / 7"}, {"src": "img/or/02.jpg", "cap": "2 / 7"}, {"src": "img/or/03.jpg", "cap": "3 / 7"}, {"src": "img/or/04.jpg", "cap": "4 / 7"}, {"src": "img/or/05.jpg", "cap": "5 / 7"}, {"src": "img/or/06.jpg", "cap": "6 / 7"}, {"src": "img/or/07.jpg", "cap": "7 / 7"}], "cr": [{"src": "img/cr/01.jpg", "cap": "1 / 12", "live": false}, {"src": "img/cr/02.jpg", "cap": "2 / 12", "live": false}, {"src": "img/cr/03.jpg", "cap": "3 / 12", "live": false}, {"src": "img/cr/04.jpg", "cap": "4 / 12", "live": false}, {"src": "img/cr/05.webp", "cap": "5 / 12", "live": false}, {"src": "img/cr/06.webp", "cap": "6 / 12", "live": false}, {"src": "img/cr/07.jpg", "cap": "7 / 12", "live": false}, {"src": "img/cr/08.jpg", "cap": "8 / 12", "live": false}, {"src": "", "cap": "Demo, optional", "live": true}, {"src": "img/cr/09.jpg", "cap": "9 / 12", "live": false}, {"src": "img/cr/10.jpg", "cap": "10 / 12", "live": false}, {"src": "img/cr/11.jpg", "cap": "11 / 12", "live": false}, {"src": "img/cr/12.jpg", "cap": "12 / 12", "live": false}, {"src": "img/cr/13.jpg", "cap": "Appendix A1", "live": false}, {"src": "img/cr/14.jpg", "cap": "Appendix A2", "live": false}, {"src": "img/cr/15.jpg", "cap": "Appendix A3", "live": false}, {"src": "img/cr/16.jpg", "cap": "Appendix A4", "live": false}, {"src": "img/cr/17.jpg", "cap": "Appendix A5", "live": false}, {"src": "img/cr/18.jpg", "cap": "Appendix A6", "live": false}, {"src": "img/cr/19.jpg", "cap": "Appendix A7", "live": false}, {"src": "img/cr/20.jpg", "cap": "Appendix A8", "live": false}, {"src": "img/cr/21.jpg", "cap": "Appendix A9", "live": false}, {"src": "img/cr/22.jpg", "cap": "Appendix A10", "live": false}]}};
   var V=document.querySelector(".view"),stage=V.querySelector(".stage"),bar=V.querySelector(".bar"),count=bar.querySelector("span"),prev=bar.querySelector('[data-p=prev]'),next=bar.querySelector('[data-p=next]');
   var seq=null,i=0;
-  ["tw","or","tw7"].forEach(function(f){
-    var g=document.querySelector('[data-f="'+f+'"] .grid');
-    D.items[f].forEach(function(it,n){
-      var b=document.createElement("button");b.type="button";b.className="tile";
-      b.innerHTML='<div class="th" style="background-image:url(\''+(it.thumb||it.img)+'\')"></div><div class="meta"><div class="title"></div></div>';
-      b.querySelector(".title").textContent=it.title;
-      b.addEventListener("click",function(){openItem(it,f,n);});g.appendChild(b);
+  var FO=["tw","or","tw7"],SHORT={tw:"Transaction Logging",or:"Orchid",tw7:"Transaction Logging, 7 slides"};
+  var KN={deck:"Decks",proto:"Prototype",slide:"Slides",image:"Images"},KO=["deck","proto","slide","image"];
+  var st={proj:"all",kind:"all",q:"",sort:"deck"};
+  function kindOf(it){return it.deck?"deck":it.proto?"proto":it.kind==="Image"?"image":"slide";}
+  function nameOf(it){return it.deck?"Full deck":it.proto?"Live prototype":it.title;}
+  function subOf(it){var k=kindOf(it);if(k==="deck")return D.decks[it.deck].filter(function(x){return !x.live;}).length+" slides";if(k==="proto")return "Interactive";if(k==="image")return "Image";var m=/(\d+)\.[a-z]+$/.exec(it.img||"");return m?"Slide "+(+m[1]):"Slide";}
+  function match(it,f,skipKind){if(st.proj!=="all"&&st.proj!==f)return false;if(!skipKind&&st.kind!=="all"&&st.kind!==kindOf(it))return false;if(st.q&&nameOf(it).toLowerCase().indexOf(st.q)<0&&it.title.toLowerCase().indexOf(st.q)<0)return false;return true;}
+  function chip(box,key,val,text,n){var b=document.createElement("button");b.type="button";b.dataset.v=val;b.setAttribute("aria-pressed",st[key]===val?"true":"false");b.textContent=text;if(n!=null){var c=document.createElement("i");c.textContent=n;b.appendChild(c);}b.addEventListener("click",function(){st[key]=val;draw();var again=box.querySelector('[data-v="'+val+'"]');if(again)again.focus();});box.appendChild(b);}
+  function draw(){
+    var total=0,shown=0,pj=document.getElementById("proj"),kd=document.getElementById("kind");
+    [pj,kd].forEach(function(x){while(x.children.length>1)x.removeChild(x.lastChild);});
+    chip(pj,"proj","all","All");FO.forEach(function(f){chip(pj,"proj",f,SHORT[f],D.items[f].length);});
+    var kc={deck:0,proto:0,slide:0,image:0},ka=0;
+    FO.forEach(function(f){D.items[f].forEach(function(it){if(match(it,f,true)){kc[kindOf(it)]++;ka++;}});});
+    chip(kd,"kind","all","All",ka);KO.forEach(function(k){if(kc[k]||st.kind===k)chip(kd,"kind",k,KN[k],kc[k]);});
+    FO.forEach(function(f){
+      var sec=document.querySelector('[data-f="'+f+'"]'),g=sec.querySelector(".grid"),all=D.items[f];total+=all.length;
+      var list=all.map(function(it,n){return{it:it,n:n};}).filter(function(x){return match(x.it,f);});
+      if(st.sort==="az")list.sort(function(a,b){return nameOf(a.it).localeCompare(nameOf(b.it));});
+      else if(st.sort==="kind")list.sort(function(a,b){return KO.indexOf(kindOf(a.it))-KO.indexOf(kindOf(b.it))||a.n-b.n;});
+      shown+=list.length;sec.hidden=!list.length;g.innerHTML="";
+      sec.querySelector(".fh span").textContent=list.length===all.length?all.length+" items":list.length+" of "+all.length;
+      list.forEach(function(x){
+        var it=x.it,k=kindOf(it),b=document.createElement("button");b.type="button";b.className="tile"+(k==="deck"||k==="proto"?" lead":"");
+        b.innerHTML='<div class="th" style="background-image:url(\''+(it.thumb||it.img)+'\')"></div><div class="meta"><div class="title"></div><div class="k"></div></div>';
+        b.querySelector(".title").textContent=nameOf(it);b.querySelector(".k").textContent=subOf(it);
+        b.addEventListener("click",function(){openItem(it,f,x.n);});g.appendChild(b);
+      });
     });
-  });
+    document.getElementById("none").hidden=shown>0;
+    document.getElementById("sum").textContent=(shown===total?total+" items":shown+" of "+total+" items")+" across "+FO.length+" collections. Open any tile to present it full screen.";
+  }
+  document.getElementById("q").addEventListener("input",function(e){st.q=e.target.value.trim().toLowerCase();draw();});
+  document.getElementById("sort").addEventListener("change",function(e){st.sort=e.target.value;draw();});
+  document.getElementById("clear").addEventListener("click",function(){st.proj="all";st.kind="all";st.q="";document.getElementById("q").value="";draw();document.getElementById("q").focus();});
+  draw();
   function seqFor(f){
     var out=[];
     D.items[f].forEach(function(it,n){
