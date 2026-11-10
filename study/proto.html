@@ -164,14 +164,6 @@ textarea.field { min-height: 76px; resize: vertical; font: 400 14px/1.4 var(--f-
 .sp-l { display: none; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--p-muted); }
 .sp-x { justify-items: end; }
 .field.need { border-color: #e0b44a; background-color: #fffbf0; }
-@container (max-width: 620px) {
-  .sp-h { display: none; }
-  .sp-r { grid-template-columns: 1fr 1fr; border: 1px solid var(--p-line); border-left-width: 4px; border-radius: 10px; padding: 10px 12px; gap: 10px; }
-  .sp-l { display: block; }
-  .sp-x { grid-column: 2; grid-row: 1; position: relative; }
-  .sp-r .sp-c:nth-child(1) { grid-column: 1; grid-row: 1; }
-  .sp-r .sp-c:nth-child(2), .sp-r .sp-c:nth-child(3), .sp-r .sp-c:nth-child(4) { grid-column: 1 / -1; }
-}
 .more { border: 1px solid var(--p-line); border-radius: 10px; }
 .more summary { cursor: pointer; padding: 10px 12px; font-size: 13px; font-weight: 600; color: var(--p-fg); }
 .more-b { padding: 4px 12px 14px; display: grid; gap: 12px; }
@@ -300,15 +292,62 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
 .task .split span.done::before { content: "✓ "; }
 .iter-btn { padding: 7px 12px 7px 10px; }
 .td-act .row { justify-content: flex-end; }
-@container (max-width: 620px) {
-  .sp-r { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) 32px; align-items: end; }
-  .sp-r .sp-c:nth-child(1) { grid-column: 1; grid-row: 1; }
-  .sp-r .sp-c:nth-child(2) { grid-column: 2; grid-row: 1; }
-  .sp-r .sp-x { grid-column: 3; grid-row: 1; }
-  .sp-r .sp-c:nth-child(3) { grid-column: 1; grid-row: 2; }
-  .sp-r .sp-c:nth-child(4) { grid-column: 2 / -1; grid-row: 2; }
-}
 
+/* wayfinding pass */
+.sp-r { border-left: 0; padding-left: 0; position: relative; transition: transform .12s ease; }
+.sp-h span { padding-left: 2px; }
+.sp-h, .sp-r { grid-template-columns: 22px 92px minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1.4fr) 32px; }
+.sp.one .sp-h, .sp.one .sp-r { grid-template-columns: 92px minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1.4fr) 32px; }
+.grip { appearance: none; border: 0; background: none; padding: 0; width: 22px; height: 36px; display: grid; place-items: center; color: var(--p-dim); cursor: grab; touch-action: none; border-radius: 6px; }
+.grip:hover, .grip:focus-visible { color: var(--p-fg); background: var(--p-sunk); }
+.grip:focus-visible { outline: 2px solid var(--p-accent); outline-offset: 1px; }
+.sp-r.dragging { transition: none; z-index: 3; background: var(--p-bg); box-shadow: 0 6px 18px rgba(20,20,40,.18); border-radius: 8px; }
+.sp-r.dragging .grip { cursor: grabbing; color: var(--p-accent); }
+@media (prefers-reduced-motion: reduce) { .sp-r { transition: none; } }
+@container (max-width: 700px) {
+  .sp-h { display: none; }
+  .sp-l { display: block; }
+  .sp-r { grid-template-columns: 22px minmax(0, 1fr) minmax(0, 1.4fr) 32px; align-items: end; border: 1px solid var(--p-line); border-radius: 10px; padding: 10px 12px 10px 6px; gap: 10px; }
+  .sp.one .sp-r { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) 32px; padding-left: 12px; }
+  .sp-r .grip { grid-column: 1; grid-row: 1 / span 2; align-self: center; height: 48px; }
+  .sp-r .c-amt { grid-column: 2; grid-row: 1; } .sp-r .c-type { grid-column: 3; grid-row: 1; } .sp-r .sp-x { grid-column: 4; grid-row: 1; }
+  .sp-r .c-det { grid-column: 2; grid-row: 2; } .sp-r .c-fund { grid-column: 3 / -1; grid-row: 2; }
+  .sp.one .sp-r .c-amt { grid-column: 1; } .sp.one .sp-r .c-type { grid-column: 2; } .sp.one .sp-r .sp-x { grid-column: 3; } .sp.one .sp-r .c-det { grid-column: 1; } .sp.one .sp-r .c-fund { grid-column: 2 / -1; }
+}
+.frame input[type=number]::-webkit-inner-spin-button, .frame input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.frame input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+.kbd-hint { font-size: 12px; color: var(--p-muted); margin: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; }
+kbd { font: 600 11px var(--f-ui); border: 1px solid var(--p-line); border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px; background: var(--p-bg); color: var(--p-fg); }
+.rc-opt { max-width: 440px; }
+.td-crumb .cr-back { width: 28px; height: 28px; border: 1px solid var(--p-line); border-radius: 7px; display: grid; place-items: center; color: var(--p-fg); margin-right: 4px; flex: none; }
+.td-crumb .cr-back:hover { background: var(--p-sunk); }
+.td-crumb .cr-x { color: var(--p-muted); }
+.td-crumb button:hover { text-decoration: underline; } .td-crumb .cr-back:hover { text-decoration: none; }
+.td-crumb button:focus-visible, .link:focus-visible, .tgl-s:focus-visible { outline: 2px solid var(--p-accent); outline-offset: 2px; border-radius: 4px; }
+.td-crumb .org { margin-left: auto; display: flex; align-items: center; gap: 6px; color: var(--p-muted); padding-left: 12px; }
+.td-crumb .org i { width: 18px; height: 18px; border-radius: 5px; background: #d8cdfb; display: inline-block; }
+table.list tr[data-v] { cursor: pointer; }
+table.list tr[data-v]:hover td { background: var(--p-sunk); }
+table.list td.go, table.list th.go { width: 28px; padding-left: 0; text-align: right; color: var(--p-dim); }
+.badge-split { display: inline-flex; gap: 5px; align-items: center; font: 600 12px var(--f-ui); color: var(--p-accent); background: var(--p-accent-soft); border-radius: 999px; padding: 3px 9px; white-space: nowrap; vertical-align: middle; }
+.badge-split svg { width: 12px; height: 12px; }
+table.list tr.split-p td { background: #faf8ff; border-bottom-color: transparent; font-weight: 600; }
+table.list tr.split-p.shut td { border-bottom-color: var(--p-line); }
+table.list tr.split-c td { background: #faf8ff; padding-top: 5px; padding-bottom: 5px; color: var(--p-muted); font-size: 12.5px; border-bottom-color: transparent; }
+table.list tr.split-c.last td { border-bottom-color: var(--p-line); padding-bottom: 12px; }
+table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3effe; }
+.split-c .part { display: inline-flex; align-items: center; gap: 8px; }
+.split-c .tree { width: 12px; height: 12px; border-left: 1.5px solid #cfc6f5; border-bottom: 1.5px solid #cfc6f5; border-bottom-left-radius: 5px; margin: -8px 0 0 6px; display: inline-block; }
+.split-c .dot { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+.tgl-s { appearance: none; border: 0; background: none; cursor: pointer; color: var(--p-muted); width: 24px; height: 24px; border-radius: 6px; display: inline-grid; place-items: center; padding: 0; }
+.tgl-s svg { width: 14px; height: 14px; transition: transform .15s; } .tgl-s[aria-expanded=true] svg { transform: rotate(180deg); }
+.framewrap { display: grid; gap: 12px; min-width: 0; } .framewrap > .frame { min-width: 0; }
+@media (min-width: 1100px) { .stage:not(.compare) .framewrap { grid-template-columns: minmax(0, 1fr) 300px; align-items: start; } .stage:not(.compare) .ref { position: sticky; top: 12px; } }
+.ref { border: 1.5px dashed var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 10px; background: var(--panel); color: var(--fg); font-size: 13px; min-width: 0; }
+.ref-tag { font: 600 11px var(--f-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ref h3 { margin: 0; font: 600 15px/1.3 var(--f-ui); }
+.ref .rule { font-size: 12.5px; color: var(--muted); margin: 0; }
+.ref-rc { display: grid; gap: 8px; }
 </style>
 
 <div class="page">
@@ -462,7 +501,7 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
     function fmtDate(iso) { var p = parts(iso); return MON[p[1]] + " " + p[2] + ", " + p[0]; }
     function fmtLong(iso) { var p = parts(iso); return MONL[p[1]] + " " + p[2] + ", " + p[0]; }
     function blankLine(amt) { return { id: uid++, amt: amt, type: MODE === "table" ? "" : "Donation", cat: "Other", gift: "Money", adv: false, fund: "General Donations", impact: "" }; }
-    function reset() { s = { screen: "list", step: 1, total: 200, lines: [], date: "2026-04-23", entry: "quick", confirm: false, region: "CA", rcpt: "email", meta: blankMeta(), open: {}, itab: {}, clicks: 0, saved: false, editing: false, snap: null, receiptOpen: false }; render(); }
+    function reset() { s = { screen: "list", step: 1, total: 200, lines: [], date: "2026-04-23", entry: "quick", confirm: false, region: "CA", rcpt: "email", meta: blankMeta(), open: {}, itab: {}, clicks: 0, saved: false, editing: false, snap: null, receiptOpen: false, contact: "Sarah Padilla", owner: "Sarah Padilla", view: null, collapsed: false }; render(); nav(false); }
     function sum() { return s.lines.reduce(function (n, l) { return n + (Number(l.amt) || 0); }, 0); }
     function left() { return Math.round((s.total - sum()) * 100) / 100; }
     function eligible() { return s.lines.filter(function (l) { return l.type === "Donation"; }).reduce(function (n, l) { return n + (Number(l.amt) || 0); }, 0); }
@@ -495,6 +534,44 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
                : '<label class="f"><span>Category <span class="req">*</span></span><select class="field" id="' + P + '-cat-' + x.id + '" data-k="cat" data-id="' + x.id + '">' + CATS.map(function (g) { return '<option' + (g === x.cat ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select></label>') +
         '</div>';
     }
+    var CONTACTS = ["Sarah Padilla", "Daniel Padilla", "Maya Chen", "Priya Raman"];
+    var HIST = HISTORY.map(function (r, i) { var don = r.type === "Donation"; return { desc: r.desc, date: ["2026-03-14", "2026-02-14", "2025-11-22"][i], total: r.amt, rcpt: don ? "email" : "ignore", freq: don ? "Monthly" : "One-time", id: ["k2mPwQ7RtaVzN8cJd", "h9TfLs3XoEbGu5yKa", "c6WnDr1ZqMvHj4pSe"][i], lines: [{ id: 101 + i, amt: r.amt, type: don ? "Donation" : "Revenue", cat: "Purchase", gift: "Money", fund: r.fund, impact: "" }] }; });
+    function withView(fn) {
+      var h = s.screen === "details" && s.view != null ? HIST[s.view] : null; if (!h) return fn(null);
+      var k = { lines: s.lines, total: s.total, date: s.date, rcpt: s.rcpt, meta: s.meta, contact: s.contact };
+      s.lines = h.lines; s.total = h.total; s.date = h.date; s.rcpt = h.rcpt; s.meta = blankMeta(); s.contact = "Sarah Padilla";
+      try { return fn(h); } finally { s.lines = k.lines; s.total = k.total; s.date = k.date; s.rcpt = k.rcpt; s.meta = k.meta; s.contact = k.contact; }
+    }
+    function initials(n) { return String(n).split(/\s+/).map(function (w) { return w.charAt(0); }).join("").slice(0, 2).toUpperCase(); }
+    function crumbs(trail, backAct) {
+      return '<nav class="td-crumb" aria-label="Breadcrumb">' + (backAct ? '<button type="button" class="cr-back" data-a="' + backAct + '" aria-label="Back" title="Back">' + IC.back + '</button>' : '') +
+        '<span class="cr-x">Contacts</span><span class="sep">›</span><span class="cr-x">' + esc(s.owner) + '</span>' +
+        trail.map(function (c, i) { return '<span class="sep">›</span>' + (i === trail.length - 1 ? '<b aria-current="page">' + c[0] + '</b>' : '<button type="button" data-a="' + c[1] + '">' + c[0] + '</button>'); }).join("") +
+        '<span class="org"><i></i>ABC Organization</span></nav>';
+    }
+    function flowCrumbs() { return s.editing ? crumbs([["Transactions", "tolist"], ["Gala night · " + money(s.snapTotal), "cancel"], ["Edit"]], "cancel") : crumbs([["Transactions", "cancel"], ["New transaction"]], "cancel"); }
+    function listRows() {
+      var out = "", go = '<td class="go" aria-hidden="true">›</td>';
+      if (s.saved) {
+        var d = fmtDate(s.date), n = s.lines.length, lk = '<button type="button" class="link" data-a="open" data-v="new">Gala night</button>';
+        if (n < 2) { var x0 = s.lines[0]; out += '<tr class="new" data-v="new"><td>' + d + '</td><td>' + (x0.type === "Donation" ? "Donation" : "Other Revenue") + '</td><td>' + lk + '</td><td>' + esc(x0.fund) + '</td><td class="num">' + money(s.total) + '</td>' + go + '</tr>'; }
+        else {
+          out += '<tr class="split-p' + (s.collapsed ? ' shut' : '') + '" data-v="new"><td>' + d + '</td><td><span class="badge-split">' + IC.split + 'Split · ' + n + ' parts</span></td><td>' + lk + '</td><td>' + campaignsLabel() + '</td><td class="num">' + money(s.total) + '</td><td class="go"><button type="button" class="tgl-s" data-a="collapse" aria-expanded="' + !s.collapsed + '" aria-label="' + (s.collapsed ? "Show" : "Hide") + ' the ' + n + ' parts of this payment">' + IC.chev + '</button></td></tr>';
+          if (!s.collapsed) out += s.lines.map(function (x, i) { return '<tr class="split-c' + (i === n - 1 ? ' last' : '') + '" data-v="new"><td></td><td colspan="2"><span class="part"><span class="tree"></span><i class="dot" style="background:' + COLORS[x.type] + '"></i>' + x.type + ' · ' + esc(x.type === "Donation" ? x.gift : x.cat) + '</span></td><td>' + esc(x.fund) + '</td><td class="num">' + money(x.amt) + '</td><td></td></tr>'; }).join("");
+        }
+      }
+      if (s.owner === "Sarah Padilla") out += HISTORY.map(function (r, i) { return '<tr data-v="' + i + '"><td>' + r.date + '</td><td>' + r.type + '</td><td><button type="button" class="link" data-a="open" data-v="' + i + '">' + r.desc + '</button></td><td>' + r.fund + '</td><td class="num">' + money(r.amt) + '</td>' + go + '</tr>'; }).join("");
+      return out;
+    }
+    function renderRef() {
+      if (!opts.ref) return;
+      var body;
+      if (s.screen === "list" || (s.view == null && !s.lines.length)) body = '<p class="rule">Start or open a transaction to see what its receipt would say.</p>';
+      else body = withView(function () { if (untyped()) return '<p class="rule">Choose what each line was to see the receipt.</p>'; if (!eligible()) return '<p class="rule">Nothing on this payment is a gift, so there is no tax receipt.</p>'; return '<div class="ref-rc">' + receiptLines() + '</div>'; });
+      opts.ref.innerHTML = '<span class="ref-tag">Reference, not part of the screen</span><div class="row" style="justify-content:space-between;gap:8px"><h3>What the receipt would say</h3>' + regionSelect() + '</div>' + body;
+    }
+    function nav(push) { if (!opts.history) return; try { var st = { aft: s.screen, view: s.view }; if (push) history.pushState(st, ""); else history.replaceState(st, ""); } catch (er) {} }
+    function focusSel(q) { var f = root.querySelector(q); if (f) f.focus({ preventScroll: true }); }
     function receiptLines() {
       var e = eligible(), b = benefit(), r = s.region;
       if (r === "CA") return '<div class="kv"><span>Total amount received</span><b>' + money(s.total) + '</b></div><div class="kv"><span>Value of advantage (gala ticket)</span><b>' + money(b) + '</b></div><div class="kv"><span>Eligible amount of gift</span><b>' + money(e) + '</b></div><p class="rule">Canada: the receipt shows the total, the advantage, and what is left as eligible.</p>';
@@ -511,6 +588,9 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       tri: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M8 2.5l6 10.5H2z"/></svg>',
       chev: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg>',
       lock: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>',
+      back: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M9.5 3.5L5 8l4.5 4.5"/></svg>',
+      grip: '<svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><circle cx="5.5" cy="3.5" r="1.3"/><circle cx="10.5" cy="3.5" r="1.3"/><circle cx="5.5" cy="8" r="1.3"/><circle cx="10.5" cy="8" r="1.3"/><circle cx="5.5" cy="12.5" r="1.3"/><circle cx="10.5" cy="12.5" r="1.3"/></svg>',
+      split: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h4M6 8c3 0 3-4.5 8-4.5M6 8c3 0 3 4.5 8 4.5"/></svg>',
       dots: '<svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><circle cx="8" cy="3" r="1.4"/><circle cx="8" cy="8" r="1.4"/><circle cx="8" cy="13" r="1.4"/></svg>'
     };
     var TXN_ID = "y4rHeXBLxduBiQLuT";
@@ -535,40 +615,42 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       else rows = [["Amount", money(x.amt) + " CAD"], ["Category", esc(x.cat)], ["Value received", "Gala ticket, " + money(x.amt) + " fair market value"], ["Tax receipt", "Not receiptable. Shown as the advantage on the gift receipt."]];
       return tabs + '<div class="ti-body" role="tabpanel">' + rows.map(function (r) { return '<span class="td-k">' + r[0] + '</span><span>' + r[1] + '</span>'; }).join("") + '</div>';
     }
-    function detailsView() {
+    function detailsView() { return withView(function (h) { return detailsHtml(h) + (s.receiptOpen ? receiptModal() : ''); }); }
+    function detailsHtml(h) {
       var items = s.lines.map(function (x) {
         var open = !!s.open[x.id], isDon = x.type === "Donation";
         var tag = isDon ? '<span class="tchip">' + IC.gift + esc(x.gift) + ' (Donation: gift type)</span>' : '<span class="tchip">' + IC.tri + esc(x.cat) + ' (Revenue: category)</span>';
         return '<div class="ti"><div class="ti-head"><span class="nm">' + x.type + '</span>' + tag + '<span class="rt">' + idChip(itemId(x)) + '<span class="am">' + money(x.amt) + '<small>CAD</small></span><button type="button" class="tgl" data-a="toggle" data-id="' + x.id + '" aria-expanded="' + open + '" aria-label="' + (open ? "Hide" : "Show") + ' details for ' + x.type + ' ' + money(x.amt) + '">' + IC.chev + '</button></span></div>' + (open ? itemBody(x) : '') + '</div>';
       }).join("");
-      return '<nav class="td-crumb" aria-label="Breadcrumb"><button type="button" data-a="list">All Contacts</button><span class="sep">›</span><button type="button" data-a="list">Sarah Padilla - Transactions</button><span class="sep">›</span><b>Transaction Details</b><span class="org" style="margin-left:auto;display:flex;align-items:center;gap:6px;color:var(--p-muted)"><i style="width:18px;height:18px;border-radius:5px;background:#d8cdfb;display:inline-block"></i>ABC Organization</span></nav>' +
+      return crumbs([["Transactions", "list"], [esc(h ? h.desc : "Gala night") + " · " + money(s.total)]], "list") +
         '<div class="td-tabs" aria-hidden="true"><span>Profile</span><span>Interactions</span><span>To-Do’s</span><span class="on">Fundraising</span><span>Memberships</span><span>Volunteering</span></div>' +
         '<div class="td"><div class="td-head"><div><div class="td-amt">' + money(s.total) + '<small>CAD</small></div><div class="td-chips"><span class="tchip">' + IC.card + 'Card</span><span class="tchip green">Paid</span></div></div>' +
-        '<div class="td-act"><span class="tchip" title="The contact is locked after saving. Other details can still be corrected.">' + IC.lock + 'Contact locked</span><div class="row"><button type="button" class="btn sm" data-a="edit">Edit</button>' + idChip(TXN_ID) + '</div></div></div>' +
-        '<div class="td-grid"><div class="td-dl"><span class="td-k">Contact</span><span class="person"><i>SP</i>Sarah Padilla</span><span class="td-k">Date received</span><span class="tchip" style="width:max-content">' + IC.cal + fmtLong(s.date) + '</span><span class="td-k">Frequency</span><span>One-time</span><span class="td-k">Tax-deductible</span><span><b>' + money(eligible()) + '</b> on one receipt</span></div>' +
+        '<div class="td-act"><span class="tchip" title="The contact is locked after saving. Other details can still be corrected.">' + IC.lock + 'Contact locked</span><div class="row">' + (h ? '' : '<button type="button" class="btn sm" data-a="edit">Edit</button>') + idChip(h ? h.id : TXN_ID) + '</div></div></div>' +
+        '<div class="td-grid"><div class="td-dl"><span class="td-k">Contact</span><span class="person"><i>' + initials(s.contact) + '</i>' + esc(s.contact) + '</span><span class="td-k">Date received</span><span class="tchip" style="width:max-content">' + IC.cal + fmtLong(s.date) + '</span><span class="td-k">Frequency</span><span>' + (h ? h.freq : "One-time") + '</span><span class="td-k">Tax-deductible</span><span>' + (eligible() ? '<b>' + money(eligible()) + '</b> on one receipt' : 'None. Nothing here is a gift.') + '</span></div>' +
         '<div class="td-rc"><span class="td-k">Receipt info</span><div class="row">' + receiptChips() + '</div>' + (s.rcpt === "skip" || s.rcpt === "ignore" ? '' : '<button type="button" class="btn sm" data-a="viewreceipt">View Receipt</button>') + '</div></div>' +
-        '<p class="sub" style="margin:-6px 0 0">The contact is locked after saving, so the audit trail holds. Other details can still be corrected.</p><p class="td-h2">Transaction Items</p><div class="items">' + items + '</div><button type="button" class="link" data-a="list" style="justify-self:start">Back to transactions</button></div>';
+        '<p class="sub" style="margin:-6px 0 0">The contact is locked after saving, so the audit trail holds. Other details can still be corrected.</p><p class="td-h2">Transaction Items' + (s.lines.length > 1 ? ' <span class="badge-split">' + IC.split + 'Split · ' + s.lines.length + ' parts</span>' : '') + '</p><div class="items">' + items + '</div><button type="button" class="link" data-a="list" style="justify-self:start">Back to transactions</button></div>';
     }
     function receiptModal() {
       var name = { CA: "Canada", US: "United States", AU: "Australia" }[s.region];
       return '<div class="scrim fix" data-a="closereceipt-bg"><div class="modal" role="dialog" aria-modal="true" aria-label="Receipt"><div class="modal-h">Receipt<button type="button" class="x" data-a="closereceipt" aria-label="Close">×</button></div>' +
-        '<div class="modal-b rcpt-doc"><div><div class="org">ABC Organization</div><div class="meta"><span>Official receipt for income tax purposes · ' + name + ' rules</span><span>Receipt no. R-2026-0418 · Issued ' + fmtDate(s.date) + '</span><span>Received from Sarah Padilla</span></div></div>' +
+        '<div class="modal-b rcpt-doc"><div><div class="org">ABC Organization</div><div class="meta"><span>Official receipt for income tax purposes · ' + name + ' rules</span><span>Receipt no. R-2026-0418 · Issued ' + fmtDate(s.date) + '</span><span>Received from ' + esc(s.contact) + '</span></div></div>' +
         '<div class="panel receipt">' + receiptLines() + '</div></div><div class="modal-f"><span></span><button type="button" class="btn" data-a="closereceipt">Close</button></div></div></div>';
     }
 
     var TYPE_LABEL = { Donation: "Donation, a gift", Revenue: "Revenue, got something back" };
     function regionSelect() { return '<label class="f" style="grid-auto-flow:column;align-items:center;gap:6px;margin:0">Rules<select class="field" id="' + P + '-region" style="width:auto;padding:5px 32px 5px 8px;background-position:right 10px center"><option value="CA"' + (s.region === "CA" ? ' selected' : '') + '>Canada</option><option value="US"' + (s.region === "US" ? ' selected' : '') + '>United States</option><option value="AU"' + (s.region === "AU" ? ' selected' : '') + '>Australia</option></select></label>'; }
     function spRow(x, i) {
-      var c = x.type ? COLORS[x.type] : "var(--p-line)", det;
+      var det, n = s.lines.length;
       if (x.type === "Donation") det = '<select class="field" data-k="gift" data-id="' + x.id + '" aria-label="Gift type, line ' + (i + 1) + '">' + GIFT.map(function (g) { return '<option' + (g === x.gift ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select>';
       else if (x.type === "Revenue") det = '<select class="field" data-k="cat" data-id="' + x.id + '" aria-label="Category, line ' + (i + 1) + '">' + CATS.map(function (g) { return '<option' + (g === x.cat ? ' selected' : '') + '>' + g + '</option>'; }).join("") + '</select>';
       else det = '<select class="field" disabled aria-label="Detail, line ' + (i + 1) + '"><option>Pick a type first</option></select>';
-      return '<div class="sp-r" style="border-left-color:' + c + '">' +
-        '<div class="sp-c"><span class="sp-l">Amount</span><span class="money"><span>$</span><input class="field" data-k="amt" data-id="' + x.id + '" type="number" inputmode="decimal" min="0" value="' + x.amt + '" aria-label="Amount, line ' + (i + 1) + '"></span></div>' +
-        '<div class="sp-c"><span class="sp-l">What it was</span><select class="field' + (x.type ? '' : ' need') + '" data-k="type" data-id="' + x.id + '" aria-label="What line ' + (i + 1) + ' was"><option value=""' + (x.type ? '' : ' selected') + ' disabled>Choose…</option><option value="Donation"' + (x.type === "Donation" ? ' selected' : '') + '>' + TYPE_LABEL.Donation + '</option><option value="Revenue"' + (x.type === "Revenue" ? ' selected' : '') + '>' + TYPE_LABEL.Revenue + '</option></select></div>' +
-        '<div class="sp-c"><span class="sp-l">' + (x.type === "Revenue" ? "Category" : "Gift type") + '</span>' + det + '</div>' +
-        '<div class="sp-c"><span class="sp-l">Campaign</span><input class="field combo" list="dl-fund" placeholder="Start typing to search..." autocomplete="off" data-k="fund" data-id="' + x.id + '" value="' + esc(x.fund) + '" aria-label="Campaign, line ' + (i + 1) + '"></div>' +
-        '<div class="sp-c sp-x">' + (s.lines.length > 1 ? '<button type="button" class="x" data-a="rm" data-id="' + x.id + '" aria-label="Remove line ' + (i + 1) + '">×</button>' : '') + '</div></div>';
+      return '<div class="sp-r" data-row="' + x.id + '">' +
+        (n > 1 ? '<button type="button" class="grip" data-id="' + x.id + '" aria-label="Reorder line ' + (i + 1) + ' of ' + n + '. Drag, or press the up and down arrow keys." title="Drag to reorder">' + IC.grip + '</button>' : '') +
+        '<div class="sp-c c-amt"><span class="sp-l">Amount</span><span class="money"><span>$</span><input class="field" data-k="amt" data-id="' + x.id + '" type="number" inputmode="decimal" min="0" value="' + x.amt + '" aria-label="Amount, line ' + (i + 1) + '"></span></div>' +
+        '<div class="sp-c c-type"><span class="sp-l">What it was</span><select class="field' + (x.type ? '' : ' need') + '" data-k="type" data-id="' + x.id + '" aria-label="What line ' + (i + 1) + ' was"><option value=""' + (x.type ? '' : ' selected') + ' disabled>Choose…</option><option value="Donation"' + (x.type === "Donation" ? ' selected' : '') + '>' + TYPE_LABEL.Donation + '</option><option value="Revenue"' + (x.type === "Revenue" ? ' selected' : '') + '>' + TYPE_LABEL.Revenue + '</option></select></div>' +
+        '<div class="sp-c c-det"><span class="sp-l">' + (x.type === "Revenue" ? "Category" : "Gift type") + '</span>' + det + '</div>' +
+        '<div class="sp-c c-fund"><span class="sp-l">Campaign</span><input class="field combo" list="dl-fund" placeholder="Start typing to search..." autocomplete="off" data-k="fund" data-id="' + x.id + '" value="' + esc(x.fund) + '" aria-label="Campaign, line ' + (i + 1) + '"></div>' +
+        '<div class="sp-c sp-x">' + (n > 1 ? '<button type="button" class="x" data-a="rm" data-id="' + x.id + '" aria-label="Remove line ' + (i + 1) + '">×</button>' : '') + '</div></div>';
     }
     function quickRow(x) {
       var det;
@@ -587,29 +669,31 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
     function tableFlow() {
       var l = left();
       var addBtn = '<button type="button" class="btn" data-a="add">' + (l > 0 ? '+ Add a line for the remaining ' + money(l) : '+ Add a line') + '</button>';
-      var main = '<div class="tx-top"><label class="f"><span>Contact <span class="req">*</span></span><input class="field" value="Sarah Padilla" readonly></label><label class="f"><span>Date received <span class="req">*</span></span><input class="field" type="date" id="' + P + '-date" value="' + s.date + '" max="2026-12-31" aria-describedby="' + P + '-datehint"></label><label class="f"><span>Total amount <span class="req">*</span></span><span class="money"><span>$</span><input class="field" id="' + P + '-total" type="number" inputmode="decimal" min="0" value="' + s.total + '"></span></label></div>' +
+      var main = '<div class="tx-top"><label class="f"><span>Contact <span class="req">*</span></span>' + (s.editing ? '<input class="field" value="' + esc(s.contact) + '" readonly title="The contact is locked after saving.">' : '<input class="field combo" id="' + P + '-contact" list="dl-contact" autocomplete="off" placeholder="Start typing to search..." value="' + esc(s.contact) + '">') + '</label><label class="f"><span>Date received <span class="req">*</span></span><input class="field" type="date" id="' + P + '-date" value="' + s.date + '" max="2026-12-31" aria-describedby="' + P + '-datehint"></label><label class="f"><span>Total amount <span class="req">*</span></span><span class="money"><span>$</span><input class="field" id="' + P + '-total" type="number" inputmode="decimal" min="0" value="' + s.total + '"></span></label></div>' +
         '<p class="sub dh" id="' + P + '-datehint">Use the date the money arrived. Pick it from the calendar.</p>' + entrySeg() +
         (s.entry === "quick" ? quickRow(s.lines[0]) :
-        '<div><p class="tx-q">What was this ' + money(s.total) + ' for?</p><p class="sub">Add a line for each part. The receipt updates as you go.</p></div>' +
+        '<div><p class="tx-q">What was this ' + money(s.total) + ' for?</p><p class="sub">Add a line for each part.' + (opts.ref ? '' : ' The receipt updates as you go.') + '</p></div>' +
         allocation() +
-        '<div class="sp"><div class="sp-h" aria-hidden="true"><span>Amount</span><span>What it was</span><span>Gift type or category</span><span>Campaign</span><span></span></div>' + s.lines.map(spRow).join("") + '</div>' +
+        '<div class="sp' + (s.lines.length > 1 ? '' : ' one') + '"><div class="sp-h" aria-hidden="true">' + (s.lines.length > 1 ? '<span></span>' : '') + '<span>Amount</span><span>What it was</span><span>Gift type or category</span><span>Campaign</span><span></span></div>' + s.lines.map(spRow).join("") + '</div>' +
         '<div class="row">' + addBtn + '</div>') +
         '<details class="more"' + (s.moreOpen ? ' open' : '') + '><summary>More details: impact area, soft credit, source, keywords, dedication, notes</summary><div class="more-b">' +
           s.lines.map(function (x, i) { return combo(P + "-impact-" + x.id, s.lines.length > 1 ? "Impact area, line " + (i + 1) + " (" + money(x.amt) + ")" : "Impact area", x.impact, "impact", ' data-k="impact" data-id="' + x.id + '"'); }).join("") + metaFields(P, s.meta) + '</div></details>';
       var side = '<aside class="rc-side"><div class="row" style="justify-content:space-between"><h4>Receipt preview</h4>' + regionSelect() + '</div>' +
         (untyped() ? '<p class="sub">' + (s.entry === "quick" ? 'Choose what this payment was' : 'Choose what each line was') + ' to see the receipt.</p>' : receiptLines()) +
         '<label class="f"><span class="f-k">Receipt options</span><select class="field" id="' + P + '-rcsel">' + RCPT_OPTS.map(function (o) { return '<option value="' + o[0] + '"' + (s.rcpt === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join("") + '</select></label></aside>';
+      var rcOpt = '<label class="f rc-opt"><span class="f-k">Receipt options</span><select class="field" id="' + P + '-rcsel">' + RCPT_OPTS.map(function (o) { return '<option value="' + o[0] + '"' + (s.rcpt === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join("") + '</select></label>' +
+        '<p class="kbd-hint">' + (s.entry === "split" ? '<span><kbd>Enter</kbd> in an amount adds the next line</span>' + (s.lines.length > 1 ? '<span><kbd>Alt</kbd> + <kbd>↑</kbd> <kbd>↓</kbd> moves a line</span>' : '') : '') + '<span><kbd>Ctrl</kbd> or <kbd>⌘</kbd> + <kbd>Enter</kbd> saves</span></p>';
       var b = blocker();
-      return '<div class="flow-h"><span>' + (s.editing ? 'Edit Transaction' : 'New Transaction') + '</span></div>' +
-        '<div class="body"><div class="tx-layout"><div class="tx-main">' + main + '</div>' + side + '</div></div>' +
-        '<div class="flow-f"><span class="sub tx-why' + (b ? '' : ' ok') + '" aria-live="polite">' + (b ? b : 'Ready to save.') + '</span><button type="button" class="btn" data-a="cancel">Cancel</button><button type="button" class="btn primary" data-a="save"' + (canSave() ? '' : ' disabled') + '>Save</button></div>';
+      return flowCrumbs() + '<div class="flow-h"><span>' + (s.editing ? 'Edit Transaction' : 'New Transaction') + '</span></div>' +
+        '<div class="body">' + (opts.ref ? '<div class="tx-main">' + main + rcOpt + '</div>' : '<div class="tx-layout"><div class="tx-main">' + main + '</div>' + side + '</div>') + '</div>' +
+        '<div class="flow-f"><span class="sub tx-why' + (b ? '' : ' ok') + '" aria-live="polite">' + (b ? b : 'Ready to save.') + '</span><button type="button" class="btn" data-a="cancel">Cancel</button><button type="button" class="btn primary" data-a="save" title="Ctrl or ⌘ + Enter"' + (canSave() ? '' : ' disabled') + '>Save</button></div>';
     }
 
     function confirmModal() {
       var rl = (RCPT_OPTS.filter(function (o) { return o[0] === s.rcpt; })[0] || ["", ""])[1];
       return '<div class="scrim fix"><div class="modal" role="dialog" aria-modal="true" aria-label="Check before saving" style="width:min(520px,100%)"><div class="modal-h">Check before saving<button type="button" class="x" data-a="confirmback" aria-label="Close">×</button></div>' +
         '<div class="modal-b"><div class="flag warn"><b>The contact is locked after saving.</b> Other details can still be corrected, and deleting asks for a reason.</div>' +
-        '<div class="kv"><span>Sarah Padilla · ' + fmtDate(s.date) + '</span><b>' + money(s.total) + '</b></div>' +
+        '<div class="kv"><span>' + esc(s.contact) + ' · ' + fmtDate(s.date) + '</span><b>' + money(s.total) + '</b></div>' +
         '<div class="cf">' + s.lines.map(function (x) { return '<div class="cf-r"><span class="swatch" style="background:' + COLORS[x.type] + '"></span><span>' + x.type + ' · ' + esc(x.type === "Donation" ? x.gift : x.cat) + ' · ' + esc(x.fund) + '</span><b>' + money(x.amt) + '</b></div>'; }).join("") + '</div>' +
         '<div class="kv"><span>On the receipt</span><b>' + money(eligible()) + '</b></div><div class="kv"><span>Receipt</span><span>' + rl + '</span></div></div>' +
         '<div class="modal-f"><button type="button" class="btn" data-a="confirmback">Go back and fix</button><button type="button" class="btn dark" data-a="confirmsave">Save transaction</button></div></div></div>';
@@ -618,11 +702,10 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       stats();
       var html = "";
       if (s.screen === "list") {
-        var rows = s.saved ? [{ date: fmtDate(s.date), type: splitLabel(), desc: "Gala night", fund: campaignsLabel(), amt: s.total, link: "details" }] : [];
-        html = bar("Transactions") + '<div class="body"><div class="row"><div class="grow"><p class="h">Transactions</p><p class="sub">Sarah Padilla · 4 years as a supporter</p></div><button type="button" class="btn primary" data-a="new">New Transaction</button></div>' +
-          (s.saved ? '' : '<div class="hint">' + (MODE === "table" ? 'One button. Each part of the payment gets its own line, with the receipt beside it.' : 'One button. You set the type for each split, inside the flow.') + '</div>') +
-          '<div class="tablewrap"><table class="list"><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Campaign</th><th class="num">Amount</th></tr></thead><tbody>' + historyRows(rows, "new") + '</tbody></table></div>' +
-          (s.saved ? '<p class="sub">Select <b>Gala night</b> to open the transaction you just saved.</p>' : '') + '</div>';
+        html = crumbs([["Transactions"]]) + '<div class="body"><div class="row"><div class="grow"><p class="h">Transactions</p><p class="sub">' + esc(s.owner) + (s.owner === "Sarah Padilla" ? ' · 4 years as a supporter' : '') + '</p></div><button type="button" class="btn primary" data-a="new">New Transaction</button></div>' +
+          (s.saved ? '' : '<div class="hint">' + (MODE === "table" ? 'One button. Each part of the payment gets its own line.' : 'One button. You set the type for each split, inside the flow.') + '</div>') +
+          '<div class="tablewrap"><table class="list"><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Campaign</th><th class="num">Amount</th><th class="go" aria-hidden="true"></th></tr></thead><tbody>' + listRows() + '</tbody></table></div>' +
+          '<p class="sub">Select a row to open its details.' + (s.saved && s.lines.length > 1 ? ' A split payment lists its parts under it.' : '') + '</p></div>';
       } else if (s.screen === "flow" && MODE === "table") {
         html = tableFlow();
       } else if (s.screen === "flow") {
@@ -641,22 +724,25 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
             '<div class="panel receipt"><div class="row" style="justify-content:space-between"><h4>Receipt preview</h4><label class="f" style="grid-auto-flow:column;align-items:center;gap:6px;margin:0">Rules<select class="field" id="' + P + '-region" style="width:auto;padding:5px 32px 5px 8px;background-position:right 10px center"><option value="CA"' + (s.region === "CA" ? ' selected' : '') + '>Canada</option><option value="US"' + (s.region === "US" ? ' selected' : '') + '>United States</option><option value="AU"' + (s.region === "AU" ? ' selected' : '') + '>Australia</option></select></label></div>' + receiptLines() + '</div>';
         }
         var canNext = s.step === 1 ? (s.lines.length > 0 && left() === 0) : true;
-        html = '<div class="flow-h"><span>' + (s.editing ? 'Edit Transaction' : 'New Transaction') + '</span><span class="row" style="gap:8px"><button type="button" class="btn" data-a="cancel">Cancel</button>' + (s.step === 3 ? '<button type="button" class="btn dark" data-a="save">Save</button>' : '') + '</span></div>' +
+        html = flowCrumbs() + '<div class="flow-h"><span>' + (s.editing ? 'Edit Transaction' : 'New Transaction') + '</span><span class="row" style="gap:8px"><button type="button" class="btn" data-a="cancel">Cancel</button>' + (s.step === 3 ? '<button type="button" class="btn dark" data-a="save">Save</button>' : '') + '</span></div>' +
           '<div class="body">' + stepper() + body +
           '<div class="row" style="justify-content:space-between;margin-top:4px">' + (s.step > 1 ? '<button type="button" class="btn" data-a="back">Back</button>' : '<span></span>') + (s.step < 3 ? '<button type="button" class="btn primary" data-a="next"' + (canNext ? '' : ' disabled') + '>Next</button>' : '') + '</div>' +
           (s.step === 1 && s.lines.length && !canNext ? '<p class="sub" style="text-align:right">Next unlocks when the splits add up to the total.</p>' : '') + '</div>';
       } else {
-        html = detailsView() + (s.receiptOpen ? receiptModal() : '');
+        html = detailsView();
       }
       if (s.confirm && s.screen === "flow") html += confirmModal();
       root.innerHTML = html;
+      renderRef();
     }
     function line(id) { return s.lines.find(function (l) { return String(l.id) === String(id); }); }
     root.addEventListener("click", function (e) {
-      var t = e.target.closest("button"); if (!t || !root.contains(t)) return;
+      var t = e.target.closest("button");
+      if (!t) { var tr = e.target.closest("tr[data-v]"); if (tr && root.contains(tr)) t = root.querySelector('button.link[data-v="' + tr.dataset.v + '"]'); }
+      if (!t || !root.contains(t) || t.classList.contains("grip")) return;
       s.clicks++;
-      var a = t.dataset.a;
-      if (a === "new") { s.screen = "flow"; s.step = 1; s.entry = "quick"; s.confirm = false; s.lines = [blankLine(s.total)]; }
+      var a = t.dataset.a, prevScreen = s.screen, prevView = s.view;
+      if (a === "new") { s.view = null; s.contact = s.owner; s.screen = "flow"; s.step = 1; s.entry = "quick"; s.confirm = false; s.lines = [blankLine(s.total)]; }
       else if (a === "add") { s.lines.push(blankLine(Math.max(0, left()))); }
       else if (a === "rm") { s.lines = s.lines.filter(function (l) { return String(l.id) !== t.dataset.id; }); }
       else if (a === "next") { if (s.step < 3) s.step++; }
@@ -664,23 +750,32 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       else if (a === "cancel") { if (s.editing) { s.lines = s.snap; s.total = s.snapTotal; s.editing = false; s.screen = "details"; } else { s.screen = "list"; s.lines = s.saved ? s.lines : []; } }
       else if (a === "save") { s.confirm = true; }
       else if (a === "confirmback") { s.confirm = false; }
-      else if (a === "confirmsave") { s.confirm = false; s.saved = true; s.editing = false; s.screen = "details"; s.open = {}; }
+      else if (a === "confirmsave") { s.confirm = false; s.owner = s.contact; s.view = null; s.saved = true; s.editing = false; s.screen = "details"; s.open = {}; }
       else if (a === "entry") { var e2 = t.dataset.e; if (e2 === "quick" && s.lines.length > 1) return; s.entry = e2; if (e2 === "quick" && s.lines[0]) s.lines[0].amt = s.total; }
       else if (a === "edit") { s.snap = JSON.parse(JSON.stringify(s.lines)); s.snapTotal = s.total; s.editing = true; s.screen = "flow"; s.step = 1; s.entry = s.lines.length > 1 ? "split" : s.entry; }
       else if (a === "itab") { s.itab[t.dataset.id] = t.dataset.t; }
       else if (a === "viewreceipt") { s.receiptOpen = true; }
       else if (a === "closereceipt") { s.receiptOpen = false; }
       else if (a === "copy") { var v = t.dataset.copy; try { navigator.clipboard.writeText(v).then(function () { var b = root.querySelector('[data-copy="' + v + '"]'); if (b) { b.classList.add("copied"); b.firstChild.textContent = "Copied"; setTimeout(function () { render(); }, 1200); } }, function () {}); } catch (err) {} return; }
-      else if (a === "details") { s.screen = "details"; }
-      else if (a === "list") { s.screen = "list"; }
+      else if (a === "open") { s.view = t.dataset.v === "new" ? null : +t.dataset.v; s.screen = "details"; s.receiptOpen = false; }
+      else if (a === "collapse") { s.collapsed = !s.collapsed; }
+      else if (a === "tolist") { if (s.editing) { s.lines = s.snap; s.total = s.snapTotal; s.editing = false; } s.screen = "list"; }
+      else if (a === "list") { s.screen = "list"; s.receiptOpen = false; }
       else if (a === "toggle") { s.open[t.dataset.id] = !s.open[t.dataset.id]; }
       render();
+      if (opts.history) {
+        var hs = null; try { hs = history.state; } catch (er) {}
+        if (a === "cancel" && prevScreen === "flow" && hs && hs.aft === "flow") { try { history.back(); } catch (er2) {} }
+        else if (a === "confirmsave") nav(false);
+        else if (s.screen !== prevScreen || s.view !== prevView) nav(true);
+      }
       var fo = null;
       if (a === "add" && s.lines.length) fo = '[data-k="amt"][data-id="' + s.lines[s.lines.length - 1].id + '"]';
       else if (a === "rm") fo = '[data-a="add"]';
       else if (a === "save") fo = '[data-a="confirmsave"]';
       else if (a === "confirmback") fo = '[data-a="save"]';
-      else if (a === "confirmsave" || a === "details" || (a === "cancel" && s.screen === "details")) fo = '[data-a="edit"]';
+      else if (a === "confirmsave" || a === "open" || (a === "cancel" && s.screen === "details")) fo = '[data-a="edit"], .cr-back';
+      else if (a === "collapse") fo = '[data-a="collapse"]';
       else if (a === "new" || a === "edit") fo = 'select[data-k="type"], [data-k="amt"]';
       else if (a === "entry") fo = '[data-a="entry"][data-e="' + s.entry + '"]';
       else if (a === "toggle") fo = '[data-a="toggle"][data-id="' + t.dataset.id + '"]';
@@ -688,7 +783,7 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       else if (a === "next" || a === "back") fo = '[data-a="next"], [data-a="save"]';
       else if (a === "viewreceipt") fo = '[data-a="closereceipt"]';
       else if (a === "closereceipt") fo = '[data-a="viewreceipt"]';
-      else if (a === "list" || a === "cancel") fo = '[data-a="new"], [data-a="details"]';
+      else if (a === "list" || a === "cancel" || a === "tolist") fo = prevScreen === "details" ? 'button.link[data-v="' + (prevView == null ? "new" : prevView) + '"]' : '[data-a="new"]';
       if (fo) { var fe = root.querySelector(fo); if (fe) fe.focus({ preventScroll: a !== "add" }); }
     });
     root.addEventListener("change", function (e) {
@@ -696,6 +791,7 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       if (el.name === P + "-rc") { s.rcpt = el.value; render(); return; }
       if (el.id === P + "-region") { s.region = el.value; render(); var rg = root.querySelector("#" + P + "-region"); if (rg) rg.focus({ preventScroll: true }); return; }
       if (el.id === P + "-rcsel") { s.rcpt = el.value; return; }
+      if (el.id === P + "-contact") { if (CONTACTS.indexOf(el.value) < 0) el.value = s.contact; else s.contact = el.value; return; }
       if (el.id === P + "-date") { if (el.value) s.date = el.value; else el.value = s.date; return; }
       if (el.dataset.k && el.tagName === "SELECT") { var x = line(el.dataset.id); if (!x) return; x[el.dataset.k] = el.value; render(); var again = root.querySelector('select[data-k="' + el.dataset.k + '"][data-id="' + el.dataset.id + '"]'); if (again) again.focus({ preventScroll: true }); return; }
       if (el.dataset.k && el.classList.contains("combo")) { var y = line(el.dataset.id); if (!y) return; if (el.dataset.k === "fund" && FUNDS.indexOf(el.value) < 0) { el.value = y.fund; return; } y[el.dataset.k] = el.value; stats(); }
@@ -713,13 +809,65 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
     function refreshAlloc() {
       if (MODE === "table" && s.screen === "flow") {
         var act = document.activeElement, key = act && act.dataset ? (act.dataset.k || "") + ":" + (act.dataset.id || act.id) : null, pos = act && act.selectionStart != null ? null : null;
-        var side = root.querySelector(".rc-side"); if (side) { var t2 = document.createElement("div"); t2.innerHTML = tableFlow(); side.replaceWith(t2.querySelector(".rc-side")); var ff = root.querySelector(".flow-f"); if (ff) { var nf = t2.querySelector(".flow-f"); ff.querySelector(".tx-why").textContent = nf.querySelector(".tx-why").textContent; ff.querySelector(".tx-why").className = nf.querySelector(".tx-why").className; ff.querySelector('[data-a="save"]').disabled = nf.querySelector('[data-a="save"]').disabled; } var ab = root.querySelector('[data-a="add"]'); if (ab) ab.replaceWith(t2.querySelector('[data-a="add"]')); var q = root.querySelector(".tx-q"); if (q) q.replaceWith(t2.querySelector(".tx-q")); }
+        var ff = root.querySelector(".flow-f"); if (ff) { var t2 = document.createElement("div"); t2.innerHTML = tableFlow(); var side = root.querySelector(".rc-side"); if (side) side.replaceWith(t2.querySelector(".rc-side")); { var nf = t2.querySelector(".flow-f"); ff.querySelector(".tx-why").textContent = nf.querySelector(".tx-why").textContent; ff.querySelector(".tx-why").className = nf.querySelector(".tx-why").className; ff.querySelector('[data-a="save"]').disabled = nf.querySelector('[data-a="save"]').disabled; } var ab = root.querySelector('[data-a="add"]'); if (ab) ab.replaceWith(t2.querySelector('[data-a="add"]')); var q = root.querySelector(".tx-q"); if (q) q.replaceWith(t2.querySelector(".tx-q")); }
       }
       var a = root.querySelector(".alloc"); if (a) { var tmp = document.createElement("div"); tmp.innerHTML = allocation(); a.replaceWith(tmp.firstChild); }
       var n = root.querySelector("[data-a='next']"); if (n) n.disabled = !(s.lines.length > 0 && left() === 0);
-      root.querySelectorAll(".sp-r").forEach(function (r, i) { var x = s.lines[i]; if (x) r.style.borderLeftColor = x.type ? COLORS[x.type] : "var(--p-line)"; });
+      renderRef();
       stats();
     }
+    if (opts.ref) opts.ref.addEventListener("change", function (e) { if (e.target.id === P + "-region") { s.region = e.target.value; renderRef(); var rg = opts.ref.querySelector("select"); if (rg) rg.focus({ preventScroll: true }); } });
+    root.addEventListener("focusin", function (e) { var el = e.target; if (el.tagName === "INPUT" && !el.readOnly && (el.type === "number" || el.classList.contains("combo"))) { try { el.select(); } catch (er) {} } });
+    function moveLine(i, j) { var m = s.lines.splice(i, 1)[0]; s.lines.splice(j, 0, m); return m; }
+    root.addEventListener("keydown", function (e) {
+      if (MODE !== "table" || s.screen !== "flow" || s.confirm) return;
+      var el = e.target, row = el.closest ? el.closest(".sp-r") : null;
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { if (canSave()) { e.preventDefault(); s.confirm = true; render(); focusSel('[data-a="confirmsave"]'); } return; }
+      if (row && (e.key === "ArrowUp" || e.key === "ArrowDown") && (e.altKey || el.classList.contains("grip"))) {
+        e.preventDefault();
+        var i = s.lines.findIndex(function (l) { return String(l.id) === row.dataset.row; }), j = i + (e.key === "ArrowUp" ? -1 : 1);
+        if (i < 0 || j < 0 || j >= s.lines.length) return;
+        var m = moveLine(i, j), sel = el.classList.contains("grip") ? '.grip[data-id="' + m.id + '"]' : '[data-k="' + el.dataset.k + '"][data-id="' + m.id + '"]';
+        render(); focusSel(sel); return;
+      }
+      if (e.key === "Enter" && el.tagName === "INPUT" && el.type === "number") {
+        e.preventDefault();
+        if (s.entry === "split" && left() > 0) { var nl = blankLine(left()); s.lines.push(nl); render(); focusSel('[data-k="type"][data-id="' + nl.id + '"]'); return; }
+        var un = s.lines.filter(function (l) { return !l.type; })[0];
+        if (un) { focusSel('[data-k="type"][data-id="' + un.id + '"]'); return; }
+        if (canSave()) { s.confirm = true; render(); focusSel('[data-a="confirmsave"]'); }
+      }
+    });
+    var drag = null;
+    root.addEventListener("pointerdown", function (e) {
+      var g = e.target.closest ? e.target.closest(".grip") : null; if (!g || e.button > 0) return;
+      var rows = [].slice.call(root.querySelectorAll(".sp-r")), row = g.closest(".sp-r"), from = rows.indexOf(row);
+      var rects = rows.map(function (r) { return r.getBoundingClientRect(); });
+      drag = { from: from, to: from, y0: e.clientY, rows: rows, rects: rects, row: row, step: rects.length > 1 ? rects[1].top - rects[0].top : rects[0].height + 8 };
+      try { g.setPointerCapture(e.pointerId); } catch (er) {}
+      row.classList.add("dragging"); e.preventDefault();
+    });
+    root.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      var d = drag, last = d.rects.length - 1, dy = e.clientY - d.y0;
+      dy = Math.max(d.rects[0].top - d.rects[d.from].top - 6, Math.min(d.rects[last].top - d.rects[d.from].top + 6, dy));
+      d.row.style.transform = "translateY(" + dy + "px)";
+      d.to = Math.max(0, Math.min(last, Math.round((d.rects[d.from].top + dy - d.rects[0].top) / d.step)));
+      d.rows.forEach(function (r, i) { if (i === d.from) return; var sh = 0; if (d.from < d.to && i > d.from && i <= d.to) sh = -d.step; else if (d.from > d.to && i >= d.to && i < d.from) sh = d.step; r.style.transform = sh ? "translateY(" + sh + "px)" : ""; });
+    });
+    function endDrag(commit) { if (!drag) return; var d = drag; drag = null; var id = s.lines[d.from].id; if (commit && d.to !== d.from) moveLine(d.from, d.to); render(); focusSel('.grip[data-id="' + id + '"]'); }
+    root.addEventListener("pointerup", function () { endDrag(true); });
+    root.addEventListener("pointercancel", function () { endDrag(false); });
+    if (opts.history) window.addEventListener("popstate", function (e) {
+      var st = e.state; if (!st || !st.aft) return;
+      var sc = st.aft; s.view = st.view == null ? null : st.view; s.confirm = false; s.receiptOpen = false;
+      if (sc !== "flow" && s.editing) { s.lines = s.snap; s.total = s.snapTotal; s.editing = false; }
+      if (sc === "flow") { s.view = null; if (s.saved) { if (!s.editing) { s.snap = JSON.parse(JSON.stringify(s.lines)); s.snapTotal = s.total; s.editing = true; s.entry = s.lines.length > 1 ? "split" : s.entry; } } else if (!s.lines.length) { s.entry = "quick"; s.lines = [blankLine(s.total)]; } }
+      if (sc === "details" && s.view == null && !s.saved) sc = "list";
+      if (sc === "list" && !s.saved) s.lines = [];
+      s.screen = sc; render();
+      focusSel(sc === "list" ? '[data-a="new"]' : sc === "details" ? '[data-a="edit"], .cr-back' : 'select[data-k="type"], [data-k="amt"]');
+    });
     root.addEventListener("keydown", function (e) { if (e.key === "Escape" && (s.confirm || s.receiptOpen)) { var was = s.confirm ? '[data-a="save"]' : '[data-a="viewreceipt"]'; s.confirm = false; s.receiptOpen = false; render(); var b2 = root.querySelector(was); if (b2) b2.focus({ preventScroll: true }); } });
     this.reset = reset; reset();
   }
@@ -822,7 +970,7 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
   var stage = document.getElementById("stage");
   var COG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.5v1.8M8 12.7v1.8M14.5 8h-1.8M3.3 8H1.5M12.6 3.4l-1.3 1.3M4.7 11.3l-1.3 1.3M12.6 12.6l-1.3-1.3M4.7 4.7L3.4 3.4"/></svg>';
   function column(id, title, note) {
-    return '<section class="col" id="col-' + id + '" aria-label="' + title + '"><div class="colhead"><h2>' + title + '</h2><div class="stats" id="stats-' + id + '"></div>' + (id === "after" ? '<button type="button" class="iter-btn" id="iter-btn" aria-expanded="false" aria-controls="iter" title="How we got here: the options we compared and why">' + COG + 'How we got here</button>' : '') + '</div><div class="frame" id="frame-' + id + '"></div><div class="row" style="justify-content:space-between"><p class="note">' + note + '</p><button type="button" class="reset" id="reset-' + id + '">Start over</button></div></section>';
+    return '<section class="col" id="col-' + id + '" aria-label="' + title + '"><div class="colhead"><h2>' + title + '</h2><div class="stats" id="stats-' + id + '"></div>' + (id === "after" ? '<button type="button" class="iter-btn" id="iter-btn" aria-expanded="false" aria-controls="iter" title="How we got here: the options we compared and why">' + COG + 'How we got here</button>' : '') + '</div>' + (id === "after" ? '<div class="framewrap"><div class="frame" id="frame-after"></div><aside class="ref" id="ref-after" aria-label="Receipt reference"></aside></div>' : '<div class="frame" id="frame-' + id + '"></div>') + '<div class="row" style="justify-content:space-between"><p class="note">' + note + '</p><button type="button" class="reset" id="reset-' + id + '">Start over</button></div></section>';
   }
   stage.innerHTML = column("before", "Before the redesign", "One type per payment, chosen before you start.") + column("after", "After the redesign", "Quick entry for most payments, a split when it’s needed, and a check before saving.") + iterSection();
   function statsFor(id) {
@@ -833,10 +981,10 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       el.innerHTML = '<span class="stat">Clicks <b>' + st.clicks + '</b></span><span class="stat">Records <b>' + st.records + '</b></span><span class="stat' + cls + '">Receipt <b>' + st.receipt + '</b></span>';
     };
   }
-  var dls = { fund: FUNDS, impact: IMPACT, soft: SOFT, source: SOURCES, kw: KEYWORDS };
+  var dls = { contact: ["Sarah Padilla", "Daniel Padilla", "Maya Chen", "Priya Raman"], fund: FUNDS, impact: IMPACT, soft: SOFT, source: SOURCES, kw: KEYWORDS };
   document.body.insertAdjacentHTML("beforeend", Object.keys(dls).map(function (k) { return '<datalist id="dl-' + k + '">' + dls[k].map(function (v) { return '<option value="' + esc(v) + '">'; }).join("") + '</datalist>'; }).join(""));
   var before = new Before(document.getElementById("frame-before"), statsFor("before"));
-  var after = new After(document.getElementById("frame-after"), statsFor("after"), { mode: "table", prefix: "a" });
+  var after = new After(document.getElementById("frame-after"), statsFor("after"), { mode: "table", prefix: "a", ref: document.getElementById("ref-after"), history: true });
   var iA = new After(document.getElementById("frame-iA"), statsFor("iA"), { mode: "cards", prefix: "ia" });
   var iB = new Guided(document.getElementById("frame-iB"), statsFor("iB"));
   var iC = new After(document.getElementById("frame-iC"), statsFor("iC"), { mode: "table", prefix: "ic" });
