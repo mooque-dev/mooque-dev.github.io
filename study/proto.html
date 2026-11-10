@@ -486,8 +486,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
         (s.shut ? '' : '<div class="bd-grid">' + f.map(function (p) { return '<div><span class="td-k">' + p[0] + '</span>' + p[1] + '</div>'; }).join("") + '</div>') + '</div></div></div>';
     }
     function rows(newRows) {
-      var go = '<td class="go" aria-hidden="true">' + chv() + '</td>';
-      var mk = function (v, r, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + ' data-v="' + v + '"><td>' + r.date + '</td><td>' + esc(r.type) + '</td><td><button type="button" class="link" data-a="open" data-v="' + v + '">' + esc(r.desc) + '</button></td><td>' + esc(r.fund) + '</td><td class="num">' + money(r.amt) + '</td>' + go + '</tr>'; };
+      var mk = function (v, r, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + r.date + '</td><td>' + esc(r.type) + '</td><td>' + esc(r.desc) + '</td><td>' + esc(r.fund) + '</td><td class="num">' + money(r.amt) + '</td></tr>'; };
       return newRows.map(function (r) { return mk("r" + r.i, r, "new"); }).join("") + HISTORY.map(function (r, i) { return mk("h" + i, r); }).join("");
     }
     function stats() {
@@ -500,7 +499,6 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
     }
     function render() {
       var st = stats();
-      if (s.view) { root.innerHTML = details(); return; }
       var newRows = s.records.map(function (r, i) { return { i: i, date: TODAY, type: r.type === "Donation" ? "Donation" : "Other Revenue", desc: r.type === "Donation" ? "Gala night" : "Gala ticket", fund: r.fund, amt: r.amt }; }).reverse(); var unused = s.records.slice().reverse().map(function (r) { return { date: TODAY, type: r.type === "Donation" ? "Donation" : "Other Revenue", desc: r.type === "Donation" ? "Gala night" : "Gala ticket", fund: r.fund, amt: r.amt }; });
       var feedback = "";
       if (s.records.length) {
@@ -517,7 +515,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
           '</div></div>' +
           (s.records.length === 0 ? '<div class="hint">First choice: is this payment a <b>Donation</b> or <b>Other Revenue</b>? The product makes you pick one type per payment.</div>' : '') +
           feedback +
-          '<div class="tablewrap"><table class="list"><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Campaign</th><th class="num">Amount</th><th class="go" aria-hidden="true"></th></tr></thead><tbody>' + rows(newRows) + '</tbody></table></div>' +
+          '<div class="tablewrap"><table class="list"><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Campaign</th><th class="num">Amount</th></tr></thead><tbody>' + rows(newRows) + '</tbody></table></div>' +
           (s.records.length ? '<div class="panel"><h4>What the receipt says</h4><div class="kv"><span>Tax-deductible (on ' + st.receipts + ' receipt' + (st.receipts === 1 ? '' : 's') + ')</span><b>' + money(st.eligible) + '</b></div><div class="kv"><span>Should be</span><b>$100</b></div></div>' : '') +
         '</div>' + (s.modal ? modal() : '');
     }
