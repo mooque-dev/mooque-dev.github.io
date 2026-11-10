@@ -285,6 +285,29 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
 .rcpt-doc .org { font-weight: 700; font-size: 15px; }
 .rcpt-doc .meta { font-size: 12.5px; color: var(--p-muted); display: grid; gap: 2px; }
 @media (prefers-reduced-motion: reduce) { .tgl svg { transition: none; } }
+/* polish pass */
+.scrim.fix { position: fixed; align-items: center; z-index: 50; }
+.flow-f { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 12px 20px; border-top: 1px solid var(--p-line); background: var(--p-bg); }
+.flow-f .tx-why { margin-right: auto; }
+.tx-why.ok { color: #1d7a49; }
+.flow-h { min-height: 46px; }
+.allocbar { position: relative; }
+.allocbar .ov { position: absolute; top: 0; bottom: 0; right: 0; border-left: 2px solid #b42318; background: repeating-linear-gradient(135deg, rgba(180,35,24,.62) 0 6px, rgba(180,35,24,.38) 6px 12px); }
+.alloc.over .allocbar { box-shadow: 0 0 0 2px #f3c1bc; }
+.sp-x .x { width: 32px; height: 32px; }
+.sp-h, .sp-r { grid-template-columns: 92px minmax(0, 1.7fr) minmax(0, .85fr) minmax(0, 1.45fr) 32px; }
+.task .split span.done { background: var(--ok-bg); color: var(--ok); font-weight: 600; }
+.task .split span.done::before { content: "✓ "; }
+.iter-btn { padding: 7px 12px 7px 10px; }
+.td-act .row { justify-content: flex-end; }
+@container (max-width: 620px) {
+  .sp-r { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) 32px; align-items: end; }
+  .sp-r .sp-c:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .sp-r .sp-c:nth-child(2) { grid-column: 2; grid-row: 1; }
+  .sp-r .sp-x { grid-column: 3; grid-row: 1; }
+  .sp-r .sp-c:nth-child(3) { grid-column: 1; grid-row: 2; }
+  .sp-r .sp-c:nth-child(4) { grid-column: 2 / -1; grid-row: 2; }
+}
 
 </style>
 
@@ -292,7 +315,7 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
   <div class="head">
     <div>
       <h1>Split payments, before and after</h1>
-      <p>Rebuilt from my Transaction Workflows designs at Aplos (now Velora), white-labelled with illustrative data. After shows the refined version I’d ship next. The cog beside it opens how we got there.</p>
+      <p>Rebuilt from my Transaction Workflows designs at Keela, part of Aplos (now Velora), white-labelled with illustrative data. After shows the refined version I’d ship next. “How we got here” beside it compares it with what shipped.</p>
     </div>
     <nav class="views" aria-label="Choose a view">
       <a href="#before" data-view="before">Before</a>
@@ -449,7 +472,8 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
     function blocker() { var l = left(); if (untyped()) return s.entry === "quick" && MODE === "table" ? "Choose what this payment was." : "Choose what each line was."; if (l > 0) return money(l) + " still to place."; if (l < 0) return money(-l) + " more than the payment."; return ""; }
     function stats() {
       var ok = s.saved ? (eligible() === 100 && left() === 0) : null;
-      onStats({ clicks: s.clicks, records: s.saved ? 1 : 0, receipt: s.saved ? (ok ? "right, one receipt" : "check the split") : "not yet", ok: ok });
+      var has = function (ty, am, fu) { return s.lines.some(function (l) { return l.type === ty && Number(l.amt) === am && (!fu || l.fund === fu); }); };
+      onStats({ clicks: s.clicks, records: s.saved ? 1 : 0, receipt: s.saved ? (ok ? "right, one receipt" : "check the split") : "not yet", ok: ok, task: [has("Revenue", 100), has("Donation", 50, "General Donations"), has("Donation", 50, "Capital Campaign")] });
     }
     function stepper() {
       var names = ["Transaction Info", "Associations", "Receipting"], out = [];
@@ -457,10 +481,10 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       return '<div class="stepper" aria-label="Steps">' + out.join("") + '</div>';
     }
     function allocation() {
-      var l = left(), tot = s.total || 1;
+      var l = left(), real = s.total || 1, tot = Math.max(real, sum());
       var segs = s.lines.map(function (x) { if (!x.type) { var wu = Math.max(0, Math.min(Number(x.amt) || 0, tot)) / tot; return wu > 0 ? '<span style="width:' + (wu * 100) + '%;background:#b9bcc6">' + (wu > .16 ? money(x.amt) : "") + '</span>' : ""; } var w = Math.max(0, Math.min(Number(x.amt) || 0, tot)) / tot; return w > 0 ? '<span style="width:' + (w * 100) + '%;background:' + COLORS[x.type] + '">' + (w > .16 ? money(x.amt) : "") + '</span>' : ""; }).join("");
       var status = l === 0 && MODE === "table" && untyped() ? '<span class="chip amber">Adds up</span> Now choose what each line was.' : l === 0 ? '<span class="chip green">Balanced</span> Every dollar is accounted for.' : l > 0 ? '<span class="chip amber">' + money(l) + ' left</span> Allocate the rest before saving.' : '<span class="chip red">' + money(-l) + ' over</span> Lower a split before saving.';
-      return '<div class="alloc"><div class="allocbar" role="img" aria-label="' + money(sum()) + ' of ' + money(s.total) + ' allocated">' + segs + '</div><div class="row" style="justify-content:space-between"><span class="legend"><span><i style="background:' + COLORS.Donation + '"></i>' + (MODE === "table" ? 'Gift, goes on the receipt' : 'Donation (receiptable)') + '</span><span><i style="background:' + COLORS.Revenue + '"></i>' + (MODE === "table" ? 'Got something back, not receipted' : 'Revenue (not receiptable)') + '</span></span><span style="font-size:13px" aria-live="polite">' + status + '</span></div></div>';
+      return '<div class="alloc' + (l < 0 ? ' over' : '') + '"><div class="allocbar" role="img" aria-label="' + money(sum()) + ' of ' + money(s.total) + ' allocated">' + segs + (l < 0 ? '<i class="ov" style="left:' + (real / tot * 100) + '%"></i>' : '') + '</div><div class="row" style="justify-content:space-between"><span class="legend"><span><i style="background:' + COLORS.Donation + '"></i>' + (MODE === "table" ? 'Gift, goes on the receipt' : 'Donation (receiptable)') + '</span><span><i style="background:' + COLORS.Revenue + '"></i>' + (MODE === "table" ? 'Got something back, not receipted' : 'Revenue (not receiptable)') + '</span></span><span style="font-size:13px" aria-live="polite">' + status + '</span></div></div>';
     }
     function card(x, i) {
       var isDon = x.type === "Donation";
@@ -520,19 +544,19 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       return '<nav class="td-crumb" aria-label="Breadcrumb"><button type="button" data-a="list">All Contacts</button><span class="sep">›</span><button type="button" data-a="list">Sarah Padilla - Transactions</button><span class="sep">›</span><b>Transaction Details</b><span class="org" style="margin-left:auto;display:flex;align-items:center;gap:6px;color:var(--p-muted)"><i style="width:18px;height:18px;border-radius:5px;background:#d8cdfb;display:inline-block"></i>ABC Organization</span></nav>' +
         '<div class="td-tabs" aria-hidden="true"><span>Profile</span><span>Interactions</span><span>To-Do’s</span><span class="on">Fundraising</span><span>Memberships</span><span>Volunteering</span></div>' +
         '<div class="td"><div class="td-head"><div><div class="td-amt">' + money(s.total) + '<small>CAD</small></div><div class="td-chips"><span class="tchip">' + IC.card + 'Card</span><span class="tchip green">Paid</span></div></div>' +
-        '<div class="td-act"><span class="tchip" title="The contact is locked after saving. Other details can still be corrected.">' + IC.lock + 'Contact locked</span>' + idChip(TXN_ID) + '</div></div>' +
+        '<div class="td-act"><span class="tchip" title="The contact is locked after saving. Other details can still be corrected.">' + IC.lock + 'Contact locked</span><div class="row"><button type="button" class="btn sm" data-a="edit">Edit</button>' + idChip(TXN_ID) + '</div></div></div>' +
         '<div class="td-grid"><div class="td-dl"><span class="td-k">Contact</span><span class="person"><i>SP</i>Sarah Padilla</span><span class="td-k">Date received</span><span class="tchip" style="width:max-content">' + IC.cal + fmtLong(s.date) + '</span><span class="td-k">Frequency</span><span>One-time</span><span class="td-k">Tax-deductible</span><span><b>' + money(eligible()) + '</b> on one receipt</span></div>' +
         '<div class="td-rc"><span class="td-k">Receipt info</span><div class="row">' + receiptChips() + '</div>' + (s.rcpt === "skip" || s.rcpt === "ignore" ? '' : '<button type="button" class="btn sm" data-a="viewreceipt">View Receipt</button>') + '</div></div>' +
         '<p class="sub" style="margin:-6px 0 0">The contact is locked after saving, so the audit trail holds. Other details can still be corrected.</p><p class="td-h2">Transaction Items</p><div class="items">' + items + '</div><button type="button" class="link" data-a="list" style="justify-self:start">Back to transactions</button></div>';
     }
     function receiptModal() {
       var name = { CA: "Canada", US: "United States", AU: "Australia" }[s.region];
-      return '<div class="scrim" data-a="closereceipt-bg"><div class="modal" role="dialog" aria-modal="true" aria-label="Receipt"><div class="modal-h">Receipt<button type="button" class="x" data-a="closereceipt" aria-label="Close">×</button></div>' +
+      return '<div class="scrim fix" data-a="closereceipt-bg"><div class="modal" role="dialog" aria-modal="true" aria-label="Receipt"><div class="modal-h">Receipt<button type="button" class="x" data-a="closereceipt" aria-label="Close">×</button></div>' +
         '<div class="modal-b rcpt-doc"><div><div class="org">ABC Organization</div><div class="meta"><span>Official receipt for income tax purposes · ' + name + ' rules</span><span>Receipt no. R-2026-0418 · Issued ' + fmtDate(s.date) + '</span><span>Received from Sarah Padilla</span></div></div>' +
         '<div class="panel receipt">' + receiptLines() + '</div></div><div class="modal-f"><span></span><button type="button" class="btn" data-a="closereceipt">Close</button></div></div></div>';
     }
 
-    var TYPE_LABEL = { Donation: "Donation, a gift", Revenue: "Revenue, they got something back" };
+    var TYPE_LABEL = { Donation: "Donation, a gift", Revenue: "Revenue, got something back" };
     function regionSelect() { return '<label class="f" style="grid-auto-flow:column;align-items:center;gap:6px;margin:0">Rules<select class="field" id="' + P + '-region" style="width:auto;padding:5px 32px 5px 8px;background-position:right 10px center"><option value="CA"' + (s.region === "CA" ? ' selected' : '') + '>Canada</option><option value="US"' + (s.region === "US" ? ' selected' : '') + '>United States</option><option value="AU"' + (s.region === "AU" ? ' selected' : '') + '>Australia</option></select></label>'; }
     function spRow(x, i) {
       var c = x.type ? COLORS[x.type] : "var(--p-line)", det;
@@ -576,13 +600,14 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
         (untyped() ? '<p class="sub">' + (s.entry === "quick" ? 'Choose what this payment was' : 'Choose what each line was') + ' to see the receipt.</p>' : receiptLines()) +
         '<label class="f"><span class="f-k">Receipt options</span><select class="field" id="' + P + '-rcsel">' + RCPT_OPTS.map(function (o) { return '<option value="' + o[0] + '"' + (s.rcpt === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join("") + '</select></label></aside>';
       var b = blocker();
-      return '<div class="flow-h"><span>' + (s.editing ? 'Edit Transaction' : 'New Transaction') + '</span><span class="row" style="gap:8px"><span class="sub tx-why" aria-live="polite">' + (b ? b : '') + '</span><button type="button" class="btn" data-a="cancel">Cancel</button><button type="button" class="btn primary" data-a="save"' + (canSave() ? '' : ' disabled') + '>Save</button></span></div>' +
-        '<div class="body"><div class="tx-layout"><div class="tx-main">' + main + '</div>' + side + '</div></div>';
+      return '<div class="flow-h"><span>' + (s.editing ? 'Edit Transaction' : 'New Transaction') + '</span></div>' +
+        '<div class="body"><div class="tx-layout"><div class="tx-main">' + main + '</div>' + side + '</div></div>' +
+        '<div class="flow-f"><span class="sub tx-why' + (b ? '' : ' ok') + '" aria-live="polite">' + (b ? b : 'Ready to save.') + '</span><button type="button" class="btn" data-a="cancel">Cancel</button><button type="button" class="btn primary" data-a="save"' + (canSave() ? '' : ' disabled') + '>Save</button></div>';
     }
 
     function confirmModal() {
       var rl = (RCPT_OPTS.filter(function (o) { return o[0] === s.rcpt; })[0] || ["", ""])[1];
-      return '<div class="scrim"><div class="modal" role="dialog" aria-modal="true" aria-label="Check before saving" style="width:min(520px,100%)"><div class="modal-h">Check before saving<button type="button" class="x" data-a="confirmback" aria-label="Close">×</button></div>' +
+      return '<div class="scrim fix"><div class="modal" role="dialog" aria-modal="true" aria-label="Check before saving" style="width:min(520px,100%)"><div class="modal-h">Check before saving<button type="button" class="x" data-a="confirmback" aria-label="Close">×</button></div>' +
         '<div class="modal-b"><div class="flag warn"><b>The contact is locked after saving.</b> Other details can still be corrected, and deleting asks for a reason.</div>' +
         '<div class="kv"><span>Sarah Padilla · ' + fmtDate(s.date) + '</span><b>' + money(s.total) + '</b></div>' +
         '<div class="cf">' + s.lines.map(function (x) { return '<div class="cf-r"><span class="swatch" style="background:' + COLORS[x.type] + '"></span><span>' + x.type + ' · ' + esc(x.type === "Donation" ? x.gift : x.cat) + ' · ' + esc(x.fund) + '</span><b>' + money(x.amt) + '</b></div>'; }).join("") + '</div>' +
@@ -636,12 +661,12 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       else if (a === "rm") { s.lines = s.lines.filter(function (l) { return String(l.id) !== t.dataset.id; }); }
       else if (a === "next") { if (s.step < 3) s.step++; }
       else if (a === "back") { if (s.step > 1) s.step--; }
-      else if (a === "cancel") { if (s.editing) { s.lines = s.snap; s.editing = false; s.screen = "details"; } else { s.screen = "list"; s.lines = s.saved ? s.lines : []; } }
+      else if (a === "cancel") { if (s.editing) { s.lines = s.snap; s.total = s.snapTotal; s.editing = false; s.screen = "details"; } else { s.screen = "list"; s.lines = s.saved ? s.lines : []; } }
       else if (a === "save") { s.confirm = true; }
       else if (a === "confirmback") { s.confirm = false; }
       else if (a === "confirmsave") { s.confirm = false; s.saved = true; s.editing = false; s.screen = "details"; s.open = {}; }
       else if (a === "entry") { var e2 = t.dataset.e; if (e2 === "quick" && s.lines.length > 1) return; s.entry = e2; if (e2 === "quick" && s.lines[0]) s.lines[0].amt = s.total; }
-      else if (a === "edit") { s.snap = JSON.parse(JSON.stringify(s.lines)); s.editing = true; s.screen = "flow"; s.step = 1; }
+      else if (a === "edit") { s.snap = JSON.parse(JSON.stringify(s.lines)); s.snapTotal = s.total; s.editing = true; s.screen = "flow"; s.step = 1; s.entry = s.lines.length > 1 ? "split" : s.entry; }
       else if (a === "itab") { s.itab[t.dataset.id] = t.dataset.t; }
       else if (a === "viewreceipt") { s.receiptOpen = true; }
       else if (a === "closereceipt") { s.receiptOpen = false; }
@@ -650,16 +675,30 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
       else if (a === "list") { s.screen = "list"; }
       else if (a === "toggle") { s.open[t.dataset.id] = !s.open[t.dataset.id]; }
       render();
-      
+      var fo = null;
+      if (a === "add" && s.lines.length) fo = '[data-k="amt"][data-id="' + s.lines[s.lines.length - 1].id + '"]';
+      else if (a === "rm") fo = '[data-a="add"]';
+      else if (a === "save") fo = '[data-a="confirmsave"]';
+      else if (a === "confirmback") fo = '[data-a="save"]';
+      else if (a === "confirmsave" || a === "details" || (a === "cancel" && s.screen === "details")) fo = '[data-a="edit"]';
+      else if (a === "new" || a === "edit") fo = 'select[data-k="type"], [data-k="amt"]';
+      else if (a === "entry") fo = '[data-a="entry"][data-e="' + s.entry + '"]';
+      else if (a === "toggle") fo = '[data-a="toggle"][data-id="' + t.dataset.id + '"]';
+      else if (a === "itab") fo = '[data-a="itab"][data-id="' + t.dataset.id + '"][data-t="' + t.dataset.t + '"]';
+      else if (a === "next" || a === "back") fo = '[data-a="next"], [data-a="save"]';
+      else if (a === "viewreceipt") fo = '[data-a="closereceipt"]';
+      else if (a === "closereceipt") fo = '[data-a="viewreceipt"]';
+      else if (a === "list" || a === "cancel") fo = '[data-a="new"], [data-a="details"]';
+      if (fo) { var fe = root.querySelector(fo); if (fe) fe.focus({ preventScroll: a !== "add" }); }
     });
     root.addEventListener("change", function (e) {
       var el = e.target;
       if (el.name === P + "-rc") { s.rcpt = el.value; render(); return; }
-      if (el.id === P + "-region") { s.region = el.value; render(); return; }
+      if (el.id === P + "-region") { s.region = el.value; render(); var rg = root.querySelector("#" + P + "-region"); if (rg) rg.focus({ preventScroll: true }); return; }
       if (el.id === P + "-rcsel") { s.rcpt = el.value; return; }
       if (el.id === P + "-date") { if (el.value) s.date = el.value; else el.value = s.date; return; }
-      if (el.dataset.k && el.tagName === "SELECT") { var x = line(el.dataset.id); if (!x) return; x[el.dataset.k] = el.value; render(); return; }
-      if (el.dataset.k && el.classList.contains("combo")) { var y = line(el.dataset.id); if (!y) return; if (el.dataset.k === "fund" && FUNDS.indexOf(el.value) < 0) { el.value = y.fund; return; } y[el.dataset.k] = el.value; }
+      if (el.dataset.k && el.tagName === "SELECT") { var x = line(el.dataset.id); if (!x) return; x[el.dataset.k] = el.value; render(); var again = root.querySelector('select[data-k="' + el.dataset.k + '"][data-id="' + el.dataset.id + '"]'); if (again) again.focus({ preventScroll: true }); return; }
+      if (el.dataset.k && el.classList.contains("combo")) { var y = line(el.dataset.id); if (!y) return; if (el.dataset.k === "fund" && FUNDS.indexOf(el.value) < 0) { el.value = y.fund; return; } y[el.dataset.k] = el.value; stats(); }
     });
     root.addEventListener("toggle", function (e) { if (e.target.classList && e.target.classList.contains("more")) s.moreOpen = e.target.open; }, true);
     root.addEventListener("change", function () {
@@ -674,14 +713,14 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
     function refreshAlloc() {
       if (MODE === "table" && s.screen === "flow") {
         var act = document.activeElement, key = act && act.dataset ? (act.dataset.k || "") + ":" + (act.dataset.id || act.id) : null, pos = act && act.selectionStart != null ? null : null;
-        var side = root.querySelector(".rc-side"); if (side) { var t2 = document.createElement("div"); t2.innerHTML = tableFlow(); side.replaceWith(t2.querySelector(".rc-side")); var fh = root.querySelector(".flow-h"); fh.replaceWith(t2.querySelector(".flow-h")); var ab = root.querySelector('[data-a="add"]'); if (ab) ab.replaceWith(t2.querySelector('[data-a="add"]')); var q = root.querySelector(".tx-q"); if (q) q.replaceWith(t2.querySelector(".tx-q")); }
+        var side = root.querySelector(".rc-side"); if (side) { var t2 = document.createElement("div"); t2.innerHTML = tableFlow(); side.replaceWith(t2.querySelector(".rc-side")); var ff = root.querySelector(".flow-f"); if (ff) { var nf = t2.querySelector(".flow-f"); ff.querySelector(".tx-why").textContent = nf.querySelector(".tx-why").textContent; ff.querySelector(".tx-why").className = nf.querySelector(".tx-why").className; ff.querySelector('[data-a="save"]').disabled = nf.querySelector('[data-a="save"]').disabled; } var ab = root.querySelector('[data-a="add"]'); if (ab) ab.replaceWith(t2.querySelector('[data-a="add"]')); var q = root.querySelector(".tx-q"); if (q) q.replaceWith(t2.querySelector(".tx-q")); }
       }
       var a = root.querySelector(".alloc"); if (a) { var tmp = document.createElement("div"); tmp.innerHTML = allocation(); a.replaceWith(tmp.firstChild); }
       var n = root.querySelector("[data-a='next']"); if (n) n.disabled = !(s.lines.length > 0 && left() === 0);
       root.querySelectorAll(".sp-r").forEach(function (r, i) { var x = s.lines[i]; if (x) r.style.borderLeftColor = x.type ? COLORS[x.type] : "var(--p-line)"; });
       stats();
     }
-    root.addEventListener("keydown", function (e) { if (e.key === "Escape" && (s.confirm || s.receiptOpen)) { s.confirm = false; s.receiptOpen = false; render(); } });
+    root.addEventListener("keydown", function (e) { if (e.key === "Escape" && (s.confirm || s.receiptOpen)) { var was = s.confirm ? '[data-a="save"]' : '[data-a="viewreceipt"]'; s.confirm = false; s.receiptOpen = false; render(); var b2 = root.querySelector(was); if (b2) b2.focus({ preventScroll: true }); } });
     this.reset = reset; reset();
   }
 
@@ -783,13 +822,14 @@ input[type="date"].field { font-variant-numeric: tabular-nums; min-height: 38px;
   var stage = document.getElementById("stage");
   var COG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.5v1.8M8 12.7v1.8M14.5 8h-1.8M3.3 8H1.5M12.6 3.4l-1.3 1.3M4.7 11.3l-1.3 1.3M12.6 12.6l-1.3-1.3M4.7 4.7L3.4 3.4"/></svg>';
   function column(id, title, note) {
-    return '<section class="col" id="col-' + id + '" aria-label="' + title + '"><div class="colhead"><h2>' + title + '</h2><div class="stats" id="stats-' + id + '"></div>' + (id === "after" ? '<button type="button" class="iter-btn" id="iter-btn" aria-expanded="false" aria-controls="iter" title="How we got here: the options we compared and why">' + COG + 'How we tested</button>' : '') + '</div><div class="frame" id="frame-' + id + '"></div><div class="row" style="justify-content:space-between"><p class="note">' + note + '</p><button type="button" class="reset" id="reset-' + id + '">Start over</button></div></section>';
+    return '<section class="col" id="col-' + id + '" aria-label="' + title + '"><div class="colhead"><h2>' + title + '</h2><div class="stats" id="stats-' + id + '"></div>' + (id === "after" ? '<button type="button" class="iter-btn" id="iter-btn" aria-expanded="false" aria-controls="iter" title="How we got here: the options we compared and why">' + COG + 'How we got here</button>' : '') + '</div><div class="frame" id="frame-' + id + '"></div><div class="row" style="justify-content:space-between"><p class="note">' + note + '</p><button type="button" class="reset" id="reset-' + id + '">Start over</button></div></section>';
   }
   stage.innerHTML = column("before", "Before the redesign", "One type per payment, chosen before you start.") + column("after", "After the redesign", "Quick entry for most payments, a split when it’s needed, and a check before saving.") + iterSection();
   function statsFor(id) {
     return function (st) {
       var el = document.getElementById("stats-" + id); if (!el) return;
       var cls = st.ok === null ? "" : st.ok ? " good" : " bad";
+      if (id === "after" && st.task) { [].forEach.call(document.querySelectorAll(".task .split span"), function (c, i) { c.classList.toggle("done", !!st.task[i]); }); }
       el.innerHTML = '<span class="stat">Clicks <b>' + st.clicks + '</b></span><span class="stat">Records <b>' + st.records + '</b></span><span class="stat' + cls + '">Receipt <b>' + st.receipt + '</b></span>';
     };
   }

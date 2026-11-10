@@ -52,7 +52,7 @@ h1{font-size:28px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}.sub{colo
   }
   function render(){
     stage.innerHTML="";var s=seq[i];
-    if(s.proto){var fr=document.createElement("iframe");fr.src="proto.html#compare";fr.title="Live prototype";stage.appendChild(fr);}
+    if(s.proto){var fr=document.createElement("iframe");fr.src="proto.html#after";fr.title="Live prototype";stage.appendChild(fr);}
     else{var im=document.createElement("img");im.src=s.src;im.alt=s.cap||"";stage.appendChild(im);}
     count.textContent=s.cap+"  ·  "+(i+1)+" / "+seq.length; prev.disabled=i===0; next.disabled=i===seq.length-1;
   }
