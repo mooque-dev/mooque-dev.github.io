@@ -15,60 +15,88 @@ h1{font-size:clamp(20px,2.6vw,34px);font-weight:500;letter-spacing:-.01em;margin
 .hint{color:var(--muted);font-size:13px;margin:clamp(14px,2vw,26px) 12px 0}
 .peek{position:fixed;left:0;top:0;z-index:9;width:min(460px,46vw);background:#fff;border-radius:12px;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 18px 44px rgba(20,20,40,.22);overflow:hidden;pointer-events:none;opacity:0;transform:translate3d(-999px,-999px,0) scale(.97);transition:opacity .14s ease}
 .peek.on{opacity:1}
-.peek img{display:block;width:100%;height:auto;max-height:min(330px,52vh);object-fit:cover;object-position:top left;background:var(--card);border-bottom:1px solid var(--line)}
-.peek .none{display:grid;place-items:center;height:150px;background:var(--card);color:var(--muted);font-size:14px;border-bottom:1px solid var(--line);padding:0 24px;text-align:center}
+.shot{position:relative;aspect-ratio:16/10;background:var(--card);border-bottom:1px solid var(--line);overflow:hidden}
+.shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left;opacity:0;transition:opacity .22s ease}
+.shot img.on{opacity:1}
+.shot .none{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:14px;padding:0 24px;text-align:center}
+.tag{position:absolute;left:10px;top:10px;z-index:2;display:flex;background:rgba(17,18,20,.86);border-radius:999px;padding:3px;font-size:12px;font-weight:600;line-height:1}
+.tag span{padding:5px 10px;border-radius:999px;color:#b9bcc4;transition:background .2s,color .2s}.tag span.on{background:#fff;color:#111214}
+.row.on span,.row.on b{transition:opacity .2s}.rows.after .row.on span{opacity:.45}.rows.before .row.on b{opacity:.45}
 .peek p{margin:0;padding:10px 12px 11px;font-size:13px;line-height:1.35}.peek p span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 @media (max-width:640px){.cols{display:none}.row{grid-template-columns:1fr;gap:4px}.peek{width:min(340px,88vw)}}
-@media (prefers-reduced-motion:reduce){.row,.peek{transition:none}}
+@media (prefers-reduced-motion:reduce){.row,.peek,.shot img,.tag span{transition:none}}
 </style></head><body>
 <main class="slide">
 <h1>What I saw in research changed what I built</h1>
 <div class="cols" aria-hidden="true"><span>What we saw</span><span>What we built</span></div>
 <ul class="rows" id="rows"></ul>
-<p class="hint" id="hint">Hover a row to see the screen it led to.</p>
+<p class="hint" id="hint">Hover a row. The left side shows the screen before, the right side shows what changed.</p>
 </main>
 <div class="peek" id="peek" aria-hidden="true"></div>
 <script>
 (function(){
-  var REB="Shipped flow, rebuilt with sample data", ORIG="From my original design file";
+  var REB="Shipped flow, rebuilt with sample data", OLD="Old flow, rebuilt with sample data", ORIG="From my original design file";
   var R=[
-    ["All 8 people kept a side spreadsheet to track the split","The split lives in Keela, with a running total","img/rs/1.jpg","Every part of the payment sits on one screen, and a bar keeps the running total.",REB],
-    ["Errors stayed invisible until the final report","The total checks itself; Next unlocks only when it adds up","img/rs/2.jpg","$50 is still unplaced, so the bar flags it and Next stays locked.",REB],
-    ["Many people doing the books weren’t accountants","Plain labels: receiptable or not, and a receipt preview","img/rs/3.jpg","The last step shows what the receipt will say before anything is saved.",REB],
-    ["“Death by checkbox” when editing many payments","Batch edit by date, donor, fund or category",null,"No screen for this one in the deck yet.",""],
-    ["Receipt rules differ by country","The right fields appear for each part of the payment","img/rs/5.jpg","Currency and advantage fields show up only on the part that needs them.",ORIG],
-    ["People think “what was it” before “whose was it”","Details view puts the items first","img/rs/6.jpg","The saved payment opens on its items: what each part was, then the rest.",REB]
+    ["All 8 people kept a side spreadsheet to track the split","The split lives in Keela, with a running total",
+      ["img/rs/b1.jpg","One $200 payment became three separate records, matched up by hand.",OLD],
+      ["img/rs/1.jpg","Every part of the payment sits on one screen, and a bar keeps the running total.",REB]],
+    ["Errors stayed invisible until the final report","The total checks itself; Next unlocks only when it adds up",
+      ["img/rs/b2.jpg","The pop-up took any amount as one type. Nothing checked it against the payment.",OLD],
+      ["img/rs/2.jpg","$50 is still unplaced, so the bar flags it and Next stays locked.",REB]],
+    ["Many people doing the books weren’t accountants","Plain labels: receiptable or not, and a receipt preview",
+      ["img/rs/b3.jpg","The very first choice was an accounting one: Donation or Other Revenue.",OLD],
+      ["img/rs/3.jpg","The last step shows what the receipt will say before anything is saved.",REB]],
+    ["“Death by checkbox” when editing many payments","Batch edit by date, donor, fund or category",
+      [null,"No before screen for this one in the deck yet.",""],
+      [null,"No after screen for this one in the deck yet.",""]],
+    ["Receipt rules differ by country","The right fields appear for each part of the payment",
+      ["img/rs/b5.jpg","One pop-up, with the same fields for the whole payment.",OLD],
+      ["img/rs/5.jpg","Currency and advantage fields show up only on the part that needs them.",ORIG]],
+    ["People think “what was it” before “whose was it”","Details view puts the items first",
+      ["img/rs/b6.jpg","The old details page: one record, every field in a single grid.",OLD],
+      ["img/rs/6.jpg","The saved payment opens on its items: what each part was, then the rest.",REB]]
   ];
-  var rows=document.getElementById("rows"),peek=document.getElementById("peek"),cur=-1,pinned=false;
+  var rows=document.getElementById("rows"),peek=document.getElementById("peek"),cur=-1,side=0,pinned=false;
   R.forEach(function(r,i){
     var li=document.createElement("li"),b=document.createElement("button");b.type="button";b.className="row";b.dataset.i=i;
     var a=document.createElement("span"),c=document.createElement("b");a.textContent=r[0];c.textContent=r[1];b.appendChild(a);b.appendChild(c);
-    b.setAttribute("aria-describedby","peek");li.appendChild(b);rows.appendChild(li);
-    if(r[2]){var im=new Image();im.src=r[2];}
+    li.appendChild(b);rows.appendChild(li);
+    [r[2][0],r[3][0]].forEach(function(u){if(u){var im=new Image();im.src=u;}});
   });
-  function show(i){
-    if(i===cur)return;cur=i;
+  function show(i,sd){
+    if(i===cur&&sd===side)return;var fresh=i!==cur;cur=i;side=sd;
     [].forEach.call(rows.querySelectorAll(".row"),function(b,k){b.classList.toggle("on",k===i);});
-    rows.classList.toggle("live",i>=0);
+    rows.classList.toggle("live",i>=0);rows.classList.toggle("before",i>=0&&sd===0);rows.classList.toggle("after",i>=0&&sd===1);
     if(i<0){peek.classList.remove("on");return;}
-    var r=R[i];peek.innerHTML="";
-    if(r[2]){var im=document.createElement("img");im.src=r[2];im.alt="";peek.appendChild(im);}else{var d=document.createElement("div");d.className="none";d.textContent="Batch edit";peek.appendChild(d);}
-    var p=document.createElement("p");p.textContent=r[3];if(r[4]){var s=document.createElement("span");s.textContent=r[4];p.appendChild(s);}peek.appendChild(p);
+    var r=R[i];
+    if(fresh){
+      peek.innerHTML='<div class="shot"><div class="tag"><span>Before</span><span>After</span></div></div><p></p>';
+      var sh=peek.firstChild;
+      [r[2],r[3]].forEach(function(v){var el;if(v[0]){el=document.createElement("img");el.src=v[0];el.alt="";}else{el=document.createElement("img");el.alt="";el.hidden=true;}sh.appendChild(el);});
+      if(!r[2][0]&&!r[3][0]){var d=document.createElement("div");d.className="none";d.textContent="Batch edit";sh.appendChild(d);}
+    }
+    var ims=peek.querySelectorAll(".shot img"),tg=peek.querySelectorAll(".tag span"),v=r[2+sd];
+    ims[0].classList.toggle("on",sd===0);ims[1].classList.toggle("on",sd===1);tg[0].classList.toggle("on",sd===0);tg[1].classList.toggle("on",sd===1);
+    var p=peek.querySelector("p");p.textContent=v[1];if(v[2]){var s=document.createElement("span");s.textContent=v[2];p.appendChild(s);}
     peek.classList.add("on");
   }
+  function sideOf(b,x){var c=b.querySelector("b").getBoundingClientRect();return x>=c.left-12?1:0;}
   function place(x,y,b){
     var w=peek.offsetWidth,h=peek.offsetHeight,vw=window.innerWidth,vh=window.innerHeight,r=b.getBoundingClientRect();
-    var px=Math.max(10,Math.min(vw-w-10,x-w*.35)),py=r.bottom+10;if(py+h>vh-10)py=r.top-h-10;if(py<10)py=Math.max(10,vh-h-10);
+    var px=Math.max(10,Math.min(vw-w-10,x-w*.35)),py=r.bottom+10;if(py+h>vh-10)py=r.top-h-10;if(py<10){var c=b.querySelector("b").getBoundingClientRect();py=Math.max(10,Math.min(vh-h-10,y-h/2));px=side===0?Math.min(vw-w-10,c.left):Math.max(10,c.left-w-24);}
     peek.style.transform="translate3d("+Math.round(px)+"px,"+Math.round(py)+"px,0)";
   }
-  rows.addEventListener("pointermove",function(e){if(e.pointerType==="touch")return;var b=e.target.closest(".row");if(!b)return;pinned=false;show(+b.dataset.i);place(e.clientX,e.clientY,b);});
-  rows.addEventListener("pointerleave",function(e){if(e.pointerType==="touch"||pinned)return;show(-1);});
-  rows.addEventListener("focusin",function(e){var b=e.target.closest(".row");if(!b||!b.matches(":focus-visible"))return;pinned=true;show(+b.dataset.i);var r=b.getBoundingClientRect();place(r.left+r.width*.6,r.bottom,b);});
-  rows.addEventListener("focusout",function(){if(pinned){pinned=false;show(-1);}});
-  rows.addEventListener("click",function(e){var b=e.target.closest(".row");if(!b)return;var i=+b.dataset.i;if(pinned&&cur===i){pinned=false;show(-1);return;}pinned=true;show(i);var r=b.getBoundingClientRect();place(e.clientX||r.left+r.width*.6,r.bottom,b);});
-  if(matchMedia("(hover:none)").matches)document.getElementById("hint").textContent="Tap a row to see the screen it led to.";
+  rows.addEventListener("pointermove",function(e){if(e.pointerType==="touch")return;var b=e.target.closest(".row");if(!b)return;pinned=false;show(+b.dataset.i,sideOf(b,e.clientX));place(e.clientX,e.clientY,b);});
+  rows.addEventListener("pointerleave",function(e){if(e.pointerType==="touch"||pinned)return;show(-1,0);});
+  rows.addEventListener("focusin",function(e){var b=e.target.closest(".row");if(!b||!b.matches(":focus-visible"))return;pinned=true;show(+b.dataset.i,0);var r=b.getBoundingClientRect();place(r.left+r.width*.6,r.bottom,b);});
+  rows.addEventListener("focusout",function(){if(pinned){pinned=false;show(-1,0);}});
+  rows.addEventListener("click",function(e){var b=e.target.closest(".row");if(!b)return;var i=+b.dataset.i,r=b.getBoundingClientRect();
+    if(e.detail&&!matchMedia("(hover:none)").matches)return;
+    if(pinned&&cur===i){if(side===0)show(i,1);else{pinned=false;show(-1,0);return;}}else{pinned=true;show(i,0);}
+    place(r.left+r.width*.6,r.bottom,b);});
+  if(matchMedia("(hover:none)").matches)document.getElementById("hint").textContent="Tap a row to see the screen before. Tap again to see what changed.";
   document.addEventListener("keydown",function(e){
-    if(e.key==="Escape"&&cur>=0){pinned=false;show(-1);return;}
+    if(e.key==="Escape"&&cur>=0){pinned=false;show(-1,0);return;}
     if(window.parent!==window&&["ArrowLeft","ArrowRight","PageUp","PageDown","Escape"].indexOf(e.key)>=0){try{window.parent.postMessage({studyKey:e.key},location.origin==="null"?"*":location.origin);}catch(er){}}
   });
 })();
