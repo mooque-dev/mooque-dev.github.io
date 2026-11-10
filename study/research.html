@@ -1,0 +1,75 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>What I saw in research changed what I built</title>
+<style>
+:root{color-scheme:light;--fg:#111214;--muted:#6b6e76;--line:#e4e4e8;--blue:#0060d0;--card:#f4f4f6}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:#fff;color:var(--fg);font:16px/1.4 -apple-system,"Helvetica Neue",Helvetica,Arial,sans-serif;display:grid;place-items:center}
+.slide{width:min(1240px,100%);padding:clamp(20px,4vw,56px)}
+h1{font-size:clamp(20px,2.6vw,34px);font-weight:500;letter-spacing:-.01em;margin:0 0 clamp(18px,3.4vw,44px)}
+.cols,.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:0 clamp(16px,4vw,56px)}
+.cols{color:var(--muted);font-size:clamp(13px,1.5vw,19px);margin:0 0 6px;padding:0 12px}
+.rows{list-style:none;margin:0;padding:0;display:grid}
+.row{all:unset;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:0 clamp(16px,4vw,56px);width:100%;padding:clamp(8px,1.25vw,16px) 12px;border-radius:10px;font-size:clamp(15px,1.95vw,25px);line-height:1.25;cursor:default;transition:background .15s,opacity .15s}
+.row b{color:var(--blue);font-weight:600}
+.rows.live .row{opacity:.38}.rows.live .row.on{opacity:1;background:var(--card)}
+.row:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.hint{color:var(--muted);font-size:13px;margin:clamp(14px,2vw,26px) 12px 0}
+.peek{position:fixed;left:0;top:0;z-index:9;width:min(460px,46vw);background:#fff;border-radius:12px;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 18px 44px rgba(20,20,40,.22);overflow:hidden;pointer-events:none;opacity:0;transform:translate3d(-999px,-999px,0) scale(.97);transition:opacity .14s ease}
+.peek.on{opacity:1}
+.peek img{display:block;width:100%;height:auto;max-height:min(330px,52vh);object-fit:cover;object-position:top left;background:var(--card);border-bottom:1px solid var(--line)}
+.peek .none{display:grid;place-items:center;height:150px;background:var(--card);color:var(--muted);font-size:14px;border-bottom:1px solid var(--line);padding:0 24px;text-align:center}
+.peek p{margin:0;padding:10px 12px 11px;font-size:13px;line-height:1.35}.peek p span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+@media (max-width:640px){.cols{display:none}.row{grid-template-columns:1fr;gap:4px}.peek{width:min(340px,88vw)}}
+@media (prefers-reduced-motion:reduce){.row,.peek{transition:none}}
+</style></head><body>
+<main class="slide">
+<h1>What I saw in research changed what I built</h1>
+<div class="cols" aria-hidden="true"><span>What we saw</span><span>What we built</span></div>
+<ul class="rows" id="rows"></ul>
+<p class="hint" id="hint">Hover a row to see the screen it led to.</p>
+</main>
+<div class="peek" id="peek" aria-hidden="true"></div>
+<script>
+(function(){
+  var REB="Shipped flow, rebuilt with sample data", ORIG="From my original design file";
+  var R=[
+    ["All 8 people kept a side spreadsheet to track the split","The split lives in Keela, with a running total","img/rs/1.jpg","Every part of the payment sits on one screen, and a bar keeps the running total.",REB],
+    ["Errors stayed invisible until the final report","The total checks itself; Next unlocks only when it adds up","img/rs/2.jpg","$50 is still unplaced, so the bar flags it and Next stays locked.",REB],
+    ["Many people doing the books weren’t accountants","Plain labels: receiptable or not, and a receipt preview","img/rs/3.jpg","The last step shows what the receipt will say before anything is saved.",REB],
+    ["“Death by checkbox” when editing many payments","Batch edit by date, donor, fund or category",null,"No screen for this one in the deck yet.",""],
+    ["Receipt rules differ by country","The right fields appear for each part of the payment","img/rs/5.jpg","Currency and advantage fields show up only on the part that needs them.",ORIG],
+    ["People think “what was it” before “whose was it”","Details view puts the items first","img/rs/6.jpg","The saved payment opens on its items: what each part was, then the rest.",REB]
+  ];
+  var rows=document.getElementById("rows"),peek=document.getElementById("peek"),cur=-1,pinned=false;
+  R.forEach(function(r,i){
+    var li=document.createElement("li"),b=document.createElement("button");b.type="button";b.className="row";b.dataset.i=i;
+    var a=document.createElement("span"),c=document.createElement("b");a.textContent=r[0];c.textContent=r[1];b.appendChild(a);b.appendChild(c);
+    b.setAttribute("aria-describedby","peek");li.appendChild(b);rows.appendChild(li);
+    if(r[2]){var im=new Image();im.src=r[2];}
+  });
+  function show(i){
+    if(i===cur)return;cur=i;
+    [].forEach.call(rows.querySelectorAll(".row"),function(b,k){b.classList.toggle("on",k===i);});
+    rows.classList.toggle("live",i>=0);
+    if(i<0){peek.classList.remove("on");return;}
+    var r=R[i];peek.innerHTML="";
+    if(r[2]){var im=document.createElement("img");im.src=r[2];im.alt="";peek.appendChild(im);}else{var d=document.createElement("div");d.className="none";d.textContent="Batch edit";peek.appendChild(d);}
+    var p=document.createElement("p");p.textContent=r[3];if(r[4]){var s=document.createElement("span");s.textContent=r[4];p.appendChild(s);}peek.appendChild(p);
+    peek.classList.add("on");
+  }
+  function place(x,y,b){
+    var w=peek.offsetWidth,h=peek.offsetHeight,vw=window.innerWidth,vh=window.innerHeight,r=b.getBoundingClientRect();
+    var px=Math.max(10,Math.min(vw-w-10,x-w*.35)),py=r.bottom+10;if(py+h>vh-10)py=r.top-h-10;if(py<10)py=Math.max(10,vh-h-10);
+    peek.style.transform="translate3d("+Math.round(px)+"px,"+Math.round(py)+"px,0)";
+  }
+  rows.addEventListener("pointermove",function(e){if(e.pointerType==="touch")return;var b=e.target.closest(".row");if(!b)return;pinned=false;show(+b.dataset.i);place(e.clientX,e.clientY,b);});
+  rows.addEventListener("pointerleave",function(e){if(e.pointerType==="touch"||pinned)return;show(-1);});
+  rows.addEventListener("focusin",function(e){var b=e.target.closest(".row");if(!b||!b.matches(":focus-visible"))return;pinned=true;show(+b.dataset.i);var r=b.getBoundingClientRect();place(r.left+r.width*.6,r.bottom,b);});
+  rows.addEventListener("focusout",function(){if(pinned){pinned=false;show(-1);}});
+  rows.addEventListener("click",function(e){var b=e.target.closest(".row");if(!b)return;var i=+b.dataset.i;if(pinned&&cur===i){pinned=false;show(-1);return;}pinned=true;show(i);var r=b.getBoundingClientRect();place(e.clientX||r.left+r.width*.6,r.bottom,b);});
+  if(matchMedia("(hover:none)").matches)document.getElementById("hint").textContent="Tap a row to see the screen it led to.";
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"&&cur>=0){pinned=false;show(-1);return;}
+    if(window.parent!==window&&["ArrowLeft","ArrowRight","PageUp","PageDown","Escape"].indexOf(e.key)>=0){try{window.parent.postMessage({studyKey:e.key},location.origin==="null"?"*":location.origin);}catch(er){}}
+  });
+})();
+</script></body></html>
