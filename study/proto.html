@@ -416,6 +416,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
 .ad-h { font: 600 18px var(--f-ui); margin: 0; padding-bottom: 12px; border-bottom: 1px solid var(--p-line); }
 .ad-person { color: var(--p-accent); font-weight: 600; }
 .ad-rc { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.btn.navy { background: #1f2a44; border-color: #1f2a44; color: #fff; display: inline-flex; align-items: center; gap: 6px; }
 </style>
 
 <div class="page">
@@ -729,7 +730,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
       return crumbs([["Transactions", "list"], [esc(h ? h.desc : "Gala night") + " · " + money(s.total)]], "list") +
         '<div class="td-tabs" aria-hidden="true"><span>Profile</span><span>Interactions</span><span>To-Do’s</span><span class="on">Fundraising</span><span>Memberships</span><span>Volunteering</span></div>' +
         '<div class="td"><div class="ad-head"><div class="td-amt">' + money(s.total) + '<small>CAD</small></div><span class="tchip">' + IC.card + 'Card</span><span class="tchip green">Paid</span>' +
-        '<div class="ad-act"><span class="btn sm acc-o ghost" aria-disabled="true" title="Not part of this prototype">Actions' + chv("d") + '</span>' + (h ? '' : '<button type="button" class="btn sm acc" data-a="edit">Edit</button>') + '</div></div>' +
+        '<div class="ad-act"><span class="btn sm acc-o ghost" aria-disabled="true" title="Not part of this prototype">Actions' + chv("d") + '</span><span class="btn sm navy ghost" aria-disabled="true" title="Opens this payment\'s accounting record in Aplos. Not part of this prototype">Open in Aplos<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" aria-hidden="true"><path d="M9.5 2.5h4v4M13.5 2.5L7.5 8.5M12 9.5v3a1 1 0 0 1-1 1H3.5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3"/></svg></span>' + (h ? '' : '<button type="button" class="btn sm acc" data-a="edit">Edit</button>') + '</div></div>' +
         '<p class="ad-h">Transaction Details</p><div class="kvl">' +
         '<span class="td-k">Contact</span><span class="ad-person">' + esc(s.contact) + '</span>' +
         '<span class="td-k">Transaction ID</span><span>' + idChip(h ? h.id : TXN_ID) + '</span>' +
