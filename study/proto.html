@@ -390,6 +390,32 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
 .more summary::before { content: ""; width: 12px; height: 12px; transform: rotate(-90deg); flex: none; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 3.5l5 5 5-5'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 3.5l5 5 5-5'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform .15s; }
 .more[open] summary::before { transform: none; }
 @media (prefers-reduced-motion: reduce) { .more summary::before { transition: none; } }
+/* details pages, matched to the real product screens */
+.bdx { display: grid; gap: 14px; padding: 14px 16px 20px; background: var(--p-sunk); }
+@container (min-width: 760px) { .bdx { grid-template-columns: 210px minmax(0, 1fr); align-items: start; } }
+.bd-av.ini { display: grid; place-items: center; background: #5fd38a; color: #fff; font: 600 19px var(--f-ui); }
+.bd-hl .v { font-size: 13.5px; line-height: 1.45; }
+.bdp { background: var(--p-bg); border: 1px solid var(--p-line); border-radius: 10px; min-width: 0; }
+.bdp-top { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--p-line); flex-wrap: wrap; }
+.bdp-top .link { margin-right: auto; display: inline-flex; align-items: center; gap: 4px; font-weight: 500; }
+.btn.acc-o { border-color: var(--p-accent); color: var(--p-accent); display: inline-flex; align-items: center; gap: 6px; }
+.btn.acc { background: var(--p-accent); border-color: var(--p-accent); color: #fff; }
+.bdp-b { padding: 16px 18px 20px; display: grid; gap: 16px; }
+.bdp-b h3 { margin: 0; font: 600 17px var(--f-ui); }
+.bdk { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.bdk > div { border: 1px solid var(--p-line); border-radius: 8px; padding: 14px 10px; text-align: center; display: grid; gap: 8px; align-content: start; }
+.bdk span { font: 600 11px var(--f-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--p-muted); }
+.bdk b { font: 600 21px/1.15 var(--f-ui); font-variant-numeric: tabular-nums; }
+.bdk em { justify-self: center; font: 600 13px var(--f-ui); font-style: normal; background: #e3f1fb; color: #1f6fa8; border-radius: 999px; padding: 5px 14px; }
+.kvl { display: grid; grid-template-columns: 170px minmax(0, 1fr); column-gap: 12px; }
+.kvl > * { padding: 11px 0; border-bottom: 1px solid var(--p-line); font-size: 13.5px; min-width: 0; }
+.kvl > .td-k { align-self: stretch; display: flex; align-items: center; }
+.ad-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ad-head .td-amt { margin-right: 6px; }
+.ad-act { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.ad-h { font: 600 18px var(--f-ui); margin: 0; padding-bottom: 12px; border-bottom: 1px solid var(--p-line); }
+.ad-person { color: var(--p-accent); font-weight: 600; }
+.ad-rc { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 </style>
 
 <div class="page">
@@ -468,25 +494,22 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
       return { date: h.date, type: don ? "Donation" : "Revenue", amt: h.amt, fund: h.fund, gift: don ? "Money" : "Other", impact: "", meta: blankMeta(), id: ["k2mPwQ7RtaVzN8cJd", "h9TfLs3XoEbGu5yKa", "c6WnDr1ZqMvHj4pSe"][+v.slice(1)], rcpt: don ? "R-2026-0" + (31 - +v.slice(1) * 9) : "" };
     }
     function details() {
-      var x = recOf(s.view), d = function (v) { return v ? esc(v) : "-"; }, ghost = ' aria-disabled="true" title="Not part of this prototype"';
-      var f = [["Transaction ID", "G-" + x.id + "-1"], ["Transaction amount", money(x.amt)], ["Transaction type", x.type], ["Gift type", x.gift],
-        ["Foreign exchange, original currency", "-"], ["Foreign exchange, original amount", "-"], ["Description of property received", "-"], ["Full name of appraiser", "-"],
-        ["Pledge", "-"], ["Impact area", d(x.impact)], ["Campaign", d(x.fund)], ["Pipelines", "-"],
-        ["Fundraiser", "-"], ["Soft credits", d(x.meta.soft)], ["Source", d(x.meta.source)], ["Keywords", d(x.meta.kw)],
-        ["Dedication type", "-"], ["Dedication name", d(x.meta.ded)], ["Notes", d(x.meta.notes)]];
-      var n = s.records.length;
+      var x = recOf(s.view), d = function (v) { return v ? esc(v) : "-"; }, ghost = ' aria-disabled="true" title="Not part of this prototype"', n = s.records.length;
+      var isDon = x.type === "Donation";
+      var rows = [["Transaction type", isDon ? "Donation" : "Other Revenue"], [isDon ? "Gift type" : "Category", esc(x.gift)], ["Campaign", d(x.fund)], ["Impact area", d(x.impact)],
+        ["Payment method", "Card"], ["Receipt setting", isDon ? "Generate receipt and send via email" : "Not receiptable"], ["Send receipt emails", isDon ? "Yes" : "No"], ["Notes", d(x.meta.notes)]];
       return '<nav class="td-crumb" aria-label="Breadcrumb"><span class="cr-x">All Contacts</span><span class="sep">' + chv() + '</span><button type="button" data-a="list">Sarah Padilla - Transactions</button><span class="sep">' + chv() + '</span><b aria-current="page">Transaction Details</b><span class="org"><i></i>ABC Organization</span></nav>' +
-        '<div class="td-tabs" aria-hidden="true"><span>Profile</span><span>Interactions</span><span>To-Do’s</span><span class="on">Fundraising</span><span>Memberships</span><span>Volunteering</span><span>Pipelines</span></div>' +
-        '<div class="bd"><aside class="bd-side" aria-label="Contact"><div class="bd-card bd-who"><span class="bd-av"></span>Sarah Padilla<div class="bd-acts" aria-hidden="true"><span><i>' + GLY.todo + '</i>To-Do</span><span><i>' + GLY.mail + '</i>Email</span><span><i>' + GLY.more + '</i>More</span></div></div>' +
-        '<div class="bd-card bd-hl"><div class="hd">Highlights<span class="btn sm ghost"' + ghost + '>Edit</span></div>' + [1, 2, 3, 4].map(function () { return '<div><span class="td-k">Label</span>Placeholder</div>'; }).join("") + '</div></aside>' +
-        '<div class="bd-main"><div class="bd-top"><button type="button" class="link" data-a="list">' + chv("l") + 'Back to all transactions</button><span class="tchip green">Success ✓</span><span class="btn sm ghost"' + ghost + ' aria-label="More actions">' + GLY.more + '</span><span class="btn sm primary ghost"' + ghost + '>Edit</span></div>' +
-        (s.view.charAt(0) === "r" && n > 1 ? '<div class="flag warn"><b>One of ' + n + ' records for the same $200 payment.</b> Each type was logged as its own transaction, so this page shows only this part.</div>' : '') +
-        '<div class="bd-card bd-pay"><span class="pm"><span class="tchip">Card</span>payment <b>' + money(x.amt) + '</b></span><span class="ids"><span class="idchip ghost">' + x.id + '</span>' + (x.rcpt ? '<span class="idchip ghost">' + x.rcpt + '.pdf</span>' : '') + '</span></div>' +
-        '<div class="bd-card bd-item"><div class="bd-item-h">Transaction Item<button type="button" class="x" data-a="bitem" aria-expanded="' + !s.shut + '" aria-label="' + (s.shut ? "Show" : "Hide") + ' the item fields">' + chv(s.shut ? "" : "d") + '</button></div>' +
-        (s.shut ? '' : '<div class="bd-grid">' + f.map(function (p) { return '<div><span class="td-k">' + p[0] + '</span>' + p[1] + '</div>'; }).join("") + '</div>') + '</div></div></div>';
+        '<div class="td-tabs" aria-hidden="true"><span>Profile</span><span>Interactions</span><span>To-Do’s</span><span class="on">Fundraising</span><span>Memberships</span><span>Volunteering</span></div>' +
+        '<div class="bdx"><aside class="bd-side" aria-label="Contact"><div class="bd-card bd-who"><span class="bd-av ini" aria-hidden="true">SP</span>Sarah Padilla<div class="bd-acts" aria-hidden="true"><span><i>' + GLY.todo + '</i>To-do</span><span><i>' + GLY.mail + '</i>Email</span><span><i>' + GLY.more + '</i>More</span></div></div>' +
+        '<div class="bd-card bd-hl"><div class="hd">Highlights<span class="btn sm ghost"' + ghost + '>Edit</span></div><div><span class="td-k">Address</span><span class="v">120 Queen St W<br>Toronto, ON</span></div><div><span class="td-k">Mobile phone</span><span class="v">(416) 555-0142</span></div><div><span class="td-k">Supporter since</span><span class="v">2022</span></div></div></aside>' +
+        '<div class="bdp"><div class="bdp-top"><button type="button" class="link bd-back" data-a="list">' + chv("l") + 'Back to All Transactions</button><span class="btn sm acc-o ghost"' + ghost + '>Actions' + chv("d") + '</span><span class="btn sm acc ghost"' + ghost + '>Edit</span></div>' +
+        '<div class="bdp-b">' + (s.view.charAt(0) === "r" && n > 1 ? '<div class="flag warn"><b>One of ' + n + ' records for the same $200 payment.</b> Each type was logged as its own transaction, so this page shows only this part.</div>' : '') +
+        '<h3>Transaction Details</h3><div class="bdk"><div><span>Amount</span><b>' + money(x.amt) + '</b></div><div><span>Date received</span><b>' + esc(x.date) + '</b></div><div><span>Status</span><em>Paid</em></div></div>' +
+        '<div class="kvl">' + rows.map(function (r) { return '<span class="td-k">' + r[0] + '</span><span>' + r[1] + '</span>'; }).join("") + '</div></div></div></div>';
     }
     function rows(newRows) {
-      var mk = function (v, r, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + r.date + '</td><td>' + esc(r.type) + '</td><td>' + esc(r.desc) + '</td><td>' + esc(r.fund) + '</td><td class="num">' + money(r.amt) + '</td></tr>'; };
+      var go = '<td class="go" aria-hidden="true">' + chv() + '</td>';
+      var mk = function (v, r, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + ' data-v="' + v + '"><td>' + r.date + '</td><td>' + esc(r.type) + '</td><td><button type="button" class="link" data-a="open" data-v="' + v + '">' + esc(r.desc) + '</button></td><td>' + esc(r.fund) + '</td><td class="num">' + money(r.amt) + '</td>' + go + '</tr>'; };
       return newRows.map(function (r) { return mk("r" + r.i, r, "new"); }).join("") + HISTORY.map(function (r, i) { return mk("h" + i, r); }).join("");
     }
     function stats() {
@@ -499,6 +522,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
     }
     function render() {
       var st = stats();
+      if (s.view) { root.innerHTML = details(); return; }
       var newRows = s.records.map(function (r, i) { return { i: i, date: TODAY, type: r.type === "Donation" ? "Donation" : "Other Revenue", desc: r.type === "Donation" ? "Gala night" : "Gala ticket", fund: r.fund, amt: r.amt }; }).reverse(); var unused = s.records.slice().reverse().map(function (r) { return { date: TODAY, type: r.type === "Donation" ? "Donation" : "Other Revenue", desc: r.type === "Donation" ? "Gala night" : "Gala ticket", fund: r.fund, amt: r.amt }; });
       var feedback = "";
       if (s.records.length) {
@@ -515,7 +539,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
           '</div></div>' +
           (s.records.length === 0 ? '<div class="hint">First choice: is this payment a <b>Donation</b> or <b>Other Revenue</b>? The product makes you pick one type per payment.</div>' : '') +
           feedback +
-          '<div class="tablewrap"><table class="list"><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Campaign</th><th class="num">Amount</th></tr></thead><tbody>' + rows(newRows) + '</tbody></table></div>' +
+          '<div class="tablewrap"><table class="list"><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Campaign</th><th class="num">Amount</th><th class="go" aria-hidden="true"></th></tr></thead><tbody>' + rows(newRows) + '</tbody></table></div>' +
           (s.records.length ? '<div class="panel"><h4>What the receipt says</h4><div class="kv"><span>Tax-deductible (on ' + st.receipts + ' receipt' + (st.receipts === 1 ? '' : 's') + ')</span><b>' + money(st.eligible) + '</b></div><div class="kv"><span>Should be</span><b>$100</b></div></div>' : '') +
         '</div>' + (s.modal ? modal() : '');
     }
@@ -549,7 +573,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
       if (!t || !root.contains(t)) return;
       if (t.matches("button")) s.clicks++;
       var a = t.dataset.a;
-      if (a === "open") { s.view = t.dataset.v; s.shut = false; s.menu = false; render(); var b1 = root.querySelector('.bd-top .link'); if (b1) b1.focus({ preventScroll: true }); }
+      if (a === "open") { s.view = t.dataset.v; s.shut = false; s.menu = false; render(); var b1 = root.querySelector('.bd-back'); if (b1) b1.focus({ preventScroll: true }); }
       else if (a === "list") { var was = s.view; s.view = null; render(); var b2 = root.querySelector('button.link[data-v="' + was + '"]'); if (b2) b2.focus({ preventScroll: true }); }
       else if (a === "bitem") { s.shut = !s.shut; render(); var b3 = root.querySelector('[data-a="bitem"]'); if (b3) b3.focus({ preventScroll: true }); }
       else if (a === "menu") { s.menu = !s.menu; render(); }
@@ -704,10 +728,17 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
       }).join("");
       return crumbs([["Transactions", "list"], [esc(h ? h.desc : "Gala night") + " · " + money(s.total)]], "list") +
         '<div class="td-tabs" aria-hidden="true"><span>Profile</span><span>Interactions</span><span>To-Do’s</span><span class="on">Fundraising</span><span>Memberships</span><span>Volunteering</span></div>' +
-        '<div class="td"><div class="td-head"><div><div class="td-amt">' + money(s.total) + '<small>CAD</small></div><div class="td-chips"><span class="tchip">' + IC.card + 'Card</span><span class="tchip green">Paid</span></div></div>' +
-        '<div class="td-act"><span class="tchip" title="The contact is locked after saving. Other details can still be corrected.">' + IC.lock + 'Contact locked</span><div class="row">' + (h ? '' : '<button type="button" class="btn sm" data-a="edit">Edit</button>') + idChip(h ? h.id : TXN_ID) + '</div></div></div>' +
-        '<div class="td-grid"><div class="td-dl"><span class="td-k">Contact</span><span class="person"><i>' + initials(s.contact) + '</i>' + esc(s.contact) + '</span><span class="td-k">Date received</span><span class="tchip" style="width:max-content">' + IC.cal + fmtLong(s.date) + '</span><span class="td-k">Frequency</span><span>' + (h ? h.freq : "One-time") + '</span><span class="td-k">Tax-deductible</span><span>' + (eligible() ? '<b>' + money(eligible()) + '</b> on one receipt' : 'None. Nothing here is a gift.') + '</span></div>' +
-        '<div class="td-rc"><span class="td-k">Receipt info</span><div class="row">' + receiptChips() + '</div>' + (s.rcpt === "skip" || s.rcpt === "ignore" ? '' : '<button type="button" class="btn sm" data-a="viewreceipt">View Receipt</button>') + '</div></div>' +
+        '<div class="td"><div class="ad-head"><div class="td-amt">' + money(s.total) + '<small>CAD</small></div><span class="tchip">' + IC.card + 'Card</span><span class="tchip green">Paid</span>' +
+        '<div class="ad-act"><span class="btn sm acc-o ghost" aria-disabled="true" title="Not part of this prototype">Actions' + chv("d") + '</span>' + (h ? '' : '<button type="button" class="btn sm acc" data-a="edit">Edit</button>') + '</div></div>' +
+        '<p class="ad-h">Transaction Details</p><div class="kvl">' +
+        '<span class="td-k">Contact</span><span class="ad-person">' + esc(s.contact) + '</span>' +
+        '<span class="td-k">Transaction ID</span><span>' + idChip(h ? h.id : TXN_ID) + '</span>' +
+        '<span class="td-k">Receipt info</span><span class="ad-rc">' + receiptChips() + (s.rcpt === "skip" || s.rcpt === "ignore" ? '' : '<button type="button" class="btn sm" data-a="viewreceipt">View Receipt</button>') + '</span>' +
+        '<span class="td-k">Receipt serial</span><span>' + (eligible() && s.rcpt !== "skip" && s.rcpt !== "ignore" ? (h ? ["R-2026-0314", "R-2026-0214", "-"][s.view] : "R-2026-0418") : "-") + '</span>' +
+        '<span class="td-k">Date received</span><span>' + fmtLong(s.date) + '</span>' +
+        '<span class="td-k">Frequency</span><span>' + (h ? h.freq : "One-time") + '</span>' +
+        '<span class="td-k">Tax-deductible</span><span>' + (eligible() ? '<b>' + money(eligible()) + '</b> on one receipt' : 'None. Nothing here is a gift.') + '</span>' +
+        '<span class="td-k">Created source</span><span>Keela</span></div>' +
         '<p class="sub" style="margin:-6px 0 0">The contact is locked after saving, so the audit trail holds. Other details can still be corrected.</p><p class="td-h2">Transaction Items' + (s.lines.length > 1 ? ' <span class="badge-split">' + IC.split + 'Split · ' + s.lines.length + ' parts</span>' : '') + '</p><div class="items">' + items + '</div><button type="button" class="link" data-a="list" style="justify-self:start">Back to transactions</button></div>';
     }
     function receiptModal() {
@@ -752,7 +783,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
       var main = '<div class="tx-top"><label class="f"><span>Contact <span class="req">*</span></span>' + (s.editing ? '<input class="field" value="' + esc(s.contact) + '" readonly title="The contact is locked after saving.">' : '<input class="field combo" id="' + P + '-contact" list="dl-contact" autocomplete="off" placeholder="Start typing to search..." value="' + esc(s.contact) + '">') + '</label><label class="f"><span>Date received <span class="req">*</span></span><input class="field" type="date" id="' + P + '-date" value="' + s.date + '" max="2026-12-31" aria-describedby="' + P + '-datehint"></label><label class="f"><span>Total amount <span class="req">*</span></span><span class="money"><span>$</span><input class="field" id="' + P + '-total" type="number" inputmode="decimal" min="0" value="' + s.total + '"></span></label></div>' +
         '<p class="sub dh" id="' + P + '-datehint">Use the date the money arrived. Pick it from the calendar.</p>' + entrySeg() +
         (s.entry === "quick" ? quickRow(s.lines[0]) :
-        '<div><p class="tx-q">What was this ' + money(s.total) + ' for?</p><p class="sub">Add a line for each part.' + (opts.ref ? '' : ' The receipt updates as you go.') + '</p></div>' +
+        '<div><p class="tx-q">What was this ' + money(s.total) + ' for?</p><p class="sub">Add a line for each part.</p></div>' +
         allocation() +
         '<div class="sp' + (s.lines.length > 1 ? '' : ' one') + '"><div class="sp-h" aria-hidden="true">' + (s.lines.length > 1 ? '<span></span>' : '') + '<span>Amount</span><span>What it was</span><span>Gift type or category</span><span>Campaign</span><span></span></div>' + s.lines.map(spRow).join("") + '</div>' +
         '<div class="row">' + addBtn + '</div>') +
@@ -765,7 +796,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
         '<p class="kbd-hint">' + (s.entry === "split" ? '<span><kbd>Enter</kbd> in an amount adds the next line</span>' + (s.lines.length > 1 ? '<span><kbd>Alt</kbd> + <kbd>↑</kbd> <kbd>↓</kbd> moves a line</span>' : '') : '') + '<span><kbd>Ctrl</kbd> or <kbd>⌘</kbd> + <kbd>Enter</kbd> saves</span></p>';
       var b = blocker();
       return flowCrumbs() + '<div class="flow-h"><span>' + (s.editing ? 'Edit Transaction' : 'New Transaction') + '</span></div>' +
-        '<div class="body">' + (opts.ref ? '<div class="tx-main">' + main + rcOpt + '</div>' : '<div class="tx-layout"><div class="tx-main">' + main + '</div>' + side + '</div>') + '</div>' +
+        '<div class="body"><div class="tx-main">' + main + rcOpt + '</div></div>' +
         '<div class="flow-f"><span class="sub tx-why' + (b ? '' : ' ok') + '" aria-live="polite">' + (b ? b : 'Ready to save.') + '</span><button type="button" class="btn" data-a="cancel">Cancel</button><button type="button" class="btn primary" data-a="save" title="Ctrl or ⌘ + Enter"' + (canSave() ? '' : ' disabled') + '>Save</button></div>';
     }
 
@@ -1023,9 +1054,9 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
       good: ["Nobody needs to know the words advantage or revenue. Many of the 8 people we watched weren't accountants.", "Hard to miss the ticket: the first question is about it."],
       bad: ["Slow for someone recording dozens of payments a day.", "Assumes one thing received per payment. A ticket plus a raffle breaks it.", "Hard to check before saving: the answers are spread over three screens.", "Hides the structure, so people can't check it against their spreadsheet."],
       verdict: ["drop", "Kept its plain words. They became the labels in C: a gift, or they got something back."] },
-    C: { title: "C. One table, live receipt", tag: "Final choice",
-      idea: "One line per part of the payment: amount, what it was, detail, campaign. The receipt preview sits beside it and updates as you type.",
-      good: ["It looks like the side spreadsheet all 8 people kept, so it matches how they already think.", "Everything about a part sits in one row: no stepping back to match a campaign.", "Mistakes show before saving: the receipt changes the moment a type changes.", "Nothing starts as a donation. Save stays locked until every line has a type and the total adds up.", "Quick entry for the common one-type payment, and a split only when it’s needed.", "One screen, then a final check, because the contact is locked once it’s saved."],
+    C: { title: "C. One table, one screen", tag: "Final choice",
+      idea: "One line per part of the payment: amount, what it was, detail, campaign. Save stays locked until every line has a type and the total adds up, and a final check shows what goes on the receipt.",
+      good: ["It looks like the side spreadsheet all 8 people kept, so it matches how they already think.", "Everything about a part sits in one row: no stepping back to match a campaign.", "Mistakes show before saving: the final check shows what goes on the receipt.", "Nothing starts as a donation. Save stays locked until every line has a type and the total adds up.", "Quick entry for the common one-type payment, and a split only when it’s needed.", "One screen, then a final check, because the contact is locked once it’s saved."],
       bad: ["Denser on first use, so it needs plain labels and a clear empty state.", "On a narrow screen each line becomes a small card."],
       verdict: ["keep", "Ship this. It keeps A's checks and B's plain words, and removes the step-switching."] }
   };
@@ -1035,7 +1066,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
       '<div class="rounds">' +
         '<div class="round"><span class="rn">Round 1</span><b>The pop-up</b><span class="sc">One type per payment. Workflow satisfaction 5.5 / 10.</span><span class="tag">Before</span></div>' +
         '<div class="round"><span class="rn">Round 2</span><b>Full screen, cards in three steps</b><span class="sc">Split by type. Workflow satisfaction 8.8 / 10.</span><span class="tag ship">What shipped (A)</span></div>' +
-        '<div class="round"><span class="rn">Round 3</span><b>One table, live receipt</b><span class="sc">Not tested yet. Plan below.</span><span class="tag next">What I’d ship next (C)</span></div>' +
+        '<div class="round"><span class="rn">Round 3</span><b>One table, one screen</b><span class="sc">Not tested yet. Plan below.</span><span class="tag next">What I’d ship next (C)</span></div>' +
       '</div>' +
       '<div class="var-tabs" role="tablist" aria-label="Choose a version">' + ["A", "B", "C"].map(function (k) { return '<button type="button" role="tab" data-var="' + k + '" aria-selected="false">' + VARS[k].title + '</button>'; }).join("") + '</div>' +
       ["A", "B", "C"].map(function (k) {
@@ -1043,7 +1074,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
         return '<div class="var" data-varpane="' + k + '" hidden><section class="col"><div class="colhead"><h2>' + v.title + '</h2><div class="stats" id="stats-i' + k + '"></div></div><div class="frame" id="frame-i' + k + '"></div><div class="row" style="justify-content:space-between"><p class="note">' + v.tag + '</p><button type="button" class="reset" id="reset-i' + k + '">Start over</button></div></section>' +
           '<div class="notes"><h3>' + v.title + '</h3><p>' + v.idea + '</p><div><h4>Works well</h4><ul>' + v.good.map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul></div><div><h4>Breaks down</h4><ul>' + v.bad.map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul></div><div class="verdict ' + v.verdict[0] + '"><b>' + (v.verdict[0] === "keep" ? "Choice: " : "Not chosen: ") + '</b>' + v.verdict[1] + '</div></div></div>';
       }).join("") +
-      '<div class="final"><h3>Final choice: C, one table with a live receipt</h3><div class="two-col"><div><h4>Why</h4><ol><li>It matches the spreadsheet people already kept, so there is less to learn.</li><li>Each part of the payment lives in one row, so the campaign is never matched up later.</li><li>The receipt is visible while you work, so a wrong type is caught before it becomes a wrong receipt.</li><li>No default type, so the fastest path is no longer a wrong one.</li><li>Quick entry stays quick: most payments are one type, so the split only appears when someone asks for it.</li><li>The contact is locked after saving, so the check happens before saving, with everything on one screen.</li></ol></div>' +
+      '<div class="final"><h3>Final choice: C, one table on one screen</h3><div class="two-col"><div><h4>Why</h4><ol><li>It matches the spreadsheet people already kept, so there is less to learn.</li><li>Each part of the payment lives in one row, so the campaign is never matched up later.</li><li>The receipt is visible while you work, so a wrong type is caught before it becomes a wrong receipt.</li><li>No default type, so the fastest path is no longer a wrong one.</li><li>Quick entry stays quick: most payments are one type, so the split only appears when someone asks for it.</li><li>The contact is locked after saving, so the check happens before saving, with everything on one screen.</li></ol></div>' +
       '<div><h4>How I’d test it against A</h4><ul><li>Same task, 6 to 8 people who do the books, a mix of accountants and not.</li><li>Measure: wrong receipts, time to finish, steps back, and one ease question after the task.</li><li>Pass: no wrong receipts, and faster than A for anyone recording more than one split.</li><li>Then roll out behind the feature flag, group by group, and watch categorization tickets.</li></ul></div></div></div>' +
     '</section>';
   }
