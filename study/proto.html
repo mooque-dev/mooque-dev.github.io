@@ -417,6 +417,18 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
 .ad-person { color: var(--p-accent); font-weight: 600; }
 .ad-rc { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .btn.navy { background: #1f2a44; border-color: #1f2a44; color: #fff; display: inline-flex; align-items: center; gap: 6px; }
+/* hover feedback on buttons, including ones that do nothing in this prototype */
+.btn { transition: background-color .12s ease, border-color .12s ease, color .12s ease; }
+.btn:not(:disabled):not(.primary):not(.acc):not(.navy):not(.dark):not(.acc-o):hover { background: var(--p-sunk); border-color: #c9ccd5; }
+.btn.primary:not(:disabled):hover, .btn.acc:hover { background: #4a30c4; border-color: #4a30c4; }
+.btn.navy:hover { background: #2e3b5e; border-color: #2e3b5e; }
+.btn.acc-o:hover { background: var(--p-accent-soft); }
+.bd-acts button { appearance: none; background: none; border: 0; padding: 0; display: grid; justify-items: center; gap: 3px; font: 500 10.5px var(--f-ui); color: var(--p-muted); cursor: pointer; }
+.bd-acts button i { transition: background-color .12s ease, border-color .12s ease; }
+.bd-acts button:hover i { background: var(--p-sunk); border-color: #c9ccd5; }
+.bd-acts button:hover { color: var(--p-fg); }
+.bd-acts button:focus-visible { outline: none; } .bd-acts button:focus-visible i { outline: 2px solid var(--p-accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .btn, .bd-acts button i { transition: none; } }
 </style>
 
 <div class="page">
@@ -495,15 +507,15 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
       return { date: h.date, type: don ? "Donation" : "Revenue", amt: h.amt, fund: h.fund, gift: don ? "Money" : "Other", impact: "", meta: blankMeta(), id: ["k2mPwQ7RtaVzN8cJd", "h9TfLs3XoEbGu5yKa", "c6WnDr1ZqMvHj4pSe"][+v.slice(1)], rcpt: don ? "R-2026-0" + (31 - +v.slice(1) * 9) : "" };
     }
     function details() {
-      var x = recOf(s.view), d = function (v) { return v ? esc(v) : "-"; }, ghost = ' aria-disabled="true" title="Not part of this prototype"', n = s.records.length;
+      var x = recOf(s.view), d = function (v) { return v ? esc(v) : "-"; }, n = s.records.length;
       var isDon = x.type === "Donation";
       var rows = [["Transaction type", isDon ? "Donation" : "Other Revenue"], [isDon ? "Gift type" : "Category", esc(x.gift)], ["Campaign", d(x.fund)], ["Impact area", d(x.impact)],
         ["Payment method", "Card"], ["Receipt setting", isDon ? "Generate receipt and send via email" : "Not receiptable"], ["Send receipt emails", isDon ? "Yes" : "No"], ["Notes", d(x.meta.notes)]];
       return '<nav class="td-crumb" aria-label="Breadcrumb"><span class="cr-x">All Contacts</span><span class="sep">' + chv() + '</span><button type="button" data-a="list">Sarah Padilla - Transactions</button><span class="sep">' + chv() + '</span><b aria-current="page">Transaction Details</b><span class="org"><i></i>ABC Organization</span></nav>' +
         '<div class="td-tabs" aria-hidden="true"><span>Profile</span><span>Interactions</span><span>To-Do’s</span><span class="on">Fundraising</span><span>Memberships</span><span>Volunteering</span></div>' +
-        '<div class="bdx"><aside class="bd-side" aria-label="Contact"><div class="bd-card bd-who"><span class="bd-av ini" aria-hidden="true">SP</span>Sarah Padilla<div class="bd-acts" aria-hidden="true"><span><i>' + GLY.todo + '</i>To-do</span><span><i>' + GLY.mail + '</i>Email</span><span><i>' + GLY.more + '</i>More</span></div></div>' +
-        '<div class="bd-card bd-hl"><div class="hd">Highlights<span class="btn sm ghost"' + ghost + '>Edit</span></div><div><span class="td-k">Address</span><span class="v">120 Queen St W<br>Toronto, ON</span></div><div><span class="td-k">Mobile phone</span><span class="v">(416) 555-0142</span></div><div><span class="td-k">Supporter since</span><span class="v">2022</span></div></div></aside>' +
-        '<div class="bdp"><div class="bdp-top"><button type="button" class="link bd-back" data-a="list">' + chv("l") + 'Back to All Transactions</button><span class="btn sm acc-o ghost"' + ghost + '>Actions' + chv("d") + '</span><span class="btn sm acc ghost"' + ghost + '>Edit</span></div>' +
+        '<div class="bdx"><aside class="bd-side" aria-label="Contact"><div class="bd-card bd-who"><span class="bd-av ini" aria-hidden="true">SP</span>Sarah Padilla<div class="bd-acts"><button type="button" data-a="noop"><i>' + GLY.todo + '</i>To-do</button><button type="button" data-a="noop"><i>' + GLY.mail + '</i>Email</button><button type="button" data-a="noop"><i>' + GLY.more + '</i>More</button></div></div>' +
+        '<div class="bd-card bd-hl"><div class="hd">Highlights<button type="button" class="btn sm" data-a="noop">Edit</button></div><div><span class="td-k">Address</span><span class="v">120 Queen St W<br>Toronto, ON</span></div><div><span class="td-k">Mobile phone</span><span class="v">(416) 555-0142</span></div><div><span class="td-k">Supporter since</span><span class="v">2022</span></div></div></aside>' +
+        '<div class="bdp"><div class="bdp-top"><button type="button" class="link bd-back" data-a="list">' + chv("l") + 'Back to All Transactions</button><button type="button" class="btn sm acc-o" data-a="noop">Actions' + chv("d") + '</button><button type="button" class="btn sm acc" data-a="noop">Edit</button></div>' +
         '<div class="bdp-b">' + (s.view.charAt(0) === "r" && n > 1 ? '<div class="flag warn"><b>One of ' + n + ' records for the same $200 payment.</b> Each type was logged as its own transaction, so this page shows only this part.</div>' : '') +
         '<h3>Transaction Details</h3><div class="bdk"><div><span>Amount</span><b>' + money(x.amt) + '</b></div><div><span>Date received</span><b>' + esc(x.date) + '</b></div><div><span>Status</span><em>Paid</em></div></div>' +
         '<div class="kvl">' + rows.map(function (r) { return '<span class="td-k">' + r[0] + '</span><span>' + r[1] + '</span>'; }).join("") + '</div></div></div></div>';
@@ -571,7 +583,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
     root.addEventListener("click", function (e) {
       var t = e.target.closest("button, input, select");
       if (!t) { var tr = e.target.closest("tr[data-v]"); if (tr && root.contains(tr)) t = root.querySelector('button.link[data-v="' + tr.dataset.v + '"]'); }
-      if (!t || !root.contains(t)) return;
+      if (!t || !root.contains(t) || t.dataset.a === "noop") return;
       if (t.matches("button")) s.clicks++;
       var a = t.dataset.a;
       if (a === "open") { s.view = t.dataset.v; s.shut = false; s.menu = false; render(); var b1 = root.querySelector('.bd-back'); if (b1) b1.focus({ preventScroll: true }); }
@@ -729,17 +741,10 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
       }).join("");
       return crumbs([["Transactions", "list"], [esc(h ? h.desc : "Gala night") + " · " + money(s.total)]], "list") +
         '<div class="td-tabs" aria-hidden="true"><span>Profile</span><span>Interactions</span><span>To-Do’s</span><span class="on">Fundraising</span><span>Memberships</span><span>Volunteering</span></div>' +
-        '<div class="td"><div class="ad-head"><div class="td-amt">' + money(s.total) + '<small>CAD</small></div><span class="tchip">' + IC.card + 'Card</span><span class="tchip green">Paid</span>' +
-        '<div class="ad-act"><span class="btn sm acc-o ghost" aria-disabled="true" title="Not part of this prototype">Actions' + chv("d") + '</span><span class="btn sm navy ghost" aria-disabled="true" title="Opens this payment\'s accounting record in Aplos. Not part of this prototype">Open in Aplos<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" aria-hidden="true"><path d="M9.5 2.5h4v4M13.5 2.5L7.5 8.5M12 9.5v3a1 1 0 0 1-1 1H3.5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3"/></svg></span>' + (h ? '' : '<button type="button" class="btn sm acc" data-a="edit">Edit</button>') + '</div></div>' +
-        '<p class="ad-h">Transaction Details</p><div class="kvl">' +
-        '<span class="td-k">Contact</span><span class="ad-person">' + esc(s.contact) + '</span>' +
-        '<span class="td-k">Transaction ID</span><span>' + idChip(h ? h.id : TXN_ID) + '</span>' +
-        '<span class="td-k">Receipt info</span><span class="ad-rc">' + receiptChips() + (s.rcpt === "skip" || s.rcpt === "ignore" ? '' : '<button type="button" class="btn sm" data-a="viewreceipt">View Receipt</button>') + '</span>' +
-        '<span class="td-k">Receipt serial</span><span>' + (eligible() && s.rcpt !== "skip" && s.rcpt !== "ignore" ? (h ? ["R-2026-0314", "R-2026-0214", "-"][s.view] : "R-2026-0418") : "-") + '</span>' +
-        '<span class="td-k">Date received</span><span>' + fmtLong(s.date) + '</span>' +
-        '<span class="td-k">Frequency</span><span>' + (h ? h.freq : "One-time") + '</span>' +
-        '<span class="td-k">Tax-deductible</span><span>' + (eligible() ? '<b>' + money(eligible()) + '</b> on one receipt' : 'None. Nothing here is a gift.') + '</span>' +
-        '<span class="td-k">Created source</span><span>Keela</span></div>' +
+        '<div class="td"><div class="td-head"><div><div class="td-amt">' + money(s.total) + '<small>CAD</small></div><div class="td-chips"><span class="tchip">' + IC.card + 'Card</span><span class="tchip green">Paid</span></div></div>' +
+        '<div class="td-act"><span class="tchip" title="The contact is locked after saving. Other details can still be corrected.">' + IC.lock + 'Contact locked</span><div class="row"><button type="button" class="btn sm navy" data-a="noop" title="Opens this payment in Aplos, where the accounting lives. Not part of this prototype.">Open in Aplos<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" aria-hidden="true"><path d="M9.5 2.5h4v4M13.5 2.5L7.5 8.5M12 9.5v3a1 1 0 0 1-1 1H3.5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3"/></svg></button>' + (h ? '' : '<button type="button" class="btn sm" data-a="edit">Edit</button>') + idChip(h ? h.id : TXN_ID) + '</div></div></div>' +
+        '<div class="td-grid"><div class="td-dl"><span class="td-k">Contact</span><span class="person"><i>' + initials(s.contact) + '</i>' + esc(s.contact) + '</span><span class="td-k">Date received</span><span class="tchip" style="width:max-content">' + IC.cal + fmtLong(s.date) + '</span><span class="td-k">Frequency</span><span>' + (h ? h.freq : "One-time") + '</span><span class="td-k">Tax-deductible</span><span>' + (eligible() ? '<b>' + money(eligible()) + '</b> on one receipt' : 'None. Nothing here is a gift.') + '</span></div>' +
+        '<div class="td-rc"><span class="td-k">Receipt info</span><div class="row">' + receiptChips() + '</div>' + (s.rcpt === "skip" || s.rcpt === "ignore" ? '' : '<button type="button" class="btn sm" data-a="viewreceipt">View Receipt</button>') + '</div></div>' +
         '<p class="sub" style="margin:-6px 0 0">The contact is locked after saving, so the audit trail holds. Other details can still be corrected.</p><p class="td-h2">Transaction Items' + (s.lines.length > 1 ? ' <span class="badge-split">' + IC.split + 'Split · ' + s.lines.length + ' parts</span>' : '') + '</p><div class="items">' + items + '</div><button type="button" class="link" data-a="list" style="justify-self:start">Back to transactions</button></div>';
     }
     function receiptModal() {
@@ -851,7 +856,7 @@ table.list tr.split-p:hover td, table.list tr.split-c:hover td { background: #f3
     root.addEventListener("click", function (e) {
       var t = e.target.closest("button");
       if (!t) { var tr = e.target.closest("tr[data-v]"); if (tr && root.contains(tr)) t = root.querySelector('button.link[data-v="' + tr.dataset.v + '"]'); }
-      if (!t || !root.contains(t) || t.classList.contains("grip")) return;
+      if (!t || !root.contains(t) || t.classList.contains("grip") || t.dataset.a === "noop") return;
       s.clicks++;
       var a = t.dataset.a, prevScreen = s.screen, prevView = s.view;
       if (a === "new") { s.view = null; s.contact = s.owner; s.screen = "flow"; s.step = 1; s.entry = "quick"; s.confirm = false; s.lines = [blankLine(s.total)]; }
