@@ -26,7 +26,7 @@ section{margin-top:64px}
 .rule a,.src a{color:var(--blue);text-underline-offset:3px}
 .docs{display:grid;gap:36px 28px}
 @media (min-width:980px){.docs{grid-template-columns:1fr 1fr 1.12fr;align-items:start}}
-.doc h3{font-size:15px;font-weight:600;margin:0 0 4px}
+.doc h3{font-size:15px;font-weight:600;margin:0 0 12px}
 .doc .how{font-size:15px;color:var(--muted);margin:0 0 14px;min-height:2.9em}
 .desk{background:var(--desk);padding:18px;display:grid;gap:12px}
 .sheet{background:var(--sheet);color:var(--sheet-fg);border:1px solid var(--sheet-line);padding:16px 16px 14px;font-size:13px;line-height:1.4;box-shadow:0 1px 1px rgba(0,0,0,.04),0 6px 16px rgba(0,0,0,.06)}
@@ -80,14 +80,24 @@ section{margin-top:52px}
 .score .m{font-weight:700;text-align:center}.score .y .m{color:var(--green)}.score .x .m{color:var(--red)}
 .score .x span:last-child{color:var(--fg)}.score .y span:last-child{color:var(--muted)}
 .res li{font-size:16px}
+
+.ct{font-size:.8em;vertical-align:.25em;text-decoration:none;color:var(--blue);margin-right:2px}
+.ct:hover{text-decoration:underline}
+.refs{border-top:1px solid var(--line);padding-top:28px}
+.refs ol{margin:0;padding:0;list-style:none;counter-reset:ref;display:grid;gap:10px;max-width:92ch;font-size:15px;color:var(--muted)}
+.refs li{counter-increment:ref;display:grid;grid-template-columns:34px 1fr;scroll-margin-top:16px}
+.refs li::before{content:"[" counter(ref) "]";color:var(--fg);font-variant-numeric:tabular-nums}
+.refs li:target span{background:color-mix(in srgb,var(--blue) 14%,transparent)}
+.refs a{color:var(--blue);text-underline-offset:3px}
+.refs .fine{font-size:14px;color:var(--muted);margin:18px 0 0}
 </style>
 <div class="w">
 <h1>One payment, three countries, one correct receipt</h1>
-<p class="lede">A supporter pays <span id="l-amt">$200</span> at a gala: half for a ticket, half as a gift. Tax rules treat the two halves differently, and the product could only record a payment as one thing. This is the receipt before and after my redesign at Keela, part of Aplos (now Velora).</p>
+<p class="lede">A supporter pays <span id="l-amt">$200</span> at a gala: half ticket, half gift. Tax rules treat the halves differently, but the product could only record one type. Before and after my redesign at Keela, part of Aplos (now Velora).</p>
 
 <section aria-label="The payment">
 <div class="pay"><div class="pay-bar" aria-hidden="true"><span class="t" id="b-t"></span><span class="g" id="b-g1"></span><span class="g" id="b-g2"></span></div>
-<div class="lgd"><span><i class="sw t"></i>Ticket: she got something back, so it isn't a gift</span><span><i class="sw g"></i>Gift: the part that earns tax relief</span></div></div>
+<div class="lgd"><span><i class="sw t"></i>Ticket: not a gift</span><span><i class="sw g"></i>Gift: earns tax relief</span></div></div>
 </section>
 
 <section aria-label="Receipts by country">
@@ -99,44 +109,53 @@ section{margin-top:52px}
 <section aria-label="How I resolved it">
 <h2>How I resolved it</h2>
 <ol class="res">
-<li><div><b>One record, split by type</b><span>Each part keeps its own type, so the product can tell the ticket from the gift.</span></div></li>
-<li><div><b>The total checks itself</b><span>The parts must add up to what was paid before you can continue.</span></div></li>
-<li><div><b>One split, each country's wording</b><span>The same split fills in the document each country expects. Legal and compliance set the required fields. My job was to make getting them right the easy path.</span></div></li>
-<li><div><b>The receipt shows before you save</b><span>People doing the books see what the donor will get while they can still fix it.</span></div></li>
+<li><div><b>One record, split by type</b><span>The product can tell the ticket from the gift.</span></div></li>
+<li><div><b>The total checks itself</b><span>The parts must add up before you can continue.</span></div></li>
+<li><div><b>One split, each country's wording</b><span>Legal set the required fields. I made getting them right the easy path.</span></div></li>
+<li><div><b>The receipt shows before you save</b><span>So it can still be fixed.</span></div></li>
 </ol>
 </section>
 
-<div class="src">
-<p>Rebuilt with sample data and a made-up organization to show the pattern. Simplified, and not tax advice.</p>
-<p>Rules from: <a href="https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/operating-a-registered-charity/issuing-receipts/split-receipting.html">CRA, split receipting</a> · <a href="https://www.irs.gov/charities-non-profits/charitable-organizations/charitable-organizations-substantiation-and-disclosure-requirements">IRS, substantiation and disclosure</a> · <a href="https://www.gov.uk/government/publications/charities-detailed-guidance-notes/chapter-3-gift-aid">HMRC, Gift Aid guidance, chapter 3.25 on split payments</a></p>
-</div>
+<section class="refs" aria-label="References">
+<h2>References</h2>
+<ol>
+<li id="ref-1"><span>Canada Revenue Agency. <a href="https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/operating-a-registered-charity/issuing-receipts/split-receipting.html">Split receipting</a>. How to work out the eligible amount when a donor gets something back.</span></li>
+<li id="ref-2"><span>Canada Revenue Agency. <a href="https://www.canada.ca/en/revenue-agency/services/tax/technical-information/income-tax/income-tax-folios-index/series-7-charities-non-profit-organizations/series/income-tax-folio-s7-f1-c1-split-receipting-deemed-fair-market-value.html">Income Tax Folio S7-F1-C1, Split-receipting and Deemed Fair Market Value</a>. The 80% threshold and the small-advantage exception.</span></li>
+<li id="ref-3"><span>Canada Revenue Agency. <a href="https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/sample-official-donation-receipts.html">Sample official donation receipts</a>. What an official receipt has to contain.</span></li>
+<li id="ref-4"><span>Internal Revenue Service. <a href="https://www.irs.gov/charities-non-profits/charitable-organizations/charitable-organizations-substantiation-and-disclosure-requirements">Charitable organizations: substantiation and disclosure requirements</a>. The written disclosure for part-gift payments over $75.</span></li>
+<li id="ref-5"><span>Internal Revenue Service. <a href="https://www.irs.gov/pub/irs-pdf/p1771.pdf">Publication 1771, Charitable Contributions: Substantiation and Disclosure Requirements</a> (PDF). Worked examples and penalties.</span></li>
+<li id="ref-6"><span>HM Revenue and Customs. <a href="https://www.gov.uk/government/publications/charities-detailed-guidance-notes/chapter-3-gift-aid">Charities: detailed guidance notes, Chapter 3: Gift Aid</a>. Section 3.23 on valuing benefits, section 3.25 on split payments.</span></li>
+<li id="ref-7"><span>HM Revenue and Customs. <a href="https://www.gov.uk/guidance/gift-aid-what-donations-charities-and-cascs-can-claim-on">Gift Aid donation claims for charities and CASCs</a>. Which payments count as donations.</span></li>
+</ol>
+<p class="fine">All pages read in November 2026. The receipts above use sample data and are simplified. Not tax advice.</p>
+</section>
 </div>
 <script>
 (function(){
 var C={
  CA:{s:"$",name:"Canada",doc:"receipt",ttl:"Official receipt for income tax purposes",reg:"Charity no. 00000 0000 RR0001",
-  need:["The total paid","What the donor got back","The gift that counts for tax"],
-  rule:"If the ticket were worth more than 80% of the payment, none of it would count as a gift.",
+  need:["Total paid","What she got back","The gift"],
+  rule:"A ticket worth over 80% of the payment would mean no gift at all.",
   one:[["Total amount received",200,"","",1],["Eligible amount of gift for tax purposes",200,"x","Should be {100}",3]],
   part:"Eligible amount of gift for tax purposes",
   after:[["Total amount received",200,"","",1],["Value of advantage: gala ticket",100,"","",2],["Eligible amount of gift for tax purposes",100,"key","",3]],
-  afterN:"Gift directed to General Donations {50} and Capital Campaign {50}."},
+  afterN:"To General Donations {50} and Capital Campaign {50}."},
  US:{s:"$",name:"the United States",doc:"acknowledgment",ttl:"Written acknowledgment and disclosure",reg:"EIN 00-0000000",
-  need:["The total paid","A fair estimate of what the donor got back","The amount that's deductible"],
-  rule:"This written disclosure is required whenever a part-gift payment is over $75.",
+  need:["Total paid","Estimate of what she got back","Deductible amount"],
+  rule:"Required in writing for any part-gift payment over $75.",
   one:[["Contribution received",200,"","",1],["Amount deductible",200,"x","Should be {100}",3]],
   part:"Amount deductible",
   after:[["Total payment",200,"","",1],["Good-faith estimate of goods or services provided: gala ticket",100,"","",2],["Amount deductible as a charitable contribution",100,"key","",3]],
-  afterN:"Your deductible amount is limited to the excess of your payment over the value of goods or services we provided. Gift directed to General Donations {50} and Capital Campaign {50}."},
+  afterN:"Only the amount above the value of what you received is deductible. To General Donations {50} and Capital Campaign {50}."},
  UK:{s:"£",name:"the United Kingdom",doc:"confirmation",ttl:"Donation confirmation and Gift Aid record",reg:"Registered charity no. 0000000",
-  need:["The total paid","The ticket, split out at its public price","The gift the charity can claim Gift Aid on"],
-  rule:"The UK has no tax receipt. Through Gift Aid the charity reclaims 25p per £1 of gift, but only if the ticket is split out and the donor is told. Without the split, none of the payment qualifies.",
+  need:["Total paid","Ticket, split out","Gift for Gift Aid"],
+  rule:"No tax receipt here: the charity reclaims 25p per £1 of gift. Without a split the donor knows about, nothing qualifies.",
   one:[["Donation received",200,"","",1],["Donation under Gift Aid",200,"x","Should be {100}",3],["Gift Aid the charity reclaims",50,"x","Should be {25}"]],
   part:"Donation under Gift Aid",
   after:[["Total payment",200,"","",1],["Gala ticket, at its public price",100,"","",2],["Donation under Gift Aid",100,"key","",3],["Gift Aid the charity reclaims, 25p per £1",25]],
-  afterN:"Split agreed with the donor at the time of payment. Gift Aid declaration on file. Donation directed to General Donations {50} and Capital Campaign {50}."}
+  afterN:"Split agreed with the donor. Gift Aid declaration on file. To General Donations {50} and Capital Campaign {50}."}
 };
-var SRC={CA:["CRA guidance","https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/operating-a-registered-charity/issuing-receipts/split-receipting.html"],US:["IRS guidance","https://www.irs.gov/charities-non-profits/charitable-organizations/charitable-organizations-substantiation-and-disclosure-requirements"],UK:["HMRC guidance, 3.25","https://www.gov.uk/government/publications/charities-detailed-guidance-notes/chapter-3-gift-aid"]};
+var CITE={CA:[1,2,3],US:[4,5],UK:[6,7]};
 var cur="CA";
 function fm(c,n){return c.s+Number(n).toFixed(2)}
 function sh(c,n){return c.s+n}
@@ -154,16 +173,16 @@ function draw(){
  var c=C[cur];
  document.getElementById("l-amt").textContent=sh(c,200);
  document.getElementById("b-t").textContent=sh(c,100)+" ticket";document.getElementById("b-g1").textContent=sh(c,50)+" gift";document.getElementById("b-g2").textContent=sh(c,50)+" gift";
- document.getElementById("need-h").textContent="What "+c.name+" needs on the "+c.doc;
+ document.getElementById("need-h").textContent="What "+c.name+" needs";
  document.getElementById("need-l").innerHTML=c.need.map(function(t,i){return '<li>'+dot(i+1)+t+'</li>'}).join('');
- document.getElementById("rule").innerHTML=c.rule+' <a href="'+SRC[cur][1]+'">'+SRC[cur][0]+'</a>';
+ document.getElementById("rule").innerHTML=c.rule+' '+CITE[cur].map(function(n){return '<a class="ct" href="#ref-'+n+'" aria-label="Reference '+n+'">['+n+']</a>'}).join('');
  document.getElementById("docs").innerHTML=
-  '<div class="doc"><span class="tag bad">✕ Wrong</span><h3>Before: logged as one donation</h3><p class="how">The quick way: pick "donation", enter '+sh(c,200)+'.</p><div class="desk">'+sheet(c,"0418",c.one)+'</div>'+
-   score([[1,"Total shown"],[0,"Missing: nothing says she got a ticket"],[0,"Wrong: says "+sh(c,200)+", should be "+sh(c,100)]])+'</div>'+
-  '<div class="doc"><span class="tag mid">△ Right amounts, scattered</span><h3>Before: the workaround</h3><p class="how">Log three separate payments, then reconcile by hand.</p><div class="desk">'+sheet(c,"0418",[[c.part+', General Donations',50,"","",3]],"",1)+sheet(c,"0419",[[c.part+', Capital Campaign',50,"","",3]],"",1)+'<div class="recline"><span><b>Other revenue</b>, gala ticket, no document</span><span>'+fm(c,100)+'</span></div></div>'+
-   score([[0,"Missing: no document shows the "+sh(c,200)],[0,"Missing: the ticket has no document"],[1,"Right, but spread over two documents"]])+'</div>'+
-  '<div class="doc"><span class="tag ok">✓ Correct</span><h3>After: one payment, split by type</h3><p class="how">One record. Each part keeps its own type.</p><div class="desk">'+sheet(c,"0418",c.after,c.afterN)+'</div>'+
-   score([[1,"Total shown"],[1,"Ticket shown at its value"],[1,"Gift is the right amount"]])+'</div>';
+  '<div class="doc"><span class="tag bad">✕ Wrong</span><h3>Before: one donation</h3><div class="desk">'+sheet(c,"0418",c.one)+'</div>'+
+   score([[1,"Shown"],[0,"Missing"],[0,"Says "+sh(c,200)+", should be "+sh(c,100)]])+'</div>'+
+  '<div class="doc"><span class="tag mid">△ Scattered</span><h3>Before: three separate records</h3><div class="desk">'+sheet(c,"0418",[[c.part+', General Donations',50,"","",3]],"",1)+sheet(c,"0419",[[c.part+', Capital Campaign',50,"","",3]],"",1)+'<div class="recline"><span><b>Other revenue</b>, gala ticket, no document</span><span>'+fm(c,100)+'</span></div></div>'+
+   score([[0,"Missing"],[0,"Missing"],[1,"Right, over two documents"]])+'</div>'+
+  '<div class="doc"><span class="tag ok">✓ Correct</span><h3>After: one split record</h3><div class="desk">'+sheet(c,"0418",c.after,c.afterN)+'</div>'+
+   score([[1,"Shown"],[1,"Shown"],[1,"Right"]])+'</div>';
  [].forEach.call(document.querySelectorAll("[data-c]"),function(b){b.setAttribute("aria-pressed",b.getAttribute("data-c")===cur?"true":"false")});
 }
 document.querySelector(".tabs").addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-c]");if(!b)return;cur=b.getAttribute("data-c");draw()});
