@@ -90,20 +90,70 @@ section{margin-top:52px}
 .refs li:target span{background:color-mix(in srgb,var(--blue) 14%,transparent)}
 .refs a{color:var(--blue);text-underline-offset:3px}
 .refs .fine{font-size:14px;color:var(--muted);margin:18px 0 0}
+
+/* legibility pass */
+:root{--muted:#4b4e57;--sheet-muted:#55585f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--muted:#c0c3cc}}
+:root[data-theme="dark"]{--muted:#c0c3cc}
+body{font-size:18px;line-height:1.55}
+.w{max-width:1260px}
+.lede{font-size:clamp(18px,1.7vw,21px)}
+h2{font-size:24px;margin:0 0 16px}
+.lgd{font-size:17px;color:var(--fg)}.sw{width:14px;height:14px}
+.pay-bar{height:50px;font-size:17px;line-height:50px}
+.tabs{gap:8px;border-bottom:0;margin:0 0 22px;flex-wrap:wrap}
+.tabs button{font-size:17px;padding:11px 18px;margin:0;border:1.5px solid var(--line);color:var(--fg);min-height:46px}
+.tabs button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.need{gap:12px;margin:0 0 44px}
+.need h2{font-size:19px}
+.need li{font-size:18px;font-weight:500}
+.need .why{font-size:17px}
+.n{width:24px;height:24px;font-size:13px}
+.cmp-h{margin-bottom:8px}
+.guide{font-size:17px;color:var(--muted);margin:0 0 26px;max-width:74ch}
+.gy{color:var(--green);font-weight:700}.gx{color:var(--red);font-weight:700}
+.docs{gap:40px 24px}
+.tag{font-size:14.5px;padding:6px 11px;margin-bottom:10px;border-width:1.5px}
+.doc h3{font-size:18px;margin:0 0 14px}
+.desk{padding:12px}
+.sheet{font-size:15px;line-height:1.45;padding:18px 16px 16px}
+.sheet .org{font-size:16px}.sheet .org small{font-size:12.5px}
+.sheet .smp{font-size:11px}
+.sheet .ttl{font-size:13px;margin:12px 0 8px}
+.sheet .meta{font-size:13px;gap:3px 12px;margin-bottom:12px}
+.sheet td{padding:9px 0}
+.sheet td:last-child{font-size:15px}
+.sheet td:has(.n){padding-left:30px}.sheet td .n{top:9px;width:21px;height:21px;font-size:12px}
+.sheet .fix{font-size:13.5px;font-weight:600}
+.sheet .nt{font-size:13px}
+.recline{font-size:15px}
+.score{font-size:17px;gap:9px;margin-top:16px}
+.score li{grid-template-columns:24px 20px 1fr;align-items:center}
+.score .y span:last-child{color:var(--fg)}
+.take{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:36px 0 0}
+.res li{font-size:18px;grid-template-columns:30px 1fr}
+.refs ol{font-size:16.5px;gap:12px}.refs li{grid-template-columns:38px 1fr}
+.refs .fine{font-size:15.5px}
+.ct{font-size:.85em}
 </style>
 <div class="w">
 <h1>One payment, three countries, one correct receipt</h1>
 <p class="lede">A supporter pays <span id="l-amt">$200</span> at a gala: half ticket, half gift. Tax rules treat the halves differently, but the product could only record one type. Before and after my redesign at Keela, part of Aplos (now Velora).</p>
 
 <section aria-label="The payment">
+<h2>The payment</h2>
 <div class="pay"><div class="pay-bar" aria-hidden="true"><span class="t" id="b-t"></span><span class="g" id="b-g1"></span><span class="g" id="b-g2"></span></div>
 <div class="lgd"><span><i class="sw t"></i>Ticket: not a gift</span><span><i class="sw g"></i>Gift: earns tax relief</span></div></div>
 </section>
 
 <section aria-label="Receipts by country">
+<h2>Pick a country to see what it asks for</h2>
 <div class="tabs" role="group" aria-label="Country"><button type="button" data-c="CA" aria-pressed="true">Canada</button><button type="button" data-c="US" aria-pressed="false">United States</button><button type="button" data-c="UK" aria-pressed="false">United Kingdom</button></div>
 <div class="need" aria-live="polite"><h2 id="need-h"></h2><ol id="need-l"></ol><p class="why" id="rule"></p></div>
+<h2 class="cmp-h">Then compare the three documents</h2>
+<p class="guide">The numbered dots on each document match the three requirements above. A <span class="gy">✓</span> means it is there and right. A <span class="gx">✕</span> means it is missing or wrong.</p>
 <div class="docs" id="docs"></div>
+<p class="take" id="take"></p>
 </section>
 
 <section aria-label="How I resolved it">
@@ -176,6 +226,7 @@ function draw(){
  document.getElementById("need-h").textContent="What "+c.name+" needs";
  document.getElementById("need-l").innerHTML=c.need.map(function(t,i){return '<li>'+dot(i+1)+t+'</li>'}).join('');
  document.getElementById("rule").innerHTML=c.rule+' '+CITE[cur].map(function(n){return '<a class="ct" href="#ref-'+n+'" aria-label="Reference '+n+'">['+n+']</a>'}).join('');
+ document.getElementById("take").textContent="Only the split record gives "+c.name+" all three.";
  document.getElementById("docs").innerHTML=
   '<div class="doc"><span class="tag bad">✕ Wrong</span><h3>Before: one donation</h3><div class="desk">'+sheet(c,"0418",c.one)+'</div>'+
    score([[1,"Shown"],[0,"Missing"],[0,"Says "+sh(c,200)+", should be "+sh(c,100)]])+'</div>'+
