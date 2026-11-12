@@ -135,10 +135,17 @@ h2{font-size:24px;margin:0 0 16px}
 .refs ol{font-size:16.5px;gap:12px}.refs li{grid-template-columns:38px 1fr}
 .refs .fine{font-size:15.5px}
 .ct{font-size:.85em}
+
+.br{font-weight:600;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+.br:hover{text-decoration-thickness:2.5px}
+.br:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.br.keela{color:#7745d6}.br.aplos{color:#1e77a8}.br.velora{color:#cf4470}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .br.keela{color:#ab8df2}:root:not([data-theme="light"]) .br.aplos{color:#5fb3de}:root:not([data-theme="light"]) .br.velora{color:#f08aa6}}
+:root[data-theme="dark"] .br.keela{color:#ab8df2}:root[data-theme="dark"] .br.aplos{color:#5fb3de}:root[data-theme="dark"] .br.velora{color:#f08aa6}
 </style>
 <div class="w">
 <h1>One payment, one correct receipt</h1>
-<p class="lede">A <span id="l-amt">$200</span> gala payment: half ticket, half gift. Before and after my redesign at Keela, part of Aplos (now Velora).</p>
+<p class="lede">A <span id="l-amt">$200</span> gala payment: half ticket, half gift. Before and after my redesign at <a class="br keela" href="https://www.keela.co/">Keela</a>, part of <a class="br aplos" href="https://www.aplos.com/">Aplos</a> (now <a class="br velora" href="https://www.joinvelora.com/">Velora</a>).</p>
 
 <section aria-label="The payment">
 <h2>The payment</h2>
