@@ -1,0 +1,110 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>Split Payment Receipts</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--bg:#f3f4f7;--panel:#fff;--fg:#17181d;--muted:#5c606c;--line:#d9dce3;--accent:#5a3fd8;--accent-soft:#eeeafd;--bad:#b42318;--bad-bg:#fdecea;--ok:#1d7a49;--ok-bg:#e5f4ec;--warn-bg:#fdf3dc;--warn:#7a5200;--paper:#fff;--paper-fg:#1c1d22;--paper-line:#e2e4ea;--paper-muted:#6b6f7a;
+--ui:-apple-system,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121318;--panel:#1b1d24;--fg:#ecedf2;--muted:#a6aab6;--line:#33363f;--accent:#a796ff;--accent-soft:#2a2650;--bad:#f2867d;--bad-bg:#3d1f1f;--ok:#6fd39b;--ok-bg:#173226;--warn-bg:#3a2f14;--warn:#f0c46b}}
+:root[data-theme="dark"]{--bg:#121318;--panel:#1b1d24;--fg:#ecedf2;--muted:#a6aab6;--line:#33363f;--accent:#a796ff;--accent-soft:#2a2650;--bad:#f2867d;--bad-bg:#3d1f1f;--ok:#6fd39b;--ok-bg:#173226;--warn-bg:#3a2f14;--warn:#f0c46b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 var(--ui)}
+.w{max-width:1120px;margin:0 auto;padding:32px 16px 64px}
+h1{font-size:clamp(24px,3.6vw,32px);line-height:1.2;font-weight:650;letter-spacing:-.015em;margin:0 0 8px;text-wrap:balance}
+.lede{color:var(--muted);margin:0;max-width:68ch}
+.task{margin:22px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.task b{font-weight:600}.chip{font-size:13px;background:var(--bg);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:22px 0 18px}
+.seg{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
+.seg button{font:600 14px/1 var(--ui);color:var(--muted);background:none;border:0;border-radius:999px;padding:10px 16px;min-height:38px;cursor:pointer}
+.seg button:hover{color:var(--fg)}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.rule{color:var(--muted);font-size:14.5px;margin:0;flex:1;min-width:240px}
+.cols{display:grid;gap:18px}
+@media (min-width:880px){.cols{grid-template-columns:1fr 1fr;align-items:start}}
+.col{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px;min-width:0}
+.col h2{font-size:18px;font-weight:650;margin:0}
+.col .sub{color:var(--muted);font-size:14.5px;margin:-8px 0 0}
+.way{display:grid;gap:10px}
+.way h3{font-size:14px;font-weight:600;margin:0;color:var(--muted)}
+.flag{border-radius:10px;padding:10px 12px;font-size:14.5px}
+.flag.bad{background:var(--bad-bg);color:var(--bad)}.flag.warn{background:var(--warn-bg);color:var(--warn)}.flag.ok{background:var(--ok-bg);color:var(--ok)}
+.flag b{font-weight:650}
+.rc{background:var(--paper);color:var(--paper-fg);border:1px solid var(--paper-line);border-radius:10px;padding:14px 16px;display:grid;gap:8px;font-size:14px;position:relative;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.rc .top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.rc .org{font-weight:650;font-size:15px}
+.rc .smp{font:600 10.5px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--paper-muted);border:1px solid var(--paper-line);border-radius:4px;padding:3px 6px;white-space:nowrap}
+.rc .kind{color:var(--paper-muted);font-size:12.5px;margin-top:-4px}
+.rc .kv{display:flex;justify-content:space-between;gap:12px;padding-top:8px;border-top:1px solid var(--paper-line)}
+.rc .kv span{min-width:0}.rc .kv b{font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rc .kv.tot b{font-size:16px}
+.rc .kv.wrong b{color:#b42318;text-decoration:underline wavy;text-underline-offset:3px}
+.rc .al{color:var(--paper-muted);font-size:12.5px;padding-top:8px;border-top:1px solid var(--paper-line)}
+.pair{display:grid;gap:10px}@media (min-width:520px){.pair{grid-template-columns:1fr 1fr}}
+.rec{border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
+.rec b{color:var(--fg);font-weight:600}
+.foot{color:var(--muted);font-size:13.5px;margin:22px 0 0;max-width:80ch}
+</style>
+<div class="w">
+<h1>One payment, one receipt: before and after the split</h1>
+<p class="lede">From my Transaction Logging Redesign at Keela, part of Aplos (now Velora). The same gala payment, as the receipt looked before the redesign and after it, under three countries' rules.</p>
+<div class="task"><b>The payment:</b><span id="t-line"></span><span class="chip" id="t-1"></span><span class="chip" id="t-2"></span><span class="chip" id="t-3"></span></div>
+<div class="bar">
+<div class="seg" role="group" aria-label="Country"><button type="button" data-c="CA" aria-pressed="true">Canada</button><button type="button" data-c="US" aria-pressed="false">United States</button><button type="button" data-c="UK" aria-pressed="false">United Kingdom</button></div>
+<p class="rule" id="rule" aria-live="polite"></p>
+</div>
+<div class="cols">
+<section class="col" aria-label="Before the redesign"><h2>Before: one type per payment</h2><p class="sub">The product made you pick one type, so there were two ways to log this. Neither gave one correct receipt.</p><div id="before"></div></section>
+<section class="col" aria-label="After the redesign"><h2>After: one payment, split by type</h2><p class="sub">Each part keeps its own type, so one receipt can show the whole payment.</p><div id="after"></div></section>
+</div>
+<p class="foot">Illustrative: rebuilt with sample data and a made-up organization. The rules are simplified to show the pattern. This is not tax advice.</p>
+</div>
+<script>
+(function(){
+var C={
+ CA:{cur:"$",name:"Canada",kind:"Official donation receipt for income tax purposes",
+  rule:"Canada: when the donor gets something back, the receipt shows the total paid, the value of that advantage, and the eligible amount left over.",
+  tot:"Total amount received",adv:"Value of advantage (gala ticket)",elig:"Eligible amount of gift",
+  wrongNote:"The receipt says the full 200 is eligible. Only the 100 gift should be.",
+  splitNote:"The amounts are right, but one payment is now three records and two receipts, and no receipt shows the total or the advantage."},
+ US:{cur:"$",name:"United States",kind:"Written acknowledgment of your contribution",
+  rule:"United States: a payment over $75 that is partly a gift needs a written disclosure with a good-faith estimate of what the donor received.",
+  tot:"Payment received",adv:"Good-faith estimate of goods received (gala ticket)",elig:"Deductible contribution",
+  wrongNote:"The acknowledgment says the full 200 is deductible, with no estimate of what the donor received.",
+  splitNote:"The amounts are right, but one payment is now three records and two acknowledgments, and neither carries the disclosure for the ticket."},
+ UK:{cur:"£",name:"United Kingdom",kind:"Gift Aid acknowledgement",
+  rule:"United Kingdom: Gift Aid applies only to the true gift. The ticket is a purchase, so it stays out of the claim. The charity claims 25p for every £1 of eligible gift.",
+  tot:"Payment received",adv:"Gala ticket (a purchase, not eligible)",elig:"Donation eligible for Gift Aid",
+  wrongNote:"Gift Aid is claimed on the full 200. Only the 100 gift is eligible, so the claim is double what it should be.",
+  splitNote:"The amounts are right, but one payment is now three records and two acknowledgements, and nothing ties them back to the 200."}
+};
+var cur="CA";
+function m(c,n){return c.cur+n}
+function rc(c,no,rows,extra){return '<div class="rc"><div class="top"><span class="org">ABC Organization</span><span class="smp">Sample</span></div><div class="kind">'+c.kind+' · No. '+no+' · Sarah Padilla</div>'+rows.map(function(r){return '<div class="kv'+(r[2]?' '+r[2]:'')+'"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>'}).join('')+(extra||'')+'</div>'}
+function draw(){
+ var c=C[cur],uk=cur==="UK";
+ document.getElementById("t-line").textContent="Sarah Padilla pays "+m(c,200)+" at the Annual Gala.";
+ document.getElementById("t-1").textContent=m(c,100)+" gala ticket";
+ document.getElementById("t-2").textContent=m(c,50)+" General Donations";
+ document.getElementById("t-3").textContent=m(c,50)+" Capital Campaign";
+ document.getElementById("rule").textContent=c.rule;
+ var w1=[[c.tot,m(c,200)],[c.elig,m(c,200),"wrong"]]; if(uk) w1.push(["Gift Aid the charity claims",m(c,50),"wrong"]);
+ var s1=[[uk?"Donation eligible for Gift Aid":c.elig,m(c,50)]],s2=[[uk?"Donation eligible for Gift Aid":c.elig,m(c,50)]];
+ if(uk){s1.push(["Gift Aid the charity claims","£12.50"]);s2.push(["Gift Aid the charity claims","£12.50"])}
+ document.getElementById("before").innerHTML=
+  '<div class="way"><h3>Way 1: log it as one donation</h3>'+rc(c,"0418",w1)+'<div class="flag bad"><b>Wrong receipt.</b> '+c.wrongNote.replace(/\b(200|100)\b/g,function(x){return m(c,x)})+'</div></div>'+
+  '<div class="way" style="margin-top:16px"><h3>Way 2: the workaround, three separate records</h3><div class="pair">'+rc(c,"0418",s1,'<div class="al">General Donations</div>')+rc(c,"0419",s2,'<div class="al">Capital Campaign</div>')+'</div>'+
+  '<div class="rec"><span><b>Other revenue</b> · gala ticket · no receipt</span><b>'+m(c,100)+'</b></div>'+
+  '<div class="flag warn"><b>Right amounts, split apart.</b> '+c.splitNote.replace(/\b200\b/g,function(x){return m(c,x)})+'</div></div>';
+ var a=[[c.tot,m(c,200),"tot"],[c.adv,m(c,100)],[c.elig,m(c,100)]]; if(uk) a.push(["Gift Aid the charity can claim",m(c,25)]);
+ document.getElementById("after").innerHTML=
+  rc(c,"0418",a,'<div class="al">Your gift supports: General Donations '+m(c,50)+' · Capital Campaign '+m(c,50)+'</div>')+
+  '<div class="flag ok" style="margin-top:10px"><b>One record, one receipt.</b> The total, what the donor got back and the gift all sit on the same document, worded for '+(cur==="US"?"the ":cur==="UK"?"the ":"")+c.name+'.</div>';
+ [].forEach.call(document.querySelectorAll("[data-c]"),function(b){b.setAttribute("aria-pressed",b.getAttribute("data-c")===cur?"true":"false")});
+}
+document.querySelector(".seg").addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-c]");if(!b)return;cur=b.getAttribute("data-c");draw()});
+draw();
+})();
+</script>
+
+</body></html>
