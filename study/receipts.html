@@ -2,107 +2,146 @@
 <title>Split Payment Receipts</title>
 <meta name="robots" content="noindex,nofollow">
 <style>
-:root{--bg:#f3f4f7;--panel:#fff;--fg:#17181d;--muted:#5c606c;--line:#d9dce3;--accent:#5a3fd8;--accent-soft:#eeeafd;--bad:#b42318;--bad-bg:#fdecea;--ok:#1d7a49;--ok-bg:#e5f4ec;--warn-bg:#fdf3dc;--warn:#7a5200;--paper:#fff;--paper-fg:#1c1d22;--paper-line:#e2e4ea;--paper-muted:#6b6f7a;
---ui:-apple-system,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121318;--panel:#1b1d24;--fg:#ecedf2;--muted:#a6aab6;--line:#33363f;--accent:#a796ff;--accent-soft:#2a2650;--bad:#f2867d;--bad-bg:#3d1f1f;--ok:#6fd39b;--ok-bg:#173226;--warn-bg:#3a2f14;--warn:#f0c46b}}
-:root[data-theme="dark"]{--bg:#121318;--panel:#1b1d24;--fg:#ecedf2;--muted:#a6aab6;--line:#33363f;--accent:#a796ff;--accent-soft:#2a2650;--bad:#f2867d;--bad-bg:#3d1f1f;--ok:#6fd39b;--ok-bg:#173226;--warn-bg:#3a2f14;--warn:#f0c46b}
+:root{--bg:#ffffff;--fg:#111214;--muted:#62656d;--line:#e3e4e8;--blue:#0060d0;--red:#c0271c;--amber:#8a5a00;--green:#1d7a49;--sheet:#ffffff;--sheet-fg:#17181c;--sheet-line:#dcdde2;--sheet-muted:#6b6e76;--desk:#f4f4f6;
+--ui:-apple-system,"Helvetica Neue",Helvetica,Arial,sans-serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101114;--fg:#eeeff2;--muted:#a3a6b0;--line:#2c2e35;--blue:#6aa9ff;--red:#ff8a80;--amber:#f0c46b;--green:#6fd39b;--desk:#191a1f}}
+:root[data-theme="dark"]{--bg:#101114;--fg:#eeeff2;--muted:#a3a6b0;--line:#2c2e35;--blue:#6aa9ff;--red:#ff8a80;--amber:#f0c46b;--green:#6fd39b;--desk:#191a1f}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 var(--ui)}
-.w{max-width:1120px;margin:0 auto;padding:32px 16px 64px}
-h1{font-size:clamp(24px,3.6vw,32px);line-height:1.2;font-weight:650;letter-spacing:-.015em;margin:0 0 8px;text-wrap:balance}
-.lede{color:var(--muted);margin:0;max-width:68ch}
-.task{margin:22px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
-.task b{font-weight:600}.chip{font-size:13px;background:var(--bg);border-radius:999px;padding:4px 10px;white-space:nowrap}
-.bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:22px 0 18px}
-.seg{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
-.seg button{font:600 14px/1 var(--ui);color:var(--muted);background:none;border:0;border-radius:999px;padding:10px 16px;min-height:38px;cursor:pointer}
-.seg button:hover{color:var(--fg)}
-.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
-.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.rule{color:var(--muted);font-size:14.5px;margin:0;flex:1;min-width:240px}
-.cols{display:grid;gap:18px}
-@media (min-width:880px){.cols{grid-template-columns:1fr 1fr;align-items:start}}
-.col{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px;min-width:0}
-.col h2{font-size:18px;font-weight:650;margin:0}
-.col .sub{color:var(--muted);font-size:14.5px;margin:-8px 0 0}
-.way{display:grid;gap:10px}
-.way h3{font-size:14px;font-weight:600;margin:0;color:var(--muted)}
-.flag{border-radius:10px;padding:10px 12px;font-size:14.5px}
-.flag.bad{background:var(--bad-bg);color:var(--bad)}.flag.warn{background:var(--warn-bg);color:var(--warn)}.flag.ok{background:var(--ok-bg);color:var(--ok)}
-.flag b{font-weight:650}
-.rc{background:var(--paper);color:var(--paper-fg);border:1px solid var(--paper-line);border-radius:10px;padding:14px 16px;display:grid;gap:8px;font-size:14px;position:relative;box-shadow:0 1px 2px rgba(0,0,0,.05)}
-.rc .top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.rc .org{font-weight:650;font-size:15px}
-.rc .smp{font:600 10.5px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--paper-muted);border:1px solid var(--paper-line);border-radius:4px;padding:3px 6px;white-space:nowrap}
-.rc .kind{color:var(--paper-muted);font-size:12.5px;margin-top:-4px}
-.rc .kv{display:flex;justify-content:space-between;gap:12px;padding-top:8px;border-top:1px solid var(--paper-line)}
-.rc .kv span{min-width:0}.rc .kv b{font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
-.rc .kv.tot b{font-size:16px}
-.rc .kv.wrong b{color:#b42318;text-decoration:underline wavy;text-underline-offset:3px}
-.rc .al{color:var(--paper-muted);font-size:12.5px;padding-top:8px;border-top:1px solid var(--paper-line)}
-.pair{display:grid;gap:10px}@media (min-width:520px){.pair{grid-template-columns:1fr 1fr}}
-.rec{border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
-.rec b{color:var(--fg);font-weight:600}
-.foot{color:var(--muted);font-size:13.5px;margin:22px 0 0;max-width:80ch}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.5 var(--ui);-webkit-font-smoothing:antialiased}
+.w{max-width:1180px;margin:0 auto;padding:56px 16px 80px}
+h1{font-size:clamp(30px,4.6vw,48px);line-height:1.06;font-weight:600;letter-spacing:-.025em;margin:0;max-width:18ch;text-wrap:balance}
+.lede{font-size:clamp(17px,1.6vw,20px);color:var(--muted);margin:18px 0 0;max-width:58ch}
+h2{font-size:22px;font-weight:600;letter-spacing:-.015em;margin:0 0 14px}
+section{margin-top:64px}
+.pay{display:grid;gap:10px;max-width:760px}
+.pay-bar{display:flex;height:44px;font:600 15px/44px var(--ui);color:#fff;font-variant-numeric:tabular-nums}
+.pay-bar span{padding:0 12px;white-space:nowrap;overflow:hidden}
+.pay-bar .t{background:#1f2a44;flex:2}.pay-bar .g{background:var(--blue);flex:1;border-left:2px solid var(--bg)}
+.pay-key{display:flex;flex-wrap:wrap;gap:4px 22px;font-size:15px;color:var(--muted)}
+.pay-key b{color:var(--fg);font-weight:600}
+.tabs{display:flex;gap:26px;border-bottom:1px solid var(--line);margin:0 0 20px}
+.tabs button{font:500 17px/1 var(--ui);color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;padding:0 0 12px;margin-bottom:-1px;cursor:pointer}
+.tabs button:hover{color:var(--fg)}
+.tabs button[aria-pressed="true"]{color:var(--fg);border-bottom-color:var(--fg);font-weight:600}
+.tabs button:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+.rule{max-width:70ch;margin:0 0 28px}
+.rule a,.src a{color:var(--blue);text-underline-offset:3px}
+.docs{display:grid;gap:36px 28px}
+@media (min-width:980px){.docs{grid-template-columns:1fr 1fr 1.12fr;align-items:start}}
+.doc h3{font-size:15px;font-weight:600;margin:0 0 4px}
+.doc .how{font-size:15px;color:var(--muted);margin:0 0 14px;min-height:2.9em}
+.desk{background:var(--desk);padding:18px;display:grid;gap:12px}
+.sheet{background:var(--sheet);color:var(--sheet-fg);border:1px solid var(--sheet-line);padding:16px 16px 14px;font-size:13px;line-height:1.4;box-shadow:0 1px 1px rgba(0,0,0,.04),0 6px 16px rgba(0,0,0,.06)}
+.sheet .hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding-bottom:10px;border-bottom:1.5px solid var(--sheet-fg)}
+.sheet .org{font-weight:700;font-size:14px;letter-spacing:-.005em}
+.sheet .org small{display:block;font-weight:400;font-size:11px;color:var(--sheet-muted);margin-top:2px}
+.sheet .smp{font:600 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--sheet-muted)}
+.sheet .ttl{font-size:11.5px;color:var(--sheet-muted);margin:10px 0 8px}
+.sheet .meta{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;font-size:11.5px;color:var(--sheet-muted);margin-bottom:10px}
+.sheet .meta b{color:var(--sheet-fg);font-weight:500}
+.sheet table{width:100%;border-collapse:collapse}
+.sheet td{padding:7px 0;border-top:1px solid var(--sheet-line);vertical-align:top}
+.sheet td:last-child{text-align:right;font:500 13px/1.4 var(--mono);white-space:nowrap;padding-left:12px}
+.sheet tr.key td{font-weight:700}.sheet tr.key td:last-child{font-weight:700}
+.sheet .x td:last-child{color:#c0271c;text-decoration:line-through}
+.sheet .fix{display:block;font:500 11.5px/1.3 var(--ui);color:#c0271c;text-decoration:none;margin-top:2px}
+.sheet .nt{font-size:11.5px;color:var(--sheet-muted);margin:10px 0 0;padding-top:8px;border-top:1px solid var(--sheet-line)}
+.recline{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted);border:1px dashed var(--line);background:var(--bg);padding:10px 12px}
+.recline b{color:var(--fg);font-weight:600}.recline span:last-child{font-family:var(--mono)}
+.verdict{font-size:15.5px;margin:14px 0 0;max-width:46ch}
+.verdict b{font-weight:600}.v-bad b{color:var(--red)}.v-mid b{color:var(--amber)}.v-ok b{color:var(--green)}
+.res{display:grid;gap:22px 40px;max-width:980px;counter-reset:r;list-style:none;margin:0;padding:0}
+@media (min-width:760px){.res{grid-template-columns:1fr 1fr}}
+.res li{counter-increment:r;display:grid;grid-template-columns:28px 1fr;font-size:16.5px}
+.res li::before{content:counter(r);color:var(--blue);font-weight:600}
+.res b{display:block;font-weight:600;margin-bottom:2px}
+.res span{color:var(--muted)}
+.src{font-size:14px;color:var(--muted);margin-top:64px;padding-top:18px;border-top:1px solid var(--line);max-width:90ch}
+.src p{margin:0 0 6px}
 </style>
 <div class="w">
-<h1>One payment, one receipt: before and after the split</h1>
-<p class="lede">From my Transaction Logging Redesign at Keela, part of Aplos (now Velora). The same gala payment, as the receipt looked before the redesign and after it, under three countries' rules.</p>
-<div class="task"><b>The payment:</b><span id="t-line"></span><span class="chip" id="t-1"></span><span class="chip" id="t-2"></span><span class="chip" id="t-3"></span></div>
-<div class="bar">
-<div class="seg" role="group" aria-label="Country"><button type="button" data-c="CA" aria-pressed="true">Canada</button><button type="button" data-c="US" aria-pressed="false">United States</button><button type="button" data-c="UK" aria-pressed="false">United Kingdom</button></div>
+<h1>One payment, three countries, one correct receipt</h1>
+<p class="lede">A supporter pays <span id="l-amt">$200</span> at a gala. Half is a ticket, half is a gift. Each country wants that written down differently, and the product could only record a payment as one thing. This is the before and after from my Transaction Logging Redesign at Keela, part of Aplos (now Velora).</p>
+
+<section aria-label="The payment">
+<div class="pay"><div class="pay-bar" aria-hidden="true"><span class="t" id="b-t"></span><span class="g" id="b-g1"></span><span class="g" id="b-g2"></span></div>
+<div class="pay-key"><span><b id="k-t"></b> gala ticket: she got something back</span><span><b id="k-g1"></b> gift to General Donations</span><span><b id="k-g2"></b> gift to Capital Campaign</span></div></div>
+</section>
+
+<section aria-label="Receipts by country">
+<div class="tabs" role="group" aria-label="Country"><button type="button" data-c="CA" aria-pressed="true">Canada</button><button type="button" data-c="US" aria-pressed="false">United States</button><button type="button" data-c="UK" aria-pressed="false">United Kingdom</button></div>
 <p class="rule" id="rule" aria-live="polite"></p>
+<div class="docs" id="docs"></div>
+</section>
+
+<section aria-label="How I resolved it">
+<h2>How I resolved it</h2>
+<ol class="res">
+<li><div><b>One record, split by type</b><span>Each part of the payment keeps its own type and amount, so the product can tell the ticket from the gift.</span></div></li>
+<li><div><b>The total checks itself</b><span>The parts have to add up to what was paid before you can move on, so the split on the receipt always matches the money.</span></div></li>
+<li><div><b>One split, each country's wording</b><span>The same split fills in the document each country expects. The required fields came from legal and compliance research. My job was to make getting them right the easy path.</span></div></li>
+<li><div><b>The receipt shows before you save</b><span>People doing the books, many of them not accountants, see what the donor will get while they can still fix it.</span></div></li>
+</ol>
+</section>
+
+<div class="src">
+<p>Rebuilt with sample data and a made-up organization to show the pattern. Simplified, and not tax advice.</p>
+<p>Rules from: <a href="https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/operating-a-registered-charity/issuing-receipts/split-receipting.html">CRA, split receipting</a> · <a href="https://www.irs.gov/charities-non-profits/charitable-organizations/charitable-organizations-substantiation-and-disclosure-requirements">IRS, substantiation and disclosure</a> · <a href="https://www.gov.uk/government/publications/charities-detailed-guidance-notes/chapter-3-gift-aid">HMRC, Gift Aid guidance, chapter 3.25 on split payments</a></p>
 </div>
-<div class="cols">
-<section class="col" aria-label="Before the redesign"><h2>Before: one type per payment</h2><p class="sub">The product made you pick one type, so there were two ways to log this. Neither gave one correct receipt.</p><div id="before"></div></section>
-<section class="col" aria-label="After the redesign"><h2>After: one payment, split by type</h2><p class="sub">Each part keeps its own type, so one receipt can show the whole payment.</p><div id="after"></div></section>
-</div>
-<p class="foot">Illustrative: rebuilt with sample data and a made-up organization. The rules are simplified to show the pattern. This is not tax advice.</p>
 </div>
 <script>
 (function(){
 var C={
- CA:{cur:"$",name:"Canada",kind:"Official donation receipt for income tax purposes",
-  rule:"Canada: when the donor gets something back, the receipt shows the total paid, the value of that advantage, and the eligible amount left over.",
-  tot:"Total amount received",adv:"Value of advantage (gala ticket)",elig:"Eligible amount of gift",
-  wrongNote:"The receipt says the full 200 is eligible. Only the 100 gift should be.",
-  splitNote:"The amounts are right, but one payment is now three records and two receipts, and no receipt shows the total or the advantage."},
- US:{cur:"$",name:"United States",kind:"Written acknowledgment of your contribution",
-  rule:"United States: a payment over $75 that is partly a gift needs a written disclosure with a good-faith estimate of what the donor received.",
-  tot:"Payment received",adv:"Good-faith estimate of goods received (gala ticket)",elig:"Deductible contribution",
-  wrongNote:"The acknowledgment says the full 200 is deductible, with no estimate of what the donor received.",
-  splitNote:"The amounts are right, but one payment is now three records and two acknowledgments, and neither carries the disclosure for the ticket."},
- UK:{cur:"£",name:"United Kingdom",kind:"Gift Aid acknowledgement",
-  rule:"United Kingdom: Gift Aid applies only to the true gift. The ticket is a purchase, so it stays out of the claim. The charity claims 25p for every £1 of eligible gift.",
-  tot:"Payment received",adv:"Gala ticket (a purchase, not eligible)",elig:"Donation eligible for Gift Aid",
-  wrongNote:"Gift Aid is claimed on the full 200. Only the 100 gift is eligible, so the claim is double what it should be.",
-  splitNote:"The amounts are right, but one payment is now three records and two acknowledgements, and nothing ties them back to the 200."}
+ CA:{s:"$",ttl:"Official receipt for income tax purposes",reg:"Charity no. 00000 0000 RR0001",
+  rule:'Canada calls this split receipting. The receipt has to show the total received, the value of what the donor got back (the advantage) and the eligible amount left over. The advantage has to stay at or under 80% of the payment for any of it to count as a gift. <a href="https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/operating-a-registered-charity/issuing-receipts/split-receipting.html">CRA guidance</a>',
+  tot:"Total amount received",adv:"Value of advantage: gala ticket",elig:"Eligible amount of gift for tax purposes",
+  one:[["Total amount received",200],["Eligible amount of gift for tax purposes",200,"x","Should be {100}. No advantage shown."]],
+  oneV:"The receipt lets the donor claim {200}. Only the {100} gift is eligible, and the ticket's value is missing.",
+  part:"Eligible amount of gift for tax purposes",
+  after:[["Total amount received",200],["Value of advantage: gala ticket",100],["Eligible amount of gift for tax purposes",100,"key"]],
+  afterN:"Gift directed to General Donations {50} and Capital Campaign {50}.",
+  afterV:"Total, advantage and eligible amount on one receipt, the three figures the CRA asks for."},
+ US:{s:"$",ttl:"Written acknowledgment and disclosure",reg:"EIN 00-0000000",
+  rule:'In the US, when a payment over $75 is partly a gift and partly a purchase, the charity has to give the donor a written disclosure: a good-faith estimate of what they received, and a statement that only the amount above that is deductible. <a href="https://www.irs.gov/charities-non-profits/charitable-organizations/charitable-organizations-substantiation-and-disclosure-requirements">IRS guidance</a>',
+  one:[["Contribution received",200],["Amount deductible",200,"x","Should be {100}. No estimate of goods received."]],
+  oneV:"The acknowledgment says all {200} is deductible, with no estimate of what the donor received, so the required disclosure is missing.",
+  part:"Contribution received",
+  after:[["Total payment",200],["Good-faith estimate of goods or services provided: gala ticket",100],["Amount deductible as a charitable contribution",100,"key"]],
+  afterN:"The deductible amount of your contribution is limited to the excess of your payment over the value of goods or services we provided. Gift directed to General Donations {50} and Capital Campaign {50}.",
+  afterV:"The estimate and the deductible amount sit on one document, which is the disclosure the IRS requires over $75."},
+ UK:{s:"£",ttl:"Donation confirmation and Gift Aid record",reg:"Registered charity no. 0000000",
+  rule:'The UK has no tax receipt. The charity reclaims 25p for every £1 of gift through Gift Aid, but only on a true gift. A £100 ticket is far over the benefit limit for a £200 payment, so unless the payment is split, and the donor is told how, none of it qualifies. Both sides should keep evidence of the split. <a href="https://www.gov.uk/government/publications/charities-detailed-guidance-notes/chapter-3-gift-aid">HMRC guidance, 3.25</a>',
+  one:[["Donation received",200],["Donation under Gift Aid",200,"x","Should be {100}."],["Gift Aid the charity reclaims",50,"x","Should be {25}."]],
+  oneV:"The charity would reclaim tax on the ticket as well as the gift. With no recorded split, the claim isn't valid at all.",
+  part:"Donation under Gift Aid",
+  after:[["Total payment",200],["Gala ticket, at its public price",100],["Donation under Gift Aid",100,"key"],["Gift Aid the charity reclaims, 25p per £1",25]],
+  afterN:"Split agreed with the donor at the time of payment. Gift Aid declaration on file. Donation directed to General Donations {50} and Capital Campaign {50}.",
+  afterV:"The split is written down where both the charity and the donor can see it, which is the evidence HMRC asks them to keep."}
 };
 var cur="CA";
-function m(c,n){return c.cur+n}
-function rc(c,no,rows,extra){return '<div class="rc"><div class="top"><span class="org">ABC Organization</span><span class="smp">Sample</span></div><div class="kind">'+c.kind+' · No. '+no+' · Sarah Padilla</div>'+rows.map(function(r){return '<div class="kv'+(r[2]?' '+r[2]:'')+'"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>'}).join('')+(extra||'')+'</div>'}
+function fm(c,n){return c.s+Number(n).toFixed(2)}
+function sh(c,n){return c.s+n}
+function fill(c,t){return t.replace(/\{(\d+)\}/g,function(_,n){return sh(c,n)})}
+function sheet(c,no,rows,note,small){
+ return '<div class="sheet"><div class="hd"><span class="org">ABC Organization<small>'+c.reg+'</small></span><span class="smp">Sample</span></div>'+
+  '<div class="ttl">'+c.ttl+'</div>'+
+  '<div class="meta"><span>No. <b>2026-'+no+'</b></span><span>Received <b>Apr 23, 2026</b></span>'+(small?'':'<span>Donor <b>Sarah Padilla</b></span><span>Issued <b>Apr 23, 2026</b></span>')+'</div>'+
+  '<table>'+rows.map(function(r){return '<tr class="'+(r[2]||'')+'"><td>'+r[0]+(r[3]?'<span class="fix">'+fill(c,r[3])+'</span>':'')+'</td><td>'+fm(c,r[1])+'</td></tr>'}).join('')+'</table>'+
+  (note?'<p class="nt">'+fill(c,note)+'</p>':'')+'</div>';
+}
 function draw(){
- var c=C[cur],uk=cur==="UK";
- document.getElementById("t-line").textContent="Sarah Padilla pays "+m(c,200)+" at the Annual Gala.";
- document.getElementById("t-1").textContent=m(c,100)+" gala ticket";
- document.getElementById("t-2").textContent=m(c,50)+" General Donations";
- document.getElementById("t-3").textContent=m(c,50)+" Capital Campaign";
- document.getElementById("rule").textContent=c.rule;
- var w1=[[c.tot,m(c,200)],[c.elig,m(c,200),"wrong"]]; if(uk) w1.push(["Gift Aid the charity claims",m(c,50),"wrong"]);
- var s1=[[uk?"Donation eligible for Gift Aid":c.elig,m(c,50)]],s2=[[uk?"Donation eligible for Gift Aid":c.elig,m(c,50)]];
- if(uk){s1.push(["Gift Aid the charity claims","£12.50"]);s2.push(["Gift Aid the charity claims","£12.50"])}
- document.getElementById("before").innerHTML=
-  '<div class="way"><h3>Way 1: log it as one donation</h3>'+rc(c,"0418",w1)+'<div class="flag bad"><b>Wrong receipt.</b> '+c.wrongNote.replace(/\b(200|100)\b/g,function(x){return m(c,x)})+'</div></div>'+
-  '<div class="way" style="margin-top:16px"><h3>Way 2: the workaround, three separate records</h3><div class="pair">'+rc(c,"0418",s1,'<div class="al">General Donations</div>')+rc(c,"0419",s2,'<div class="al">Capital Campaign</div>')+'</div>'+
-  '<div class="rec"><span><b>Other revenue</b> · gala ticket · no receipt</span><b>'+m(c,100)+'</b></div>'+
-  '<div class="flag warn"><b>Right amounts, split apart.</b> '+c.splitNote.replace(/\b200\b/g,function(x){return m(c,x)})+'</div></div>';
- var a=[[c.tot,m(c,200),"tot"],[c.adv,m(c,100)],[c.elig,m(c,100)]]; if(uk) a.push(["Gift Aid the charity can claim",m(c,25)]);
- document.getElementById("after").innerHTML=
-  rc(c,"0418",a,'<div class="al">Your gift supports: General Donations '+m(c,50)+' · Capital Campaign '+m(c,50)+'</div>')+
-  '<div class="flag ok" style="margin-top:10px"><b>One record, one receipt.</b> The total, what the donor got back and the gift all sit on the same document, worded for '+(cur==="US"?"the ":cur==="UK"?"the ":"")+c.name+'.</div>';
+ var c=C[cur];
+ document.getElementById("b-t").textContent=sh(c,100)+" ticket";document.getElementById("b-g1").textContent=sh(c,50);document.getElementById("b-g2").textContent=sh(c,50);
+ document.getElementById("k-t").textContent=sh(c,100);document.getElementById("k-g1").textContent=sh(c,50);document.getElementById("k-g2").textContent=sh(c,50);
+ document.getElementById("rule").innerHTML=c.rule;document.getElementById("l-amt").textContent=sh(c,200);
+ var docWord=cur==="UK"?"confirmations":cur==="US"?"acknowledgments":"receipts";
+ document.getElementById("docs").innerHTML=
+  '<div class="doc"><h3>Before: logged as one donation</h3><p class="how">The fastest way. Pick "donation" and enter '+sh(c,200)+'.</p><div class="desk">'+sheet(c,"0418",c.one)+'</div><p class="verdict v-bad"><b>Wrong.</b> '+fill(c,c.oneV)+'</p></div>'+
+  '<div class="doc"><h3>Before: the workaround</h3><p class="how">Log three separate payments and reconcile them by hand.</p><div class="desk">'+sheet(c,"0418",[[c.part+', General Donations',50]],"",1)+sheet(c,"0419",[[c.part+', Capital Campaign',50]],"",1)+'<div class="recline"><span><b>Other revenue</b>, gala ticket, no document</span><span>'+fm(c,100)+'</span></div></div><p class="verdict v-mid"><b>Right amounts, scattered.</b> One '+sh(c,200)+' bank deposit is now three records and two '+docWord+'. Nothing shows the whole payment or what the ticket was worth.</p></div>'+
+  '<div class="doc"><h3>After: one payment, split by type</h3><p class="how">One record. Each part keeps its own type.</p><div class="desk">'+sheet(c,"0418",c.after,c.afterN)+'</div><p class="verdict v-ok"><b>Right, on one document.</b> '+fill(c,c.afterV)+'</p></div>';
  [].forEach.call(document.querySelectorAll("[data-c]"),function(b){b.setAttribute("aria-pressed",b.getAttribute("data-c")===cur?"true":"false")});
 }
-document.querySelector(".seg").addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-c]");if(!b)return;cur=b.getAttribute("data-c");draw()});
+document.querySelector(".tabs").addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-c]");if(!b)return;cur=b.getAttribute("data-c");draw()});
 draw();
 })();
 </script>
