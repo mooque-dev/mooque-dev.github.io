@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Keela Contacts | Allen Kang</title><meta name="robots" content="noindex"><meta name="description" content="The contact record a fundraiser opens before every call, redesigned to show what changed and what to do about it. Includes a working version of the design."><meta property="og:type" content="article"><meta property="og:title" content="Keela Contacts | Allen Kang"><meta property="og:description" content="The contact record a fundraiser opens before every call, redesigned to show what changed and what to do about it. Includes a working version of the design."><meta property="og:image" content="https://allenkang.com/case-studies/keela-contacts/cover-framed.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div style="background:#111;color:#eee;font:500 14px/1 Inter,system-ui,sans-serif;padding:12px 0"><div style="max-width:1152px;margin:0 auto;padding:0 24px;display:flex;gap:18px;align-items:center"><a href="/" style="color:#fff;text-decoration:none;font-weight:600"><svg aria-hidden="true" width="0.95em" height="0.95em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.13em;margin-right:4px"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Allen Kang</a><a href="/work" style="color:#bbb;text-decoration:none">All work</a></div></div><title>Keela Contacts</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Keela Contacts | Allen Kang</title><meta name="robots" content="noindex"><meta name="description" content="The contact record a fundraiser opens before every call, redesigned to show what changed and what to do about it. Includes a working version of the design."><meta property="og:type" content="article"><meta property="og:title" content="Keela Contacts | Allen Kang"><meta property="og:description" content="The contact record a fundraiser opens before every call, redesigned to show what changed and what to do about it. Includes a working version of the design."><meta property="og:image" content="https://allenkang.com/case-studies/keela-contacts/cover-framed.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div style="background:#111;color:#eee;font:500 14px/1 Inter,system-ui,sans-serif;padding:12px 0"><div style="max-width:1152px;margin:0 auto;padding:0 24px;display:flex;gap:18px;align-items:center"><a href="/" style="color:#fff;text-decoration:none;font-weight:600"><svg aria-hidden="true" width="0.95em" height="0.95em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.13em;margin-right:4px"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Allen Kang</a><a href="/work" style="color:#bbb;text-decoration:none">All work</a></div></div>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap">
 <style>
@@ -393,9 +393,15 @@ body{font-size:18px}
 details.notes-draft{margin-top:64px;border:1px dashed var(--result-br);border-radius:10px;padding:16px 20px;background:var(--result-bg);max-width:1120px}
 details.notes-draft summary{cursor:pointer;font-weight:600}
 @media(max-width:860px){#shipped .shots{grid-template-columns:1fr!important}.shots.n2,.shots.n3,.glance{grid-template-columns:1fr}.chead h2{font-size:30px}.chead .num{font-size:42px}.changes td:nth-child(2){width:auto}}
+
+/* Plain labels: no capitals with wide spacing, no numerals over headings. */
+.eyebrow,.meta dt,.kick,.story dt,.tag,.measures th,.mini dt,table.patterns th,.chead .ck,.phase,.partdiv .ck,.changes th{text-transform:none;letter-spacing:0}
+*::before{text-transform:none !important;letter-spacing:0 !important}
+.film{margin:28px 0 0;max-width:880px}.film video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:8px;border:1px solid var(--border);background:var(--stage)}.film figcaption{margin-top:10px;font-size:14px;color:var(--muted)}
+.endlinks{border-top:1px solid var(--border);margin-top:72px;padding:28px 0 56px;font-size:15px}.endlinks .wrap{display:flex;flex-wrap:wrap;gap:10px 28px}.endlinks a{color:inherit;text-underline-offset:4px}
 </style>
-<div class="topstack"><div class="tryband"><div class="wrap"><span class="dot" aria-hidden="true"></span><span class="tt">I rebuilt these screens as a working version you can click through.</span><a href="#try">Try the interactive version <svg aria-hidden="true" width="0.95em" height="0.95em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.13em"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a></div></div>
-<nav class="cnav" aria-label="Chapters"><div class="wrap"><a href="#overview" aria-current="false">Overview</a><a href="#profile" aria-current="false">01 Contact record</a><a href="#list" aria-current="false">02 Contact list</a><a href="#shipped" aria-current="false">03 What shipped</a><a href="#refine" aria-current="false">04 Next iteration</a><a href="#proof" aria-current="false">05 Proof</a></div></nav></div>
+<div class="topstack"><div class="tryband"><div class="wrap"><span class="tt">I rebuilt these screens as a working version you can click through.</span><a href="#try">Try the interactive version <svg aria-hidden="true" width="0.95em" height="0.95em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.13em"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a></div></div>
+<nav class="cnav" aria-label="Chapters"><div class="wrap"><a href="#overview" aria-current="false">Overview</a><a href="#profile" aria-current="false">Contact record</a><a href="#list" aria-current="false">Contact list</a><a href="#shipped" aria-current="false">What shipped</a><a href="#refine" aria-current="false">Next iteration</a><a href="#proof" aria-current="false">Proof</a></div></nav></div>
 <div class="banner"><div class="wrap"><span>Demo data is illustrative. Every screen below is a working version of the design.</span></div></div>
 
 <div class="wrap">
@@ -403,6 +409,7 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
   <div class="eyebrow">Case study &middot; Nonprofit CRM &middot; Product design</div>
   <h1>Keela Contacts</h1>
   <p class="sub">For a small nonprofit, the contact record is the CRM. The old page showed everything we knew about a donor. I redesigned it to show what changed, and what to do about it.</p>
+  <figure class="film"><video controls playsinline preload="none" poster="/films/keela-contacts.jpg" width="1920" height="1080" aria-label="Keela Contacts, the short version. A silent film of 36 seconds."><source src="/films/keela-contacts.mp4" type="video/mp4"></video><figcaption>The short version: 36 seconds, no sound. Everything in it is from this page.</figcaption></figure>
   <dl class="meta">
     <div><dt>Role</dt><dd>Lead Product Designer</dd></div>
     <div><dt>Company</dt><dd>Keela</dd></div>
@@ -423,7 +430,7 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
   </dl>
 </header>
 <section class="chapter" id="profile" data-spy>
-  <div class="chead"><span class="num">01</span><span class="ck">Contact record</span><h2>Change before totals</h2></div>
+  <div class="chead"><h2>Change before totals</h2></div>
   <p class="csum">The page a fundraiser opens before every call.</p>
   
   <p class="try" id="try"><b>Try it</b>Switch tabs, hover the sparklines, add a to-do, or edit the contact and save.</p>
@@ -452,18 +459,18 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
 </div></div>
   <table class="changes"><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td><span class="n">1</span></td><td><b>Global tabs on a personal page.</b> Contacts, Companies, Households and Segments, with "Interactions" selected while viewing Sarah.</td><td><b>Tabs that belong to the person.</b> Profile, interactions, to-dos, fundraising, memberships, volunteering and pipelines, all about Sarah.</td></tr><tr><td><span class="n">2</span></td><td><b>Lifetime totals with no time.</b> "$130,000 in donations," but no sign of whether she gave last week or five years ago.</td><td><b>What changed, and when.</b> "$2,420 this month, up 40%," with a 12-month trend that tells a fundraiser it is time to call.</td></tr><tr><td><span class="n">3</span></td><td><b>Placeholders and repeats.</b> Six Highlights rows read "Label / Placeholder," two panels carry the same paragraph, and the menu is labeled "Button."</td><td><b>Highlights a fundraiser uses, two clear actions.</b> Household, tags and assignee, plus "To-do" and "Send email."</td></tr></tbody></table>
 </section><section class="chapter" id="list" data-spy>
-  <div class="chead"><span class="num">02</span><span class="ck">Contact list</span><h2>A list you can act on</h2></div>
+  <div class="chead"><h2>A list you can act on</h2></div>
   <p class="csum">Where fundraisers find who to contact next.</p>
   
   <p class="try"><b>Try it</b>Filter by type or assignee, show only hard-bounced emails, or search. Hover "+2" to see hidden tags.</p>
   <div class="stage"><div class="klist" id="list2"></div></div>
   <table class="changes"><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td><span class="n">1</span></td><td><b>A count that disagrees with itself.</b> "129 Contacts" above pagination that reads "0 of 1."</td><td><b>A count that follows the filters.</b> The heading updates as you narrow the list.</td></tr><tr><td><span class="n">2</span></td><td><b>One click from deleting a tag.</b> Every row carries removable "Tag Name ×" chips.</td><td><b>Read-only tags with overflow.</b> One tag shown, the rest behind "+2." Editing lives on the record.</td></tr><tr><td><span class="n">3</span></td><td><b>Nothing to scan by.</b> No status, no filters, empty assignee avatars; every row looks the same.</td><td><b>Filters in plain words and a deliverability status.</b> "Hard bounced" warns you before you write the email.</td></tr></tbody></table>
 </section><section class="chapter" id="shipped" data-spy>
-  <div class="chead"><span class="num">03</span><span class="ck">What shipped</span><h2>The screens customers got in 2024</h2></div>
+  <div class="chead"><h2>The screens customers got in 2024</h2></div>
   <p class="csum">Screens from the shipped product, with the sample data replaced by realistic examples.</p>
   <div class="shots" style="grid-template-columns:1fr 1fr"><figure class="shot"><button class="zoom" type="button" data-cap="All contacts, with filters, tags and deliverability status" aria-label="Enlarge: All contacts, with filters, tags and deliverability status"><img src="assets/shipped-contacts.jpg" alt="The shipped contact list: filters for contact type and assignee, tags with overflow, and a hard-bounced status before you write the email" loading="lazy" width="1440" height="900"></button><figcaption>All contacts, with filters, tags and deliverability status</figcaption></figure><figure class="shot"><button class="zoom" type="button" data-cap="Sarah's interactions, scoped to the person" aria-label="Enlarge: Sarah's interactions, scoped to the person"><img src="assets/shipped-interactions.jpg" alt="The shipped record: tabs that belong to the person, highlights on the left, and Sarah's emails and calls with their delivery status" loading="lazy" width="1440" height="900"></button><figcaption>Sarah's interactions, scoped to the person</figcaption></figure><figure class="shot"><button class="zoom" type="button" data-cap="Sarah's to-dos, with what each one relates to" aria-label="Enlarge: Sarah's to-dos, with what each one relates to"><img src="assets/shipped-todos.jpg" alt="The shipped to-do tab: open and done follow-ups for Sarah, each tied to a campaign or event, sorted by due date" loading="lazy" width="1440" height="900"></button><figcaption>Sarah's to-dos, with what each one relates to</figcaption></figure><figure class="shot"><button class="zoom" type="button" data-cap="Transactions, including split contributions" aria-label="Enlarge: Transactions, including split contributions"><img src="assets/shipped-transactions.jpg" alt="The shipped transactions list: donations and revenue, with split contributions and receipt status" loading="lazy" width="1440" height="900"></button><figcaption>Transactions, including split contributions</figcaption></figure></div>
 </section><section class="chapter" id="refine" data-spy>
-  <div class="chead"><span class="num">04</span><span class="ck">Next iteration</span><h2>What I would still refine</h2></div>
+  <div class="chead"><h2>What I would still refine</h2></div>
   <p class="csum">Owning the gaps in my own design is part of the work.</p>
   <table class="changes"><thead><tr><th></th><th>In my design</th><th>Next step</th></tr></thead><tbody>
     <tr><td><span class="n">1</span></td><td><b>Template copy and casing.</b> "Track, Manage And Forecast Your Customers And Orders" is e-commerce kit copy in Title Case, and emails were Title Cased too.</td><td><b>Write for fundraisers, and never restyle data.</b> Fixed in the demo.</td></tr>
@@ -472,7 +479,7 @@ details.notes-draft summary{cursor:pointer;font-weight:600}
     <tr><td><span class="n">4</span></td><td><b>A database ID in Highlights.</b> Noise for a fundraiser.</td><td><b>Move it to a Details drawer</b> for the admins who need it.</td></tr>
   </tbody></table>
 </section><section class="chapter" id="proof" data-spy>
-  <div class="chead"><span class="num">05</span><span class="ck">Proof</span><h2>How I&rsquo;d judge it</h2></div>
+  <div class="chead"><h2>How I&rsquo;d judge it</h2></div>
   <p class="csum">It shipped in 2024. Without the post-launch numbers, these are the measures I&rsquo;d hold it to.</p>
   <div class="tablewrap"><table class="measures">
     <thead><tr><th>Measure</th><th>How</th><th>Target</th></tr></thead>
@@ -571,6 +578,7 @@ draw();
 })();
 </script>
 
+<footer class="endlinks"><div class="wrap"><a href="/">Allen Kang</a><a href="/work">All work</a><a href="/allen-kang-resume.pdf">Résumé (PDF)</a><a href="mailto:allensmkang@gmail.com">allensmkang@gmail.com</a></div></footer>
 <script>
 (function(){
 // lightbox
